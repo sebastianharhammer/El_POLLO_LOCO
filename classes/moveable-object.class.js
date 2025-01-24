@@ -1,12 +1,12 @@
 class MoveableObject { 
     x = 120;
     y = 250;
-    height = 150;
-    width = 75;
+    height = 250;
+    width = 125;
     img;
     imageCache = {};
     currentImage = 0;
-    speed;
+    speed = 0.15;
     otherDirection = false;
 
     loadImage(path) {
