@@ -19,7 +19,7 @@ class Character extends MoveableObject {
   animate() {
 
     setInterval(() =>  {
-        if (this.world.keyboard.RIGHT) {
+        if (this.world.keyboard.RIGHT && this.x > 0) {
             this.x += this.speed;
             this.otherDirection = false;
         }
@@ -27,7 +27,7 @@ class Character extends MoveableObject {
             this.x -= this.speed;
             this.otherDirection = true;
         }
-        this.world.camera_x = -this.x;
+        this.world.camera_x = -this.x + 200;
     }, 1000 / 60);
 
     setInterval(() => {
