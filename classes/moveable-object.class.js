@@ -35,6 +35,16 @@ class MoveableObject {
       this.imageCache[path] = img;
     });
   }
+  draw(ctx) {
+    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+  }
+  drawFrame(ctx) {
+    ctx.beginPath();
+    ctx.lineWidth = "5";
+    ctx.strokeStyle = "blue";
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.stroke();  
+  }
   playAnimation(images) {
     let i = this.currentImage % this.IMAGES_WALKING.length; //let i = 7 % 6; => 1 Rest 1
     //i = 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0 ...
