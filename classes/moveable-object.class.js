@@ -10,13 +10,19 @@ class MoveableObject {
   otherDirection = false;
   speedY = 0;
   acceleration = 2.5;
+  energy = 100;
   offset = {
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
 };
-
+  hit() {
+    this.energy -= 10;
+    if(this.energy <= 0) {
+      this.energy = 0;
+    }
+  }
   applyGravity() {
     setInterval(() => {
       if (this.isAboveGround() || this.speedY > 0) {
