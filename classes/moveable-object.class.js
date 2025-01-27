@@ -17,13 +17,21 @@ class MoveableObject {
     right: 0,
     bottom: 0,
 };
+lastHit = 0;
   hit() {
     this.energy -= 20;
     if(this.energy <= 0) {
       this.energy = 0;
+    } else {
+        this.lastHit = new Date().getTime();
     }
   }
-
+  isHurt() {
+    let timePassed = new Date().getTime() - this.lastHit; //Diff in ms
+    timePassed = timePassed / 1000 //Diff in s
+    console.log(timePassed);
+    return timePassed < 2;
+  }
   isDead() {
     return this.energy == 0;
 
@@ -96,7 +104,7 @@ class MoveableObject {
   } */
 
   playAnimation(images) {
-    let i = this.currentImage % this.IMAGES_WALKING.length; //let i = 7 % 6; => 1 Rest 1
+    let i = this.currentImage % images.length; //let i = 7 % 6; => 1 Rest 1
     //i = 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0 ...
     //i ist immer der Rest
     let path = images[i];
