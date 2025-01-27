@@ -1,8 +1,8 @@
 class World {
   character = new Character();
   level = level1;
-  /* enemies = level1.enemies;
-  clouds = level1.clouds;
+  enemies = level1.enemies;
+  /* clouds = level1.clouds;
   backgroundObjects = level1.backgroundObjects; */
   canvas;
   ctx;
@@ -15,10 +15,21 @@ class World {
     this.keyboard = keyboard;
     this.draw();
     this.setWorld();
+    this.checkColisions();
   }
 
   setWorld() {
     this.character.world = this;
+  }
+
+  checkColisions() {
+    setInterval(() => {
+      this.level.enemies.forEach( (enemy) => {
+        if(this.character.isColliding(enemy)) {
+          console.log('Collision with character', enemy)
+        }
+      });
+    }, 500);
   }
 
   draw() {
