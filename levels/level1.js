@@ -55,11 +55,11 @@ const level1 = new Level(
     ),
     new BackgroundObject(
       "img/5_background/layers/2_second_layer/2.png",
-      1280 * 3
+      1279 * 3
     ),
     new BackgroundObject(
       "img/5_background/layers/1_first_layer/2.png",
-      1280 * 3
+      1279 * 3
     ),
   ],
   [ 
@@ -67,17 +67,29 @@ const level1 = new Level(
     new Coin(400, 565),
     new Coin(600, 565),
     new Coin(800, 565),
-    new Coin(1000, 565  ),
+    new Coin(1000, 565 ),
     new Coin(1200, 565),
     new Coin(1400, 565),
     new Coin(1600, 565),
     new Coin(1800, 565),
+    new Coin(2000, 565),
+    new Coin(2200, 565),
+    new Coin(2400, 565),
+    new Coin(2600, 565),
+    new Coin(2800, 565),
+    new Coin(3000, 565),
   ],
   [
     new ThrowableObject(100, 565),
     new ThrowableObject(300, 565),
     new ThrowableObject(500, 565),
     new ThrowableObject(700, 565),
+    new ThrowableObject(900, 565),
+    new ThrowableObject(1100, 565),
+    new ThrowableObject(1300, 565),
+    new ThrowableObject(1500, 565),
+    new ThrowableObject(1700, 565),
+    new ThrowableObject(1900, 565),
   ]
 );
 
