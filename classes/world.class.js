@@ -1,7 +1,7 @@
 class World {
   character = new Character();
   level = level1;
-  enemies = level1.enemies;
+  /* enemies = level1.enemies; */
   /* clouds = level1.clouds;
   backgroundObjects = level1.backgroundObjects; */
   canvas;
@@ -10,7 +10,7 @@ class World {
   camera_x = 0;
   statusBar = new StatusBar();
   throwableObject = [];
-  coins = [];
+
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -63,8 +63,8 @@ class World {
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
     
-    this.addObjectsToMap(this.throwableObject);
-    this.addObjectsToMap(this.coins);
+    this.addObjectsToMap(this.level.bottles);
+    this.addObjectsToMap(this.level.coins);
     this.ctx.translate(-this.camera_x, 0);
 
     //Draw() wird immer wieder aufgerufen

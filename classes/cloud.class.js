@@ -29,10 +29,4 @@ class Cloud extends MoveableObject {
             this.y = 20 + Math.random() * 50; // Slight random height variation
         }
     }
-
-
-    
-
-    
-    
 }

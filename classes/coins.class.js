@@ -5,18 +5,17 @@ class Coin extends MoveableObject {
         right: 10,
         bottom: 10,
     };
-    height = 500;
-    width = 500;
-    y = 300;
+    height = 100;
+    width = 100;
+    y = 1000;
     x = 300;
     IMAGES_COIN = [
         'img/8_coin/coin_1.png',
-        'img/8_coin/coin_2.png',
+        'img/8_coin/coin_2.png'
     ];
 
     constructor(x, y) {
-        super();
-        this.loadImage(this.IMAGES_COIN[0]);
+        super().loadImage(this.IMAGES_COIN[0]);
         this.loadImages(this.IMAGES_COIN);
         this.x = x;
         this.y = y;
@@ -27,7 +26,7 @@ class Coin extends MoveableObject {
         console.log(this.IMAGES_COIN);
         setInterval(() => {
             this.playAnimation(this.IMAGES_COIN);
-        }, 50);
+        }, 250);
     }
 
 }
