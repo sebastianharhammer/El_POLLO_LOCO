@@ -1,5 +1,4 @@
 class MoveableObject extends DrawableObject {
-  
   speed = 0.15;
   otherDirection = false;
   speedY = 0;
@@ -12,7 +11,6 @@ class MoveableObject extends DrawableObject {
     bottom: 0,
   };
   lastHit = 0;
-
 
   hit() {
     this.energy -= 2;
@@ -42,17 +40,17 @@ class MoveableObject extends DrawableObject {
   }
 
   isAboveGround() {
-    return this.y < 180;
+    if (this instanceof ThrowableObject) {
+      return true;
+    } else {
+      return this.y < 180;
+    }
   }
-
-
-
 
   /*   if (character.x + character.width > chicken.x 
   && character.y + character.height > chicken.y 
   && character.x < chicken.x 
   && character.y < chicken.y + chicken.height) */
-
 
   //v2
   isColliding(mo) {
