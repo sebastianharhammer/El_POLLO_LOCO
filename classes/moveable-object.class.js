@@ -14,7 +14,6 @@ class MoveableObject extends DrawableObject {
 
   hit() {
     this.energy -= 2;
-    console.log("Energie: ", this.energy);
     if (this.energy <= 0) {
       this.energy = 0;
     } else {
