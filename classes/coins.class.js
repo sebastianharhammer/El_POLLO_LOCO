@@ -1,24 +1,31 @@
-class Coins extends MoveableObject {
-    x = 0;
-    y = 0;
-    height = 200;
-    width = 200;
-    IMAGES = [
-        "img/8_coin/coin_1.png",
-        "img/8_coin/coin_2.png"
+class Coin extends MoveableObject {
+    offset = {
+        top: 10,
+        left: 10,
+        right: 10,
+        bottom: 10,
+    };
+    height = 100;
+    width = 100;
+    IMAGES_COIN = [
+        'img/8_coin/coin_1.png',
+        'img/8_coin/coin_2.png',
     ];
 
-    constructor() {
-
-        super().loadImage("img/8_coin/coin_1.png");
-        this.loadImages(this.IMAGES);
+    constructor(x, y) {
+        super();
+        this.loadImage(this.IMAGES_COIN[0]);
+        this.loadImages(this.IMAGES_COIN);
+        this.x = x;
+        this.y = y;
         this.animate();
     }
 
     animate() {
+        console.log(this.IMAGES_COIN);
         setInterval(() => {
-            this.playAnimation(this.IMAGES);
-        }, 50);
+            this.playAnimation(this.IMAGES_COIN);
+        }, 5000);
     }
 
 }

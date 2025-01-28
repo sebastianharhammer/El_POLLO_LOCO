@@ -1,7 +1,7 @@
 class Endboss extends MoveableObject {
     height = 400;
     width = 300;
-    y = 50;
+    y = 250;
 
 
     IMAGES_WALKING = [
