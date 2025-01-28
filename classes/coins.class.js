@@ -5,8 +5,10 @@ class Coin extends MoveableObject {
         right: 10,
         bottom: 10,
     };
-    height = 100;
-    width = 100;
+    height = 500;
+    width = 500;
+    y = 300;
+    x = 300;
     IMAGES_COIN = [
         'img/8_coin/coin_1.png',
         'img/8_coin/coin_2.png',
@@ -25,7 +27,7 @@ class Coin extends MoveableObject {
         console.log(this.IMAGES_COIN);
         setInterval(() => {
             this.playAnimation(this.IMAGES_COIN);
-        }, 5000);
+        }, 50);
     }
 
 }
