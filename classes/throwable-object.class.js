@@ -34,34 +34,32 @@ class ThrowableObject extends MoveableObject {
     this.speedY = 30;
     this.applyGravity();
     let bottleInterval = setInterval(() => {
-      this.x += 7;
+      this.x += 10;
       this.animateThrow();
-      if (this.y < 405) {
-        this.y = 405;
+      if (this.y > 555) {
+        this.y = 555;
+        this.x = this.x
         this.speedY = 0;
-        this.x = this.x;
-        this.animateSplash();
         clearInterval(bottleInterval);
+        /* this.animateSplash(); */
       }
-    }, 25);
+
+    }, 50);
   }
 
+
   animate() {
-    console.log(this.IMAGES_BOTTLE);
     setInterval(() => {
       this.playAnimation(this.IMAGES_BOTTLE);
-    }, 250);
+    }, 550);
   }
   animateThrow() {
-    console.log(this.IMAGES_BOTTLE_THROW);
     setInterval(() => {
       this.playAnimation(this.IMAGES_BOTTLE_THROW);
     }, 250);
   }
   animateSplash() {
-    // Clear previous animation intervals if they exist
     if (this.splashInterval) clearInterval(this.splashInterval);
-    
     let i = 0;
     this.splashInterval = setInterval(() => {
       if (i < this.IMAGES_BOTTLE_SPLASH.length) {

@@ -2,8 +2,6 @@ const level1 = new Level(
   [
     new Chicken(),
     new Chicken(),
-    new Chicken(),
-    new Chicken(),
     new Endboss(),
   ],
   [
@@ -63,20 +61,15 @@ const level1 = new Level(
     ),
   ],
   [ 
-    new Coin(200, 565),
     new Coin(400, 565),
-    new Coin(600, 565),
     new Coin(800, 565),
-    new Coin(1000, 565 ),
     new Coin(1200, 565),
-    new Coin(1400, 565),
     new Coin(1600, 565),
     new Coin(1800, 565),
     new Coin(2000, 565),
     new Coin(2200, 565),
     new Coin(2400, 565),
     new Coin(2600, 565),
-    new Coin(2800, 565),
     new Coin(3000, 565),
   ],
   [
