@@ -1,5 +1,5 @@
 class ThrowableObject extends MoveableObject {
-  constructor(x, y) {
+  constructor(x, y, statusBarBottles) {
     super().loadImage("img/6_salsa_bottle/salsa_bottle.png");
     this.loadImages(this.IMAGES_BOTTLE);
     this.loadImages(this.IMAGES_BOTTLE_SPLASH);
@@ -7,6 +7,7 @@ class ThrowableObject extends MoveableObject {
     this.y = y;
     this.height = 50;
     this.width = 60;
+    this.statusBarBottles = statusBarBottles;
     this.throw();
   }
   IMAGES_BOTTLE = [
@@ -31,20 +32,22 @@ class ThrowableObject extends MoveableObject {
   ];
 
   throw() {
-    console.log("throw");
-    this.speedY = 10;
-    this.applyGravity();
-    let bottleInterval = setInterval(() => {
-      this.x += 30;
-      this.animateThrow();
-      if (this.y > 600) {
-        this.y = 600;
-        this.x = this.x;
-        this.speedY = 0;
-        clearInterval(bottleInterval);
-        this.animateSplash();
-      }
-    }, 50);
+    if (this.statusBarBottles.percentage > 0) {
+      this.statusBarBottles.setPercentage(this.statusBarBottles.percentage - 10);
+      this.speedY = 10;
+      this.applyGravity();
+      let bottleInterval = setInterval(() => {
+        this.x += 30;
+        this.animateThrow();
+        if (this.y > 600) {
+          this.y = 600;
+          this.x = this.x;
+          this.speedY = 0;
+          clearInterval(bottleInterval);
+          this.animateSplash();
+        }
+      }, 50);
+    }
   }
 
   animate() {
