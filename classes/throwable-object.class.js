@@ -47,8 +47,12 @@ class ThrowableObject extends MoveableObject {
           this.animateSplash();
         }
       }, 50);
+    } else {
+      return  ;
     }
   }
+
+
 
   animate() {
     setInterval(() => {

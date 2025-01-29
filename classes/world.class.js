@@ -34,18 +34,19 @@ class World {
       this.checkTrowObjects();
       this.checkCoinCollisions();
       this.checkBottleCollisions();
+      this.checkBottleHit();
     }, 250);
   }
 
   checkTrowObjects() {
-    if(this.keyboard.D) {
+    if (this.keyboard.D) {
       let throwableObject = new ThrowableObject(
-        this.character.x + 100, 
+        this.character.x + 100,
         this.character.y + 100,
         this.statusBarBottles
       );
       this.throwableObjects.push(throwableObject);
-    }  
+    }
   }
 
   checkCollisions() {
@@ -57,7 +58,7 @@ class World {
     });
   }
 
-  checkCoinCollisions() { 
+  checkCoinCollisions() {
     this.level.coins.forEach((coin, index) => {
       if (this.character.isColliding(coin)) {
         this.collectCoin(index);
@@ -73,6 +74,30 @@ class World {
     });
   }
 
+  checkBottleHit() {
+    this.throwableObjects.forEach((bottle) => {
+      this.level.enemies.forEach((enemy, index) => {
+        if (bottle.isColliding(enemy)) {
+          this.chickenDies(index, bottle);
+        }
+      });
+    });
+  }
+  chickenDies(index, bottle) {
+    this.level.enemies[index].speed = 0;
+    this.level.enemies[index].playAnimation(world.level.enemies[index].IMAGES_DEAD);
+    setTimeout(() => {
+      this.level.enemies[index].y = this.level.enemies[index].y - 10;
+      this.level.enemies.splice(index, 1);
+      const bottleIndex = this.throwableObjects.indexOf(bottle);
+      this.throwableObjects.splice(bottleIndex, 1);
+
+    }, 2500);
+    
+    
+  }
+
+
   collectCoin(index) {
     this.level.coins.splice(index, 1);
     this.statusBarCoin.setPercentage(this.statusBarCoin.percentage + 10);
@@ -83,6 +108,7 @@ class World {
     this.statusBarBottles.setPercentage(this.statusBarBottles.percentage + 10);
     console.log("Bottle collected");
   }
+
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -114,6 +140,7 @@ class World {
       this.addToMap(object);
     });
   }
+
   addToMap(mo) {
     if (mo.otherDirection) {
       this.flipImage(mo);
@@ -124,12 +151,14 @@ class World {
       this.flipImageBack(mo);
     }
   }
+
   flipImage(mo) {
     this.ctx.save();
     this.ctx.translate(mo.width, 0);
     this.ctx.scale(-1, 1);
     mo.x = mo.x * -1;
   }
+
   flipImageBack(mo) {
     mo.x = mo.x * -1;
     this.ctx.restore();
