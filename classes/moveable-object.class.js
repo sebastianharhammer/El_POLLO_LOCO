@@ -13,18 +13,6 @@ class MoveableObject extends DrawableObject {
   };
   lastHit = 0;
 
-  chickenDies(index, bottle) {
-    this.level.enemies[index].speed = 0;
-    this.level.enemies[index].img = this.level.enemies[index].IMAGES_DEAD[0];
-    console.log(this.level.enemies[index].IMAGES_DEAD);
-    setTimeout(() => {
-      this.level.enemies[index].speedY -= 10;
-      this.level.enemies.splice(index, 1);
-      const bottleIndex = this.throwableObjects.indexOf(bottle);
-      this.throwableObjects.splice(bottleIndex, 1);
-
-    }, 2500);
-  }
   getTimeStamp() {
     this.lastMovement = new Date().getTime();
   }
@@ -86,12 +74,12 @@ class MoveableObject extends DrawableObject {
   //besser aus vid.
   /* isColliding (obj) {
     return  (
-    (this.X + this.width) >= obj.X                  && 
-    this.X <= (obj.X + obj.width)                   &&
-    (this.Y + this.offsetY + this.height) >= obj.Y  &&
-    (this.Y + this.offsetY) <= (obj.Y + obj.height) &&
-    ); 
-  } */
+      (this.X + this.width) >= obj.X                  && 
+      this.X <= (obj.X + obj.width)                   &&
+      (this.Y + this.offsetY + this.height) >= obj.Y  &&
+      (this.Y + this.offsetY) <= (obj.Y + obj.height) &&
+      ); 
+      } */
 
   playAnimation(images) {
     let i = this.currentImage % images.length; //let i = 7 % 6; => 1 Rest 1
@@ -101,26 +89,43 @@ class MoveableObject extends DrawableObject {
     this.img = this.imageCache[path];
     this.currentImage++;
   }
+
+  //chicken
+  isChickenColliding(bottle) {
+    console.log(bottle);
+    return this.isColliding(bottle);
+  }
+  //chickenDies
+  chickenDies(index, bottle) {
+    this.level.enemies[index].speed = 0;
+    this.level.enemies[index].img = this.level.enemies[index].IMAGES_DEAD[0];
+    console.log(this.level.enemies[index].IMAGES_DEAD);
+    setTimeout(() => {
+      this.level.enemies[index].speedY -= 10;
+      this.level.enemies.splice(index, 1);
+      const bottleIndex = this.throwableObjects.indexOf(bottle);
+      this.throwableObjects.splice(bottleIndex, 1);
+    }, 2500);
+  }
+
   moveChicken() {
-    // Base speed plus small random variation
     const baseSpeed = 2;
     const variation = Math.random() * 0.5;
     this.speed = baseSpeed + variation;
 
-    // Move chicken back and forth between boundaries
     if (this.otherDirection) {
       this.x += this.speed; // Moving right
       if (this.x >= 3000) {
         this.otherDirection = false;
       }
     } else {
-      this.x -= this.speed; // Moving left  
+      this.x -= this.speed; // Moving left
       if (this.x <= 300) {
         this.otherDirection = true;
       }
     }
   }
-  
+
   moveRight() {
     this.x += this.speed;
   }

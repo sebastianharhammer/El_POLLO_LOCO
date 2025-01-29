@@ -31,6 +31,9 @@ class Chicken extends MoveableObject {
   animate() {
     setInterval(() => {
       this.moveChicken();
+      if (this.isChickenColliding(this.bottle)) {
+        this.chickenDies();
+      }
     }, 1000 / 60);
 
     setInterval(() => {
