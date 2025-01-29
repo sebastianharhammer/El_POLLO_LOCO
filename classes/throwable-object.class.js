@@ -38,15 +38,13 @@ class ThrowableObject extends MoveableObject {
       this.animateThrow();
       if (this.y > 555) {
         this.y = 555;
-        this.x = this.x
+        this.x = this.x;
         this.speedY = 0;
         clearInterval(bottleInterval);
-        /* this.animateSplash(); */
+        this.animateSplash();
       }
-
     }, 50);
   }
-
 
   animate() {
     setInterval(() => {

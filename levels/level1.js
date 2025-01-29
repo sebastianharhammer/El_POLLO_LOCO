@@ -73,16 +73,17 @@ const level1 = new Level(
     new Coin(3000, 565),
   ],
   [
-    new ThrowableObject(100, 565),
-    new ThrowableObject(300, 565),
-    new ThrowableObject(500, 565),
-    new ThrowableObject(700, 565),
-    new ThrowableObject(900, 565),
-    new ThrowableObject(1100, 565),
-    new ThrowableObject(1300, 565),
-    new ThrowableObject(1500, 565),
-    new ThrowableObject(1700, 565),
-    new ThrowableObject(1900, 565),
+    new Bottle(500, 565),
+    new Bottle(700, 565),
+    new Bottle(900, 565),
+    new Bottle(1300, 565),
+    new Bottle(1500, 565),
+    new Bottle(1900, 565),
+    new Bottle(2100, 565),
+    new Bottle(2500, 565),
+    new Bottle(2700, 565),
+    new Bottle(2900, 565),
+
   ]
 );
 
