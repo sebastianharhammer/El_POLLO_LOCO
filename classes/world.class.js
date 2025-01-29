@@ -1,9 +1,6 @@
 class World {
   character = new Character();
   level = level1;
-  /* enemies = level1.enemies; */
-  /* clouds = level1.clouds;
-  backgroundObjects = level1.backgroundObjects; */
   canvas;
   ctx;
   keyboard;
@@ -83,20 +80,6 @@ class World {
       });
     });
   }
-  chickenDies(index, bottle) {
-    this.level.enemies[index].speed = 0;
-    this.level.enemies[index].playAnimation(world.level.enemies[index].IMAGES_DEAD);
-    setTimeout(() => {
-      this.level.enemies[index].y = this.level.enemies[index].y - 10;
-      this.level.enemies.splice(index, 1);
-      const bottleIndex = this.throwableObjects.indexOf(bottle);
-      this.throwableObjects.splice(bottleIndex, 1);
-
-    }, 2500);
-    
-    
-  }
-
 
   collectCoin(index) {
     this.level.coins.splice(index, 1);

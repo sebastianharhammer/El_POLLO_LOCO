@@ -12,6 +12,27 @@ class MoveableObject extends DrawableObject {
   };
   lastHit = 0;
 
+  chickenDies(index, bottle) {
+    this.level.enemies[index].speed = 0;
+    this.level.enemies[index].img = this.level.enemies[index].IMAGES_DEAD[0];
+    console.log(this.level.enemies[index].IMAGES_DEAD);
+    setTimeout(() => {
+      this.level.enemies[index].speedY -= 10;
+      this.level.enemies.splice(index, 1);
+      const bottleIndex = this.throwableObjects.indexOf(bottle);
+      this.throwableObjects.splice(bottleIndex, 1);
+
+    }, 2500);
+  }
+  getTimeStamp() {
+    this.lastMovement = new Date().getTime();
+  }
+  isLongIdle() {
+    let timePassed = new Date().getTime() - this.lastMovement; //Diff in ms
+    timePassed = timePassed / 1000; //Diff in s
+    return timePassed > 5;
+  }
+
   hit() {
     this.energy -= 2;
     if (this.energy <= 0) {
