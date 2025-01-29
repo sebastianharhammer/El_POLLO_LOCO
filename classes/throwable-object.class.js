@@ -31,13 +31,14 @@ class ThrowableObject extends MoveableObject {
   ];
 
   throw() {
-    this.speedY = 30;
+    console.log("throw");
+    this.speedY = 10;
     this.applyGravity();
     let bottleInterval = setInterval(() => {
-      this.x += 10;
+      this.x += 30;
       this.animateThrow();
-      if (this.y > 555) {
-        this.y = 555;
+      if (this.y > 600) {
+        this.y = 600;
         this.x = this.x;
         this.speedY = 0;
         clearInterval(bottleInterval);
@@ -49,12 +50,12 @@ class ThrowableObject extends MoveableObject {
   animate() {
     setInterval(() => {
       this.playAnimation(this.IMAGES_BOTTLE);
-    }, 550);
+    }, 250);
   }
   animateThrow() {
     setInterval(() => {
       this.playAnimation(this.IMAGES_BOTTLE_THROW);
-    }, 250);
+    }, 550);
   }
   animateSplash() {
     if (this.splashInterval) clearInterval(this.splashInterval);

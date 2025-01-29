@@ -11,9 +11,10 @@ class World {
   statusBarHP = new StatusBarHP();
   statusBarCoin = new StatusBarCoin();
   statusBarBottles = new StatusBarBottles();
-  throwableObject = [];
+  throwableObjects = [];
   bottles = level1.bottles;
   coins = level1.coins;
+
 
 
 
@@ -37,16 +38,20 @@ class World {
       this.checkTrowObjects();
       this.checkCoinCollisions();
       this.checkBottleCollisions();
-    }, 50);
+    }, 250);
   }
+
 
 
 
   checkTrowObjects() {
     if(this.keyboard.D) {
-      let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-      this.throwableObject.push(bottle);
+      let throwableObject = new ThrowableObject(this.character.x + 100, this.character.y + 100);
+      this.throwableObjects.push(throwableObject);
     }  
+
+
+
   }
   checkCollisions() {
     this.level.enemies.forEach((enemy) => {
@@ -85,31 +90,24 @@ class World {
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-
-
-
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
-    
+    this.addObjectsToMap(this.level.clouds);
 
     this.ctx.translate(-this.camera_x, 0); //
-    // --------- SPACE FOR FIXED OBJECTS --------------
     this.addToMap(this.statusBarHP);
     this.addToMap(this.statusBarCoin);
     this.addToMap(this.statusBarBottles);
     this.ctx.translate(this.camera_x, 0);
 
-
     this.addToMap(this.character);
-    this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
-    
     this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.level.coins);
+    this.addObjectsToMap(this.throwableObjects);
     this.ctx.translate(-this.camera_x, 0);
-
-    //Draw() wird immer wieder aufgerufen
     let self = this;
+
     requestAnimationFrame(function () {
       self.draw();
     });
