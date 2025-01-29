@@ -11,7 +11,7 @@ class Chicken extends MoveableObject {
     "img/3_enemies_chicken/chicken_normal/2_dead/dead.png",
     "img/3_enemies_chicken/chicken_normal/2_dead/dead.png"
   ];
-  speed = 0.15 + Math.random() + 0.25;
+  
   offset = {
     top: 10,
     left: 10,
@@ -30,7 +30,7 @@ class Chicken extends MoveableObject {
 
   animate() {
     setInterval(() => {
-      this.moveLeft();
+      this.moveChicken();
     }, 1000 / 60);
 
     setInterval(() => {

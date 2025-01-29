@@ -83,7 +83,7 @@ class Character extends MoveableObject {
         this.otherDirection = false;
         this.getTimeStamp();
       }
-      if (this.world.keyboard.LEFT && this.x > 0) {
+      if (this.world.keyboard.LEFT && this.x > 0) { 
         this.moveLeft();
         this.otherDirection = true;
         this.getTimeStamp();

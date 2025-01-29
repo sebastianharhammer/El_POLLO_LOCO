@@ -1,5 +1,6 @@
 class MoveableObject extends DrawableObject {
   speed = 0.15;
+  chickenSpeed = 0;
   otherDirection = false;
   speedY = 0;
   acceleration = 2.5;
@@ -100,6 +101,26 @@ class MoveableObject extends DrawableObject {
     this.img = this.imageCache[path];
     this.currentImage++;
   }
+  moveChicken() {
+    // Base speed plus small random variation
+    const baseSpeed = 2;
+    const variation = Math.random() * 0.5;
+    this.speed = baseSpeed + variation;
+
+    // Move chicken back and forth between boundaries
+    if (this.otherDirection) {
+      this.x += this.speed; // Moving right
+      if (this.x >= 3000) {
+        this.otherDirection = false;
+      }
+    } else {
+      this.x -= this.speed; // Moving left  
+      if (this.x <= 300) {
+        this.otherDirection = true;
+      }
+    }
+  }
+  
   moveRight() {
     this.x += this.speed;
   }
