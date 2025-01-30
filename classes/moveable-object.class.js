@@ -4,8 +4,7 @@ class MoveableObject extends DrawableObject {
   otherDirection = false;
   speedY = 0;
   acceleration = 2.5;
-  energy = 100;
-  chickenIsDead = false;
+  endbossIsDead = false;
   offset = {
     top: 0,
     left: 0,
@@ -23,10 +22,10 @@ class MoveableObject extends DrawableObject {
     return timePassed > 5;
   }
 
-  hit() {
-    this.energy -= 2;
-    if (this.energy <= 0) {
-      this.energy = 0;
+  hit(energy) {
+    energy -= 2;
+    if (energy <= 0) {
+      energy = 0;
     } else {
       this.lastHit = new Date().getTime();
     }
@@ -117,6 +116,28 @@ class MoveableObject extends DrawableObject {
     } else {
       this.x -= this.speed; // Moving left
       if (this.x <= 300) {
+        this.otherDirection = true;
+      }}
+    }
+  }
+  isEndbossIsDead() {
+    if (this.endbossIsDead) {
+      return true;
+    }
+  }
+  moveEndboss() {
+    this.speed = 2;
+    if (this.isEndbossIsDead()) {
+      this.speed = 0;
+    } else {
+      if (this.otherDirection) {
+        this.x += this.speed; // Moving right
+        if (this.x >= 1000) {
+        this.otherDirection = false;
+      }
+    } else {
+      this.x -= this.speed; // Moving left
+      if (this.x <= 600) {
         this.otherDirection = true;
       }}
     }

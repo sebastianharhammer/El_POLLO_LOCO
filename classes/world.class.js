@@ -13,6 +13,7 @@ class World {
   bottles = level1.bottles;
   coins = level1.coins;
   chickenIsDead;
+  endbossIsDead;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -51,7 +52,7 @@ class World {
   checkCollisions() {
     this.level.enemies.forEach((enemy) => {
       if (this.character.isColliding(enemy)) {
-        this.character.hit();
+        this.character.hit(this.character.energy);
         this.statusBarHP.setPercentage(this.character.energy);
       }
     });
@@ -81,9 +82,23 @@ class World {
           this.chickenDies(enemyIndex, bottleIndex);
         }
       });
+      if (this.level.endboss[0] && bottle.isColliding(this.level.endboss[0])) {
+        this.endbossDies(bottleIndex);
+      }
     });
   }
-
+  endbossDies(bottleIndex) {
+    this.level.endboss[0].hit(this.level.endboss[0].energy);
+    this.statusBarEndbossHP.setPercentage(this.level.endboss[0].percentage);
+    this.level.endboss[0].energy -= 1;
+    if (this.level.endboss[0].energy <= 0) {
+      this.level.endboss[0].endbossIsDead = true;
+      setTimeout(() => {
+        this.level.endboss.splice(0, 1);
+      }, 1500);
+    }
+    this.throwableObjects.splice(bottleIndex, 1);
+  }
   chickenDies(enemyIndex, bottleIndex) {
     this.level.enemies[enemyIndex].speed = 0;
     this.level.enemies[enemyIndex].chickenIsDead = true;
@@ -120,6 +135,7 @@ class World {
 
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.endboss);
     this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.throwableObjects);
