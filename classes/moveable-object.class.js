@@ -22,12 +22,12 @@ class MoveableObject extends DrawableObject {
     return timePassed > 5;
   }
 
-  hit(energy) {
-    energy -= 2;
-    if (energy <= 0) {
-      energy = 0;
+  hit() {
+    this.energy -= 1;
+    if (this.energy < 0) {
+        this.energy = 0;
     } else {
-      this.lastHit = new Date().getTime();
+        this.lastHit = new Date().getTime();
     }
   }
   isHurt() {

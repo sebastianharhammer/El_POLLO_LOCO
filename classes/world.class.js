@@ -52,7 +52,7 @@ class World {
   checkCollisions() {
     this.level.enemies.forEach((enemy) => {
       if (this.character.isColliding(enemy)) {
-        this.character.hit(this.character.energy);
+        this.character.hit();
         this.statusBarHP.setPercentage(this.character.energy);
       }
     });
@@ -83,19 +83,26 @@ class World {
         }
       });
       if (this.level.endboss[0] && bottle.isColliding(this.level.endboss[0])) {
-        this.endbossDies(bottleIndex);
+        
+        this.endbossHit(bottleIndex);
       }
     });
   }
-  endbossDies(bottleIndex) {
-    this.level.endboss[0].hit(this.level.endboss[0].energy);
-    this.statusBarEndbossHP.setPercentage(this.level.endboss[0].percentage);
-    this.level.endboss[0].energy -= 1;
-    if (this.level.endboss[0].energy <= 0) {
-      this.level.endboss[0].endbossIsDead = true;
-      setTimeout(() => {
-        this.level.endboss.splice(0, 1);
-      }, 1500);
+  isHurt() {
+    let timePassed = new Date().getTime() - this.lastHit; //Diff in ms
+    timePassed = timePassed / 1000; //Diff in s
+    return timePassed < 1;
+  }
+  endbossHit(bottleIndex) {
+    let endboss = this.level.endboss[0];
+    endboss.hit();
+    this.statusBarEndbossHP.setPercentage(endboss.energy);
+    
+    if (endboss.isDead()) {
+        endboss.endbossIsDead = true;
+        setTimeout(() => {
+            this.level.endboss.splice(0, 1);
+        }, 1500);
     }
     this.throwableObjects.splice(bottleIndex, 1);
   }
