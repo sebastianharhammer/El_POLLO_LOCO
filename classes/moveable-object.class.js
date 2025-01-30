@@ -5,6 +5,7 @@ class MoveableObject extends DrawableObject {
   speedY = 0;
   acceleration = 2.5;
   energy = 100;
+  chickenIsDead = false;
   offset = {
     top: 0,
     left: 0,
@@ -92,37 +93,32 @@ class MoveableObject extends DrawableObject {
 
   //chicken
   isChickenColliding(bottle) {
-    console.log(bottle);
+    console.log("chicken colliding with bottle");
     return this.isColliding(bottle);
   }
   //chickenDies
-  chickenDies(index, bottle) {
-    this.level.enemies[index].speed = 0;
-    this.level.enemies[index].img = this.level.enemies[index].IMAGES_DEAD[0];
-    console.log(this.level.enemies[index].IMAGES_DEAD);
-    setTimeout(() => {
-      this.level.enemies[index].speedY -= 10;
-      this.level.enemies.splice(index, 1);
-      const bottleIndex = this.throwableObjects.indexOf(bottle);
-      this.throwableObjects.splice(bottleIndex, 1);
-    }, 2500);
+  isChickenIsDead() {
+    if (this.chickenIsDead) {
+      return true;
+    }
   }
-
   moveChicken() {
     const baseSpeed = 2;
     const variation = Math.random() * 0.5;
     this.speed = baseSpeed + variation;
-
-    if (this.otherDirection) {
-      this.x += this.speed; // Moving right
-      if (this.x >= 3000) {
+    if (this.isChickenIsDead()) {
+      this.speed = 0;
+    } else {
+      if (this.otherDirection) {
+        this.x += this.speed; // Moving right
+        if (this.x >= 3000) {
         this.otherDirection = false;
       }
     } else {
       this.x -= this.speed; // Moving left
       if (this.x <= 300) {
         this.otherDirection = true;
-      }
+      }}
     }
   }
 

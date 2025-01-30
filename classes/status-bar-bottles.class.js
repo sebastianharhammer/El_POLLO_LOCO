@@ -43,5 +43,6 @@ class StatusBarBottles extends MoveableObject {
         return 0;
       }
     }
+    
   }
   

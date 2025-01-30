@@ -8,9 +8,11 @@ class World {
   statusBarHP = new StatusBarHP();
   statusBarCoin = new StatusBarCoin();
   statusBarBottles = new StatusBarBottles();
+  statusBarEndbossHP = new StatusBarEndbossHP();
   throwableObjects = [];
   bottles = level1.bottles;
   coins = level1.coins;
+  chickenIsDead;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -36,7 +38,7 @@ class World {
   }
 
   checkTrowObjects() {
-    if (this.keyboard.D) {
+    if (this.keyboard.D && this.statusBarBottles.percentage > 9) {
       let throwableObject = new ThrowableObject(
         this.character.x + 100,
         this.character.y + 100,
@@ -72,13 +74,23 @@ class World {
   }
 
   checkBottleHit() {
-    this.throwableObjects.forEach((bottle) => {
-      this.level.enemies.forEach((enemy, index) => {
+    this.throwableObjects.forEach((bottle, bottleIndex) => {
+      this.level.enemies.forEach((enemy, enemyIndex) => {
         if (bottle.isColliding(enemy)) {
-          this.chickenDies(index, bottle);
+          console.log("chicken colliding with bottle");
+          this.chickenDies(enemyIndex, bottleIndex);
         }
       });
     });
+  }
+
+  chickenDies(enemyIndex, bottleIndex) {
+    this.level.enemies[enemyIndex].speed = 0;
+    this.level.enemies[enemyIndex].chickenIsDead = true;
+    setTimeout(() => {
+      this.level.enemies.splice(enemyIndex, 1);
+      this.throwableObjects.splice(bottleIndex, 1);
+    }, 1500);
   }
 
   collectCoin(index) {
@@ -103,6 +115,7 @@ class World {
     this.addToMap(this.statusBarHP);
     this.addToMap(this.statusBarCoin);
     this.addToMap(this.statusBarBottles);
+    this.addToMap(this.statusBarEndbossHP);
     this.ctx.translate(this.camera_x, 0);
 
     this.addToMap(this.character);
