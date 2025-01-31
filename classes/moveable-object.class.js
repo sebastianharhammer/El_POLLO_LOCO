@@ -92,15 +92,15 @@ class MoveableObject extends DrawableObject {
 
   //chicken
   isChickenColliding(bottle) {
-    console.log("chicken colliding with bottle");
     return this.isColliding(bottle);
   }
-  //chickenDies
+
   isChickenIsDead() {
     if (this.chickenIsDead) {
       return true;
     }
   }
+
   moveChicken() {
     const baseSpeed = 2;
     const variation = Math.random() * 0.5;
@@ -132,16 +132,19 @@ class MoveableObject extends DrawableObject {
     } else {
       if (this.otherDirection) {
         this.x += this.speed; // Moving right
-        if (this.x >= 1000) {
+        if (this.x >= 3700) {
         this.otherDirection = false;
       }
     } else {
       this.x -= this.speed; // Moving left
-      if (this.x <= 600) {
+      if (this.x <= 3300) {
         this.otherDirection = true;
       }}
     }
   }
+
+ 
+
 
   moveRight() {
     this.x += this.speed;

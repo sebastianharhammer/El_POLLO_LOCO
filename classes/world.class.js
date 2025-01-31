@@ -14,6 +14,7 @@ class World {
   coins = level1.coins;
   chickenIsDead;
   endbossIsDead;
+  endbossAttack = false;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -31,12 +32,15 @@ class World {
   run() {
     setInterval(() => {
       this.checkCollisions();
+      this.checkEndbossCollision();
       this.checkTrowObjects();
       this.checkCoinCollisions();
       this.checkBottleCollisions();
       this.checkBottleHit();
+      this.checkEndbossAlert();
     }, 250);
   }
+
 
   checkTrowObjects() {
     if (this.keyboard.D && this.statusBarBottles.percentage > 9) {
@@ -56,6 +60,12 @@ class World {
         this.statusBarHP.setPercentage(this.character.energy);
       }
     });
+  }
+  checkEndbossCollision() {
+    if (this.character.isColliding(this.level.endboss[0])) {
+      this.character.hit();
+      this.statusBarHP.setPercentage(this.character.energy);
+    }
   }
 
   checkCoinCollisions() {
@@ -113,6 +123,35 @@ class World {
       this.level.enemies.splice(enemyIndex, 1);
       this.throwableObjects.splice(bottleIndex, 1);
     }, 1500);
+  }
+  checkEndbossAlert() {
+    if (!this.level.endboss[0].endbossAttack) {
+    if (this.level.endboss[0].x - this.character.x < 400) {
+      this.level.endboss[0].endbossAttack = true;  
+      this.level.endboss[0].alert = true;
+      this.stopEndboss();
+      setTimeout(() => {
+        this.startEndbossAttack();
+      }, 1000);
+    }}
+  }
+  stopEndboss() {
+    console.log("endboss stopped speed before:", this.level.endboss[0].speed);
+    this.level.endboss[0].speed = 0;
+    console.log("endboss stopped speed after:", this.level.endboss[0].speed);
+  }
+  startEndbossAttack() {
+    setInterval(() => {
+    const endboss = this.level.endboss[0];
+    if (this.character.x - (this.character.width)/2 < endboss.x) {
+      endboss.otherDirection = false;
+      this.level.endboss[0].x  -= 7.5;
+      
+    } if (this.character.x - (this.character.width)/2 > endboss.x) {
+      endboss.otherDirection = true;
+      this.level.endboss[0].x += 7.5;
+      }
+    }, 50);
   }
 
   collectCoin(index) {

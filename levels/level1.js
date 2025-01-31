@@ -1,13 +1,14 @@
     const level1 = new Level(
   [
     new Chicken(),
- /*    new Chicken(),
+    
     new Chicken(),
     new Chicken(),
     new Chicken(),
     new Chicken(),
     new Chicken(),
-    new Chicken(), */
+    new Chicken(),
+    new Chicken(),
     
   ],
   [
@@ -70,16 +71,16 @@
     ),
   ],
   [ 
-    new Coin(400, 565),
-    new Coin(800, 565),
-    new Coin(1200, 565),
-    new Coin(1600, 565),
-    new Coin(1800, 565),
-    new Coin(2000, 565),
-    new Coin(2200, 565),
-    new Coin(2400, 565),
-    new Coin(2600, 565),
-    new Coin(3000, 565),
+    new Coin(300, 550),
+    new Coin(350, 500),
+    new Coin(400, 450),
+    new Coin(450, 400),
+    new Coin(500, 450),
+    new Coin(550, 500),
+    new Coin(600, 550),
+    new Coin(1500, 500),
+    new Coin(2000, 550),
+    new Coin(2500, 500),
   ],
   [
     new Bottle(500, 565),
