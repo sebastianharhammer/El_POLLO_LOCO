@@ -83,7 +83,18 @@
     new Coin(2500, 500),
   ],
   [
-    new Bottle(500, 565),
+    new Bottle(200, 565),
+    new Bottle(201, 565),
+    new Bottle(202, 565),
+    new Bottle(203, 565),
+    new Bottle(204, 565),
+    new Bottle(205, 565),
+    new Bottle(206, 565),
+    new Bottle(207, 565),
+    new Bottle(208, 565),
+    new Bottle(209, 565),
+  
+    /* new Bottle(500, 565),
     new Bottle(700, 565),
     new Bottle(900, 565),
     new Bottle(1300, 565),
@@ -92,7 +103,7 @@
     new Bottle(2100, 565),
     new Bottle(2500, 565),
     new Bottle(2700, 565),
-    new Bottle(2900, 565),
+    new Bottle(2900, 565), */
 
   ]
 );

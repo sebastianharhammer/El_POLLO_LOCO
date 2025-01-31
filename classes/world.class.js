@@ -47,7 +47,8 @@ class World {
       let throwableObject = new ThrowableObject(
         this.character.x + 100,
         this.character.y + 100,
-        this.statusBarBottles
+        this.statusBarBottles,
+        this
       );
       this.throwableObjects.push(throwableObject);
     }
