@@ -1,14 +1,13 @@
 class ThrowableObject extends MoveableObject {
-  constructor(x, y, statusBarBottles, world) {
+  constructor(x, y, statusBarBottles) {
     super().loadImage("img/6_salsa_bottle/salsa_bottle.png");
     this.loadImages(this.IMAGES_BOTTLE);
     this.loadImages(this.IMAGES_BOTTLE_SPLASH);
     this.x = x;
     this.y = y;
-    this.height = 70;
-    this.width = 70;
+    this.height = 50;
+    this.width = 60;
     this.statusBarBottles = statusBarBottles;
-    this.world = world;
     this.throw();
   }
   IMAGES_BOTTLE = [
@@ -38,11 +37,7 @@ class ThrowableObject extends MoveableObject {
       this.speedY = 10;
       this.applyGravity();
       let bottleInterval = setInterval(() => {
-        if (this.world.character.otherDirection) {
-          this.x -= 30;
-        } else {
-          this.x += 30;
-        }
+        this.x += 30;
         this.animateThrow();
         if (this.y > 600) {
           this.y = 600;

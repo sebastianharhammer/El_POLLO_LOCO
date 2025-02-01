@@ -1,10 +1,9 @@
 class MoveableObject extends DrawableObject {
   speed = 0.15;
-  chickenSpeed = 0;
   otherDirection = false;
   speedY = 0;
   acceleration = 2.5;
-  endbossIsDead = false;
+  energy = 100;
   offset = {
     top: 0,
     left: 0,
@@ -13,21 +12,12 @@ class MoveableObject extends DrawableObject {
   };
   lastHit = 0;
 
-  getTimeStamp() {
-    this.lastMovement = new Date().getTime();
-  }
-  isLongIdle() {
-    let timePassed = new Date().getTime() - this.lastMovement; //Diff in ms
-    timePassed = timePassed / 1000; //Diff in s
-    return timePassed > 5;
-  }
-
   hit() {
-    this.energy -= 1;
-    if (this.energy < 0) {
-        this.energy = 0;
+    this.energy -= 2;
+    if (this.energy <= 0) {
+      this.energy = 0;
     } else {
-        this.lastHit = new Date().getTime();
+      this.lastHit = new Date().getTime();
     }
   }
   isHurt() {
@@ -74,12 +64,12 @@ class MoveableObject extends DrawableObject {
   //besser aus vid.
   /* isColliding (obj) {
     return  (
-      (this.X + this.width) >= obj.X                  && 
-      this.X <= (obj.X + obj.width)                   &&
-      (this.Y + this.offsetY + this.height) >= obj.Y  &&
-      (this.Y + this.offsetY) <= (obj.Y + obj.height) &&
-      ); 
-      } */
+    (this.X + this.width) >= obj.X                  && 
+    this.X <= (obj.X + obj.width)                   &&
+    (this.Y + this.offsetY + this.height) >= obj.Y  &&
+    (this.Y + this.offsetY) <= (obj.Y + obj.height) &&
+    ); 
+  } */
 
   playAnimation(images) {
     let i = this.currentImage % images.length; //let i = 7 % 6; => 1 Rest 1
@@ -89,63 +79,6 @@ class MoveableObject extends DrawableObject {
     this.img = this.imageCache[path];
     this.currentImage++;
   }
-
-  //chicken
-  isChickenColliding(bottle) {
-    return this.isColliding(bottle);
-  }
-
-  isChickenIsDead() {
-    if (this.chickenIsDead) {
-      return true;
-    }
-  }
-
-  moveChicken() {
-    const baseSpeed = 2;
-    const variation = Math.random() * 0.5;
-    this.speed = baseSpeed + variation;
-    if (this.isChickenIsDead()) {
-      this.speed = 0;
-    } else {
-      if (this.otherDirection) {
-        this.x += this.speed; // Moving right
-        if (this.x >= 3000) {
-        this.otherDirection = false;
-      }
-    } else {
-      this.x -= this.speed; // Moving left
-      if (this.x <= 300) {
-        this.otherDirection = true;
-      }}
-    }
-  }
-  isEndbossIsDead() {
-    if (this.endbossIsDead) {
-      return true;
-    }
-  }
-  moveEndboss() {
-    this.speed = 2;
-    if (this.isEndbossIsDead()) {
-      this.speed = 0;
-    } else {
-      if (this.otherDirection) {
-        this.x += this.speed; // Moving right
-        if (this.x >= 3700) {
-        this.otherDirection = false;
-      }
-    } else {
-      this.x -= this.speed; // Moving left
-      if (this.x <= 3300) {
-        this.otherDirection = true;
-      }}
-    }
-  }
-
- 
-
-
   moveRight() {
     this.x += this.speed;
   }
