@@ -12,6 +12,8 @@ class Endboss extends MoveableObject {
   energy = 5;
   alert = false;
   endbossAttack = false;
+  endbossIsDead = false;
+  endbossIsHurt = false;
   IMAGES_WALKING = [
     "img/4_enemie_boss_chicken/1_walk/G1.png",
     "img/4_enemie_boss_chicken/1_walk/G2.png",

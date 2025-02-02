@@ -122,7 +122,9 @@ class MoveableObject extends DrawableObject {
   }
   isEndbossIsDead() {
     if (this.endbossIsDead) {
-      return true;
+      setTimeout(() => {
+        this.level.endboss[0].endbossIsDead = true;
+      }, 1000);
     }
   }
   moveEndboss() {

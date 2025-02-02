@@ -142,6 +142,7 @@ class World {
     console.log("endboss stopped speed after:", this.level.endboss[0].speed);
   }
   startEndbossAttack() {
+    while (!this.level.endboss[0].endbossIsDead) {
     setInterval(() => {
     const endboss = this.level.endboss[0];
     if (this.character.x - (this.character.width)/2 < endboss.x) {
@@ -153,7 +154,7 @@ class World {
       this.level.endboss[0].x += 7.5;
       }
     }, 50);
-  }
+  }}
 
   collectCoin(index) {
     this.level.coins.splice(index, 1);
