@@ -22,6 +22,10 @@ class ThrowableObject extends MoveableObject {
     "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
     "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png",
     "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png"
   ];
   IMAGES_BOTTLE_SPLASH = [
     "./img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png",
@@ -40,18 +44,15 @@ class ThrowableObject extends MoveableObject {
     this.statusBarBottles.setPercentage(this.statusBarBottles.percentage - 10);
     
 
-    this.speedY = 10;
+    this.speedY = 30;
     this.applyGravity();
     
     const throwingLeft = this.world.character.otherDirection;
-    const THROW_SPEED = 30;
+    const THROW_SPEED = 20;
     
     let bottleInterval = setInterval(() => {
-        // Move bottle based on initial throw direction
         this.x += throwingLeft ? -THROW_SPEED : THROW_SPEED;
         this.animateThrow();
-
-        // Check for ground collision
         if (this.y >= 600) {
             this.handleBottleImpact();
             clearInterval(bottleInterval);
@@ -59,22 +60,23 @@ class ThrowableObject extends MoveableObject {
     }, 50);
   }
 
-  // New helper method to handle bottle impact
   handleBottleImpact() {
-    this.y = 600; // Set to ground level
+    this.y = 600;
     this.speedY = 0;
     this.animateSplash();
   }
 
+
   animate() {
     setInterval(() => {
       this.playAnimation(this.IMAGES_BOTTLE);
-    }, 250);
+      }, 50);
   }
+
   animateThrow() {
     setInterval(() => {
       this.playAnimation(this.IMAGES_BOTTLE_THROW);
-    }, 550);
+    }, 50);
   }
   animateSplash() {
     if (this.splashInterval) clearInterval(this.splashInterval);

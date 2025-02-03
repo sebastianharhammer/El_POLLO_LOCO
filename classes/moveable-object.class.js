@@ -71,6 +71,16 @@ class MoveableObject extends DrawableObject {
     );
   }
 
+  isJumpColliding(mo) {
+    return (
+      this.x + this.width > mo.x &&
+      this.x < mo.x + mo.width &&
+      this.y + this.height > mo.y &&
+      this.y + this.height < mo.y + mo.height/2 &&
+      this.speedY < 0
+    );
+  }
+
   //besser aus vid.
   /* isColliding (obj) {
     return  (

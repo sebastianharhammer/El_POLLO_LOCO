@@ -111,7 +111,9 @@
     new Bottle(2500, 565),
     new Bottle(2700, 565),
     new Bottle(2900, 565), */
-
+    new Bottle(3600, 565),
+    new Bottle(3700, 565),
+    new Bottle(3800, 565)
   ]
 );
 
