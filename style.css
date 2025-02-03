@@ -7,6 +7,13 @@ body {
     margin:0;
     background-image: url('./img/10_background_images/01_desert/desert04.jpg');
     background-size: cover;
+    font-family: 'ZABARS';
+}
+h1 {
+    font-size: 82px;
+}
+h2 {
+    font-size: 24px;
 }
 #backgroundVideo {
     position: fixed;
@@ -20,4 +27,8 @@ body {
 canvas {
     border-radius: 20px;
     background-color: black;
+}
+@font-face {
+    font-family: 'ZABARS';
+    src: url('./font/ZABARS/Zabars.ttf') format('truetype');
 }

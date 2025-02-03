@@ -16,6 +16,8 @@ class World {
   endboss = this.level.endboss[0];
   endbossAttack = false;
   throwCooldown = false;
+  gameStarted = false;
+  startScreen = new StartScreen();
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -23,11 +25,20 @@ class World {
     this.keyboard = keyboard;
     this.draw();
     this.setWorld();
-    this.run();
+    this.checkGameStart();
   }
 
   setWorld() {
     this.character.world = this;
+  }
+
+  checkGameStart() {
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Enter' && !this.gameStarted) {
+        this.gameStarted = true;
+        this.run();
+      }
+    });
   }
 
   run() {
@@ -37,7 +48,6 @@ class World {
       }, 100);
       setTimeout(() => {
         this.checkEndbossCollision();
-
       }, 100);
       this.checkTrowObjects();
       this.checkCoinCollisions();
@@ -45,8 +55,6 @@ class World {
       this.checkJumpCollision();
       this.checkBottleHit();
       this.checkEndbossAlert();
-
-
     }, 50);
   }
 
@@ -58,8 +66,6 @@ class World {
       }
     });
   }
-
-
 
   checkTrowObjects() {
     if (this.keyboard.D) {
@@ -94,6 +100,7 @@ class World {
       }
     });
   }
+
   checkEndbossCollision() {
     let endboss = this.level.endboss[0];
     if (endboss && this.character.isColliding(endboss)) {
@@ -131,11 +138,13 @@ class World {
       }
     });
   }
+
   isHurt() {
     let timePassed = new Date().getTime() - this.lastHit; //Diff in ms
     timePassed = timePassed / 1000; //Diff in s
     return timePassed < 1;
   }
+
   endbossHit(bottleIndex) {
     let endboss = this.level.endboss[0];
     endboss.hit();
@@ -197,7 +206,6 @@ class World {
     }}, 50);
 }
 
-
   collectCoin(index) {
     this.level.coins.splice(index, 1);
     this.statusBarCoin.setPercentage(this.statusBarCoin.percentage + 10);
@@ -212,26 +220,30 @@ class World {
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.level.backgroundObjects);
-    this.addObjectsToMap(this.level.clouds);
+    if (!this.gameStarted) {
+      this.startScreen.draw(this.ctx);
+    } else {
+      this.ctx.translate(this.camera_x, 0);
+      this.addObjectsToMap(this.level.backgroundObjects);
+      this.addObjectsToMap(this.level.clouds);
 
-    this.ctx.translate(-this.camera_x, 0); //
-    this.addToMap(this.statusBarHP);
-    this.addToMap(this.statusBarCoin);
-    this.addToMap(this.statusBarBottles);
-    this.addToMap(this.statusBarEndbossHP);
-    this.ctx.translate(this.camera_x, 0);
+      this.ctx.translate(-this.camera_x, 0);
+      this.addToMap(this.statusBarHP);
+      this.addToMap(this.statusBarCoin);
+      this.addToMap(this.statusBarBottles);
+      this.addToMap(this.statusBarEndbossHP);
+      this.ctx.translate(this.camera_x, 0);
 
-    this.addToMap(this.character);
-    this.addObjectsToMap(this.level.enemies);
-    this.addObjectsToMap(this.level.endboss);
-    this.addObjectsToMap(this.level.bottles);
-    this.addObjectsToMap(this.level.coins);
-    this.addObjectsToMap(this.throwableObjects);
-    this.ctx.translate(-this.camera_x, 0);
+      this.addToMap(this.character);
+      this.addObjectsToMap(this.level.enemies);
+      this.addObjectsToMap(this.level.endboss);
+      this.addObjectsToMap(this.level.bottles);
+      this.addObjectsToMap(this.level.coins);
+      this.addObjectsToMap(this.throwableObjects);
+      this.ctx.translate(-this.camera_x, 0);
+    }
+
     let self = this;
-
     requestAnimationFrame(function () {
       self.draw();
     });
