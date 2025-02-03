@@ -25,9 +25,9 @@ class MoveableObject extends DrawableObject {
   hit() {
     this.energy -= 1;
     if (this.energy < 0) {
-        this.energy = 0;
+      this.energy = 0;
     } else {
-        this.lastHit = new Date().getTime();
+      this.lastHit = new Date().getTime();
     }
   }
   isHurt() {
@@ -111,20 +111,19 @@ class MoveableObject extends DrawableObject {
       if (this.otherDirection) {
         this.x += this.speed; // Moving right
         if (this.x >= 3000) {
-        this.otherDirection = false;
+          this.otherDirection = false;
+        }
+      } else {
+        this.x -= this.speed; // Moving left
+        if (this.x <= 300) {
+          this.otherDirection = true;
+        }
       }
-    } else {
-      this.x -= this.speed; // Moving left
-      if (this.x <= 300) {
-        this.otherDirection = true;
-      }}
     }
   }
   isEndbossIsDead() {
     if (this.endbossIsDead) {
-      setTimeout(() => {
-        this.level.endboss[0].endbossIsDead = true;
-      }, 1000);
+      return true;
     }
   }
   moveEndboss() {
@@ -135,18 +134,16 @@ class MoveableObject extends DrawableObject {
       if (this.otherDirection) {
         this.x += this.speed; // Moving right
         if (this.x >= 3700) {
-        this.otherDirection = false;
+          this.otherDirection = false;
+        }
+      } else {
+        this.x -= this.speed; // Moving left
+        if (this.x <= 3300) {
+          this.otherDirection = true;
+        }
       }
-    } else {
-      this.x -= this.speed; // Moving left
-      if (this.x <= 3300) {
-        this.otherDirection = true;
-      }}
     }
   }
-
- 
-
 
   moveRight() {
     this.x += this.speed;

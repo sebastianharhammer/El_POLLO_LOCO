@@ -33,31 +33,38 @@ class ThrowableObject extends MoveableObject {
   ];
 
   throw() {
-    if (this.statusBarBottles.percentage > 0) {
-      this.statusBarBottles.setPercentage(this.statusBarBottles.percentage - 10);
-      this.speedY = 10;
-      this.applyGravity();
-      let bottleInterval = setInterval(() => {
-        if (this.world.character.otherDirection) {
-          this.x -= 30;
-        } else {
-          this.x += 30;
-        }
-        this.animateThrow();
-        if (this.y > 600) {
-          this.y = 600;
-          this.x = this.x;
-          this.speedY = 0;
-          clearInterval(bottleInterval);
-          this.animateSplash();
-        }
-      }, 50);
-    } else {
-      return  ;
+    if (this.statusBarBottles.percentage <= 0) {
+        return;
     }
+    
+    this.statusBarBottles.setPercentage(this.statusBarBottles.percentage - 10);
+    
+
+    this.speedY = 10;
+    this.applyGravity();
+    
+    const throwingLeft = this.world.character.otherDirection;
+    const THROW_SPEED = 30;
+    
+    let bottleInterval = setInterval(() => {
+        // Move bottle based on initial throw direction
+        this.x += throwingLeft ? -THROW_SPEED : THROW_SPEED;
+        this.animateThrow();
+
+        // Check for ground collision
+        if (this.y >= 600) {
+            this.handleBottleImpact();
+            clearInterval(bottleInterval);
+        }
+    }, 50);
   }
 
-
+  // New helper method to handle bottle impact
+  handleBottleImpact() {
+    this.y = 600; // Set to ground level
+    this.speedY = 0;
+    this.animateSplash();
+  }
 
   animate() {
     setInterval(() => {

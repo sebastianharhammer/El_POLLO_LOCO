@@ -13,8 +13,9 @@ class World {
   bottles = level1.bottles;
   coins = level1.coins;
   chickenIsDead;
-  endbossIsDead;
+  endboss = this.level.endboss[0];
   endbossAttack = false;
+  throwCooldown = false;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -31,26 +32,45 @@ class World {
 
   run() {
     setInterval(() => {
-      this.checkCollisions();
-      this.checkEndbossCollision();
+      setTimeout(() => {
+        this.checkCollisions();
+      }, 100);
+      setTimeout(() => {
+        this.checkEndbossCollision();
+
+      }, 100);
       this.checkTrowObjects();
       this.checkCoinCollisions();
       this.checkBottleCollisions();
       this.checkBottleHit();
       this.checkEndbossAlert();
-    }, 250);
+
+    }, 50);
   }
 
 
   checkTrowObjects() {
-    if (this.keyboard.D && this.statusBarBottles.percentage > 9) {
-      let throwableObject = new ThrowableObject(
-        this.character.x + 100,
-        this.character.y + 100,
-        this.statusBarBottles,
-        this
-      );
-      this.throwableObjects.push(throwableObject);
+    if (this.keyboard.D) {
+      if (this.statusBarBottles.percentage > 9 && !this.throwCooldown) {
+        const throwPositionX = this.character.otherDirection 
+          ? this.character.x  // If facing left, throw from character's position
+          : this.character.x + 100;  // If facing right, throw from ahead of character
+        
+        let throwableObject = new ThrowableObject(
+          throwPositionX,
+          this.character.y + 100,
+          this.statusBarBottles,
+          this
+        );
+        this.throwableObjects.push(throwableObject);
+        
+        this.throwCooldown = true;
+        setTimeout(() => {
+          this.throwCooldown = false;
+        }, 250);
+      } else if (this.statusBarBottles.percentage <= 9) {
+        console.log('Not enough bottles!');
+      }
     }
   }
 
@@ -63,9 +83,10 @@ class World {
     });
   }
   checkEndbossCollision() {
-    if (this.character.isColliding(this.level.endboss[0])) {
-      this.character.hit();
-      this.statusBarHP.setPercentage(this.character.energy);
+    let endboss = this.level.endboss[0];
+    if (endboss && this.character.isColliding(endboss)) {
+        this.character.hit();
+        this.statusBarHP.setPercentage(this.character.energy);
     }
   }
 
@@ -93,8 +114,7 @@ class World {
           this.chickenDies(enemyIndex, bottleIndex);
         }
       });
-      if (this.level.endboss[0] && bottle.isColliding(this.level.endboss[0])) {
-        
+      if (this.level.endboss[0] && bottle.isColliding(this.level.endboss[0]) && !this.level.endboss[0].endbossIsDead) {
         this.endbossHit(bottleIndex);
       }
     });
@@ -108,15 +128,19 @@ class World {
     let endboss = this.level.endboss[0];
     endboss.hit();
     this.statusBarEndbossHP.setPercentage(endboss.energy);
-    
-    if (endboss.isDead()) {
-        endboss.endbossIsDead = true;
+    if (endboss.energy <= 0) {
+      endboss.endbossIsDead = true;
+    }
+
+    if (endboss.endbossIsDead) {
         setTimeout(() => {
             this.level.endboss.splice(0, 1);
         }, 1500);
     }
+
     this.throwableObjects.splice(bottleIndex, 1);
   }
+
   chickenDies(enemyIndex, bottleIndex) {
     this.level.enemies[enemyIndex].speed = 0;
     this.level.enemies[enemyIndex].chickenIsDead = true;
@@ -125,36 +149,42 @@ class World {
       this.throwableObjects.splice(bottleIndex, 1);
     }, 1500);
   }
+
   checkEndbossAlert() {
-    if (!this.level.endboss[0].endbossAttack) {
-    if (this.level.endboss[0].x - this.character.x < 400) {
-      this.level.endboss[0].endbossAttack = true;  
-      this.level.endboss[0].alert = true;
-      this.stopEndboss();
-      setTimeout(() => {
-        this.startEndbossAttack();
-      }, 1000);
-    }}
+    let endboss = this.level.endboss[0];
+    if (endboss) {
+        if (endboss.x - this.character.x < 300 && !endboss.endbossAttack) {
+          this.stopEndboss();
+          endboss.endbossAttack = true;
+        }
+    }
   }
+
   stopEndboss() {
     console.log("endboss stopped speed before:", this.level.endboss[0].speed);
     this.level.endboss[0].speed = 0;
     console.log("endboss stopped speed after:", this.level.endboss[0].speed);
+    setTimeout(() => {
+      this.startEndbossAttack();
+    }, 1000);
   }
+
   startEndbossAttack() {
-    while (!this.level.endboss[0].endbossIsDead) {
-    setInterval(() => {
+    
+    const EndbossAttacking = setInterval(() => {
     const endboss = this.level.endboss[0];
     if (this.character.x - (this.character.width)/2 < endboss.x) {
       endboss.otherDirection = false;
       this.level.endboss[0].x  -= 7.5;
-      
     } if (this.character.x - (this.character.width)/2 > endboss.x) {
       endboss.otherDirection = true;
       this.level.endboss[0].x += 7.5;
-      }
-    }, 50);
-  }}
+    } if (this.level.endboss[0].endbossIsDead) {
+      console.log("Interval cleared");
+      clearInterval(EndbossAttacking);
+    }}, 50);
+}
+
 
   collectCoin(index) {
     this.level.coins.splice(index, 1);
