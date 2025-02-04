@@ -18,7 +18,6 @@ class EndScreen extends DrawableObject {
         
         if (isVictory) {
             this.calculateScore(coins, health, bottles, gameTime);
-            this.saveHighScore();
         }
 
         this.createButtons();
@@ -103,7 +102,8 @@ class EndScreen extends DrawableObject {
         
         if (this.isVictory) {
             ctx.fillText(`Final Score: ${this.score}`, this.width/2, 220);
-            ctx.font = '20px ZABARS';
+            ctx.font = '32px ZABARS';
+            ctx.letterSpacing = '3px';
             ctx.fillText(`Time Bonus: ${this.timeBonus}`, this.width/2, 260);
         } 
         
@@ -137,13 +137,5 @@ class EndScreen extends DrawableObject {
         const bottlePoints = bottles * 50;
         this.timeBonus = Math.max(0, Math.floor((300 - gameTime) * 10));
         this.score = coinPoints + healthPoints + bottlePoints + this.timeBonus;
-    }
-
-    saveHighScore() {
-        const highScores = JSON.parse(localStorage.getItem('highScores') || '[]');
-        highScores.push(this.score);
-        highScores.sort((a, b) => b - a);
-        highScores.splice(5);
-        localStorage.setItem('highScores', JSON.stringify(highScores));
     }
 }

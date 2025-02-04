@@ -22,6 +22,57 @@ h1 {
     object-fit: cover;
     z-index: -5;
 }
+.canvas-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.mobile-overlay-container-top {
+    position: absolute;
+    top: 0;
+    left: 5%;
+    right: 5%;
+    width: 100%;
+}
+#mobileImpressumTitle {
+    font-size: 32px;
+    letter-spacing: 3px;
+    color: rgb(30, 30, 30);
+}
+.mobile-overlay-container-bottom {
+    position: absolute;
+    bottom: 5%;
+    left: 5%;
+    right: 5%;
+}
+.mobile-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.mobile-direction-buttons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.mobile-action-buttons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.mobile-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    border: none;
+    background-color: transparent;
+}
+
+
 canvas {
     border-radius: 20px;
     background-color: black;
@@ -31,8 +82,24 @@ canvas {
     font-family: 'ZABARS';
     src: url('./font/ZABARS/Zabars.ttf') format('truetype');
 }
-
+@media (min-width: 1280px) {
+    .mobile-overlay-container-top {
+        display: none;
+    }
+    .mobile-overlay-container-bottom {
+        display: none;
+    }
+}
 @media only screen and (max-width: 1280px) {
+    .canvas-container {
+        display: block;
+    }
+    .mobile-overlay-container-top {
+        position: absolute;
+    }
+    .mobile-overlay-container-bottom {
+        position: absolute;
+    }
     canvas {
         width: 100%;
         height: 100%;
@@ -42,10 +109,29 @@ canvas {
         display: none;
     }
 }
-
+@media (min-height: 720px) {
+    .mobile-overlay-container-top {
+        display: none;
+    }
+    .mobile-overlay-container-bottom {
+        display: none;
+    }
+}
 @media only screen and (max-height: 720px) {
+    .canvas-container {
+        display: block;
+    }
+    .mobile-overlay-container-top {
+        position: absolute;
+    }
+    .mobile-overlay-container-bottom {
+        position: absolute;
+    }
     canvas {
         width: 100%;
         height: 100vh;
+    }
+    h1 {
+        display: none;
     }
 }
