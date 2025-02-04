@@ -286,7 +286,6 @@ class World {
   }
 
   checkGameOver() {
-    // Check for victory (endboss defeated)
     if (this.level.endboss[0]?.endbossIsDead && !this.gameOver) {
         this.gameOver = true;
         const gameTimeInSeconds = (new Date().getTime() - this.gameStartTime) / 1000;
@@ -299,7 +298,6 @@ class World {
         );
     }
     
-    // Check for defeat (character died)
     if (this.character.energy <= 0 && !this.gameOver) {
         this.gameOver = true;
         this.endScreen = new EndScreen(
@@ -310,13 +308,5 @@ class World {
             false // isVictory = false
         );
     }
-  }
-
-  checkGameRestart() {
-    document.addEventListener('keydown', (e) => {
-      if (e.code === 'Enter' && this.gameOver) {
-        window.location.reload(); // Simple reload to restart the game
-      }
-    });
   }
 }
