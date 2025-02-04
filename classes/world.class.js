@@ -18,6 +18,9 @@ class World {
   throwCooldown = false;
   gameStarted = false;
   startScreen = new StartScreen();
+  gameOver = false;
+  gameStartTime;
+  endScreen;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -26,6 +29,7 @@ class World {
     this.draw();
     this.setWorld();
     this.checkGameStart();
+    this.gameStartTime = new Date().getTime();
   }
 
   setWorld() {
@@ -55,6 +59,7 @@ class World {
       this.checkJumpCollision();
       this.checkBottleHit();
       this.checkEndbossAlert();
+      this.checkGameOver();
     }, 50);
   }
 
@@ -222,6 +227,8 @@ class World {
 
     if (!this.gameStarted) {
       this.startScreen.draw(this.ctx);
+    } else if (this.gameOver) {
+      this.endScreen.draw(this.ctx);
     } else {
       this.ctx.translate(this.camera_x, 0);
       this.addObjectsToMap(this.level.backgroundObjects);
@@ -276,5 +283,40 @@ class World {
   flipImageBack(mo) {
     mo.x = mo.x * -1;
     this.ctx.restore();
+  }
+
+  checkGameOver() {
+    // Check for victory (endboss defeated)
+    if (this.level.endboss[0]?.endbossIsDead && !this.gameOver) {
+        this.gameOver = true;
+        const gameTimeInSeconds = (new Date().getTime() - this.gameStartTime) / 1000;
+        this.endScreen = new EndScreen(
+            this.statusBarCoin.percentage / 10,
+            this.statusBarHP.percentage / 20,
+            this.statusBarBottles.percentage / 10,
+            gameTimeInSeconds,
+            true // isVictory = true
+        );
+    }
+    
+    // Check for defeat (character died)
+    if (this.character.energy <= 0 && !this.gameOver) {
+        this.gameOver = true;
+        this.endScreen = new EndScreen(
+            this.statusBarCoin.percentage / 10,
+            0,
+            this.statusBarBottles.percentage / 10,
+            0,
+            false // isVictory = false
+        );
+    }
+  }
+
+  checkGameRestart() {
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Enter' && this.gameOver) {
+        window.location.reload(); // Simple reload to restart the game
+      }
+    });
   }
 }
