@@ -19,18 +19,16 @@ class StartScreen {
 
     addInstructionsListener() {
         document.addEventListener('click', (e) => {
-            // Check if click is in instructions button area (top left)
             if (e.clientX <= 300 && e.clientY <= 550 && e.clientX >= 100 && e.clientY >= 400) {
                 this.showInstructions = !this.showInstructions;
             }
         });
+
     }
 
     draw(ctx) {
-        // Draw background
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
         
-        // Draw "Start Game" text at top middle
         ctx.font = '82px ZABARS';
         ctx.letterSpacing = '3px';
         ctx.fillStyle = 'white';

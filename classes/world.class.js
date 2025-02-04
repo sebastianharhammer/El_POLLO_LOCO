@@ -66,7 +66,6 @@ class World {
   checkJumpCollision() {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isJumpColliding(enemy)) {
-        console.log("jump collision");
         this.chickenDies(index, null);
       }
     });
@@ -76,9 +75,10 @@ class World {
     if (this.keyboard.D) {
       if (this.statusBarBottles.percentage > 9 && !this.throwCooldown) {
         const throwPositionX = this.character.otherDirection 
-          ? this.character.x  // If facing left, throw from character's position
-          : this.character.x + 100;  // If facing right, throw from ahead of character
+          ? this.character.x 
+          : this.character.x + 100; 
         
+
         let throwableObject = new ThrowableObject(
           throwPositionX,
           this.character.y + 100,
@@ -92,7 +92,6 @@ class World {
           this.throwCooldown = false;
         }, 250);
       } else if (this.statusBarBottles.percentage <= 9) {
-        console.log('Not enough bottles!');
       }
     }
   }
@@ -134,7 +133,6 @@ class World {
     this.throwableObjects.forEach((bottle, bottleIndex) => {
       this.level.enemies.forEach((enemy, enemyIndex) => {
         if (bottle.isColliding(enemy)) {
-          console.log("chicken colliding with bottle");
           this.chickenDies(enemyIndex, bottleIndex);
         }
       });
@@ -187,9 +185,7 @@ class World {
   }
 
   stopEndboss() {
-    console.log("endboss stopped speed before:", this.level.endboss[0].speed);
     this.level.endboss[0].speed = 0;
-    console.log("endboss stopped speed after:", this.level.endboss[0].speed);
     setTimeout(() => {
       this.startEndbossAttack();
     }, 1000);
@@ -206,7 +202,6 @@ class World {
       endboss.otherDirection = true;
       this.level.endboss[0].x += 7.5;
     } if (this.level.endboss[0].endbossIsDead) {
-      console.log("Interval cleared");
       clearInterval(EndbossAttacking);
     }}, 50);
 }
@@ -219,8 +214,8 @@ class World {
   collectBottle(index) {
     this.level.bottles.splice(index, 1);
     this.statusBarBottles.setPercentage(this.statusBarBottles.percentage + 10);
-    console.log("Bottle collected");
   }
+
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -286,20 +281,27 @@ class World {
   }
 
   checkGameOver() {
+    
     if (this.level.endboss[0]?.endbossIsDead && !this.gameOver) {
-        this.gameOver = true;
+      setTimeout(() => {
+      this.gameOver = true;
         const gameTimeInSeconds = (new Date().getTime() - this.gameStartTime) / 1000;
         this.endScreen = new EndScreen(
-            this.statusBarCoin.percentage / 10,
-            this.statusBarHP.percentage / 20,
-            this.statusBarBottles.percentage / 10,
-            gameTimeInSeconds,
-            true // isVictory = true
+          this.statusBarCoin.percentage / 10,
+          this.statusBarHP.percentage / 20,
+          this.statusBarBottles.percentage / 10,
+          gameTimeInSeconds,
+          true // isVictory = true
         );
+      }, 2000);
     }
     
+
     if (this.character.energy <= 0 && !this.gameOver) {
+      setTimeout(() => {
         this.gameOver = true;
+
+
         this.endScreen = new EndScreen(
             this.statusBarCoin.percentage / 10,
             0,
@@ -307,6 +309,8 @@ class World {
             0,
             false // isVictory = false
         );
+      }, 1500);
     }
   }
+
 }
