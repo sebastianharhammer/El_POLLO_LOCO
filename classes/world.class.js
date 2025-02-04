@@ -77,8 +77,6 @@ class World {
         const throwPositionX = this.character.otherDirection 
           ? this.character.x 
           : this.character.x + 100; 
-        
-
         let throwableObject = new ThrowableObject(
           throwPositionX,
           this.character.y + 100,
@@ -86,7 +84,6 @@ class World {
           this
         );
         this.throwableObjects.push(throwableObject);
-        
         this.throwCooldown = true;
         setTimeout(() => {
           this.throwCooldown = false;
@@ -155,13 +152,11 @@ class World {
     if (endboss.energy <= 0) {
       endboss.endbossIsDead = true;
     }
-
     if (endboss.endbossIsDead) {
         setTimeout(() => {
             this.level.endboss.splice(0, 1);
         }, 1500);
     }
-
     this.throwableObjects.splice(bottleIndex, 1);
   }
 
@@ -281,7 +276,6 @@ class World {
   }
 
   checkGameOver() {
-    
     if (this.level.endboss[0]?.endbossIsDead && !this.gameOver) {
       setTimeout(() => {
       this.gameOver = true;
@@ -295,13 +289,9 @@ class World {
         );
       }, 2000);
     }
-    
-
     if (this.character.energy <= 0 && !this.gameOver) {
       setTimeout(() => {
         this.gameOver = true;
-
-
         this.endScreen = new EndScreen(
             this.statusBarCoin.percentage / 10,
             0,
@@ -312,5 +302,4 @@ class World {
       }, 1500);
     }
   }
-
 }

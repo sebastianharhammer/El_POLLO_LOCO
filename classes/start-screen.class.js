@@ -5,7 +5,7 @@ class StartScreen {
     height = 720;
     img;
     showInstructions = false;
-
+    showImpressum = false;
 
     constructor() {
         this.loadImage('img/9_intro_outro_screens/start/startscreen_1.png'); // Adjust path to your image
@@ -23,8 +23,8 @@ class StartScreen {
                 this.showInstructions = !this.showInstructions;
             }
         });
-
     }
+    
 
     draw(ctx) {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -40,6 +40,25 @@ class StartScreen {
         ctx.textAlign = 'center';
         ctx.font = '38px ZABARS';
         ctx.fillText('Instructions', 100, 70);
+
+        ctx.font = '38px ZABARS';
+        ctx.fillText('⛶', 1000, 80); 
+
+        ctx.fillText('🔊', 1100, 80);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'm') {
+                this.soundOn = !this.soundOn;
+                console.log('soundOn', this.soundOn);
+                ctx.fillText(this.soundOn ? '🔊' : '🔈', 1100, 80);
+            }
+        });
+        
+        ctx.fillText('🔈', 1200, 80); 
+
+        
+
+
+
 
         if (this.showInstructions) {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
