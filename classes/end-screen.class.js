@@ -55,8 +55,11 @@ class EndScreen extends DrawableObject {
             if (!this.isVisible()) return;
 
             const rect = canvas.getBoundingClientRect();
-            const clickX = event.clientX - rect.left;
-            const clickY = event.clientY - rect.top;
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            
+            const clickX = (event.clientX - rect.left) * scaleX;
+            const clickY = (event.clientY - rect.top) * scaleY;
 
             this.buttons.forEach(button => {
                 if (this.isClickInButton(clickX, clickY, button)) {
@@ -65,13 +68,16 @@ class EndScreen extends DrawableObject {
             });
         });
 
-        // Add hover effect
+        // Add hover effect with scaling
         document.addEventListener('mousemove', (event) => {
             if (!this.isVisible()) return;
 
             const rect = canvas.getBoundingClientRect();
-            const mouseX = event.clientX - rect.left;
-            const mouseY = event.clientY - rect.top;
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            
+            const mouseX = (event.clientX - rect.left) * scaleX;
+            const mouseY = (event.clientY - rect.top) * scaleY;
 
             this.buttons.forEach(button => {
                 button.isHovered = this.isClickInButton(mouseX, mouseY, button);
