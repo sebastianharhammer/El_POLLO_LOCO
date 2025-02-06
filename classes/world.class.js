@@ -34,19 +34,47 @@ class World {
 
   setWorld() {
     this.character.world = this;
+    
   }
 
+
+
   checkGameStart() {
-    document.addEventListener('keydown', (e) => {
-      if (e.code === 'Enter' && !this.gameStarted) {
+    const startGame = () => {
+      if (!this.gameStarted) {
         this.gameStarted = true;
         this.run();
+        if (window.innerWidth <= 1280) {
+          document.getElementById('mobileOverlayContainerTop').classList.add('d-none');
+          document.getElementById('mobileOverlayContainerBottom').classList.remove('d-none');
+        }
+      }
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Enter' && window.innerWidth > 1280) {
+        startGame();
       }
     });
+
+    if (this.isMobile()) {
+      document.addEventListener('touchstart', startGame, { once: true });
+    }
   }
+
+  isMobile() {
+    if (window.innerWidth <= 1280) {
+      return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    }
+    return false;
+  }
+
+
+
 
   run() {
     setInterval(() => {
+
       setTimeout(() => {
         this.checkCollisions();
       }, 100);
@@ -287,8 +315,14 @@ class World {
           gameTimeInSeconds,
           true // isVictory = true
         );
+        if (window.innerWidth <= 1280) {
+          document.getElementById('mobileOverlayContainerTop').classList.remove('d-none');
+          document.getElementById('mobileOverlayContainerBottom').classList.add('d-none');
+        }
+
       }, 2000);
     }
+
     if (this.character.energy <= 0 && !this.gameOver) {
       setTimeout(() => {
         this.gameOver = true;
@@ -298,8 +332,13 @@ class World {
             this.statusBarBottles.percentage / 10,
             0,
             false // isVictory = false
-        );
+          );
+        if (window.innerWidth <= 1280) {
+          document.getElementById('mobileOverlayContainerTop').classList.remove('d-none');
+          document.getElementById('mobileOverlayContainerBottom').classList.add('d-none');
+        }
       }, 1500);
     }
   }
+
 }

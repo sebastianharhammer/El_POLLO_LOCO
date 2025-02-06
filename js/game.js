@@ -7,6 +7,14 @@ function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
     bindMobileControls();
+    hideMobileControls();
+}
+
+function hideMobileControls() {
+    if (world.startScreen instanceof StartScreen && window.innerWidth <= 1280) {
+        document.getElementById('mobileOverlayContainerTop').classList.add('d-none');
+        document.getElementById('mobileOverlayContainerBottom').classList.add('d-none');
+    }
 }
 
 function bindMobileControls() {
