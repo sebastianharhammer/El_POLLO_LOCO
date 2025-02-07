@@ -23,12 +23,15 @@ class MoveableObject extends DrawableObject {
   }
 
   hit() {
-    this.energy -= 1;
-    if (this.energy < 0) {
-      this.energy = 0;
-    } else {
-      this.lastHit = new Date().getTime();
-    }
+    this.world.soundManager.play('hurt');
+    setTimeout(() => {
+      this.energy -= 1;
+      if (this.energy < 0) {
+        this.energy = 0;
+      } else {
+        this.lastHit = new Date().getTime();
+      }
+    }, 500);
   }
   isHurt() {
     let timePassed = new Date().getTime() - this.lastHit; //Diff in ms
@@ -157,13 +160,19 @@ class MoveableObject extends DrawableObject {
 
   moveRight() {
     this.x += this.speed;
+    setInterval(() => {
+      this.world.soundManager.play('walk');
+    }, 100);
+    
   }
 
   moveLeft() {
     this.x -= this.speed;
+   
   }
 
   jump() {
+    this.world.soundManager.play('jump');
     this.speedY = 30;
   }
 }

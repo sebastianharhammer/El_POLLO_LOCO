@@ -64,6 +64,7 @@ class ThrowableObject extends MoveableObject {
     this.y = 600;
     this.speedY = 0;
     this.animateSplash();
+    this.world.soundManager.play('bottleHit');
   }
 
 

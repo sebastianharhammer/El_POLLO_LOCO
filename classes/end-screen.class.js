@@ -43,7 +43,6 @@ class EndScreen extends DrawableObject {
                 width: 200,
                 height: 50,
                 action: () => {
-                    // Add your main menu logic here
                     window.location.href = 'index.html';
                 }
             }

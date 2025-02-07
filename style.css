@@ -17,8 +17,9 @@ body {
     position: absolute;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.75);
     z-index: 10;
+    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,6 +34,7 @@ body {
     position: absolute;
     top: 70%;
     left: 50%;
+    right: 50%;
     transform: translate(-50%, -50%);
 }
 

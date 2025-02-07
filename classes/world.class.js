@@ -4,7 +4,7 @@ class World {
   canvas;
   ctx;
   keyboard;
-  camera_x = 0;
+  camera_x = 200;
   statusBarHP = new StatusBarHP();
   statusBarCoin = new StatusBarCoin();
   statusBarBottles = new StatusBarBottles();
@@ -16,11 +16,12 @@ class World {
   endboss = this.level.endboss[0];
   endbossAttack = false;
   throwCooldown = false;
-  gameStarted = false;
+  gameStarted = false;c
   startScreen = new StartScreen();
   gameOver = false;
   gameStartTime;
   endScreen;
+  soundManager = new SoundManager();
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -112,6 +113,7 @@ class World {
           this
         );
         this.throwableObjects.push(throwableObject);
+        this.soundManager.play('throw');
         this.throwCooldown = true;
         setTimeout(() => {
           this.throwCooldown = false;
@@ -150,6 +152,7 @@ class World {
     this.level.bottles.forEach((bottle, index) => {
       if (this.character.isColliding(bottle)) {
         this.collectBottle(index);
+
       }
     });
   }
@@ -160,10 +163,12 @@ class World {
         if (bottle.isColliding(enemy)) {
           this.chickenDies(enemyIndex, bottleIndex);
         }
+        
       });
       if (this.level.endboss[0] && bottle.isColliding(this.level.endboss[0]) && !this.level.endboss[0].endbossIsDead) {
         this.endbossHit(bottleIndex);
       }
+
     });
   }
 
@@ -186,9 +191,11 @@ class World {
         }, 1500);
     }
     this.throwableObjects.splice(bottleIndex, 1);
+    this.soundManager.play('endbossHurt');
   }
 
   chickenDies(enemyIndex, bottleIndex) {
+    this.soundManager.play('chicken');
     this.level.enemies[enemyIndex].speed = 0;
     this.level.enemies[enemyIndex].chickenIsDead = true;
     setTimeout(() => {
@@ -200,7 +207,7 @@ class World {
   checkEndbossAlert() {
     let endboss = this.level.endboss[0];
     if (endboss) {
-        if (endboss.x - this.character.x < 300 && !endboss.endbossAttack) {
+        if (endboss.x - this.character.x < 400 && !endboss.endbossAttack) {
           this.stopEndboss();
           endboss.endbossAttack = true;
         }
@@ -230,11 +237,13 @@ class World {
 }
 
   collectCoin(index) {
+    this.soundManager.play('coin');
     this.level.coins.splice(index, 1);
     this.statusBarCoin.setPercentage(this.statusBarCoin.percentage + 10);
   }
 
   collectBottle(index) {
+    this.soundManager.play('bottle');
     this.level.bottles.splice(index, 1);
     this.statusBarBottles.setPercentage(this.statusBarBottles.percentage + 10);
   }
@@ -305,6 +314,7 @@ class World {
 
   checkGameOver() {
     if (this.level.endboss[0]?.endbossIsDead && !this.gameOver) {
+      this.soundManager.play('victory');
       setTimeout(() => {
       this.gameOver = true;
         const gameTimeInSeconds = (new Date().getTime() - this.gameStartTime) / 1000;
@@ -324,6 +334,7 @@ class World {
     }
 
     if (this.character.energy <= 0 && !this.gameOver) {
+      this.soundManager.play('defeat');
       setTimeout(() => {
         this.gameOver = true;
         this.endScreen = new EndScreen(

@@ -61,7 +61,7 @@ class Character extends MoveableObject {
   world;
   speed = 5;
   offset = {
-    top: 150,
+    top: 10,
     left: 10,
     right: 10,
     bottom: 10,
@@ -83,6 +83,7 @@ class Character extends MoveableObject {
         this.moveRight();
         this.otherDirection = false;
         this.getTimeStamp();
+        this.world.soundManager.play('walk');
       }
       if (this.world.keyboard.LEFT && this.x > 0) { 
         this.moveLeft();
@@ -100,15 +101,18 @@ class Character extends MoveableObject {
       if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
         this.getTimeStamp();
+
       } else if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
       } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
         this.playAnimation(this.IMAGES_WALKING);
+        
       } else {
         if (this.isLongIdle()) {
           this.playAnimation(this.IMAGES_LONG_IDLE);
+
         } else {
           this.playAnimation(this.IMAGES_IDLE);
         }
