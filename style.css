@@ -38,10 +38,6 @@ body {
     transform: translate(-50%, -50%);
 }
 
-h1 {
-    font-size: 98px;
-    letter-spacing: 50px;
-}
 #backgroundVideo {
     position: fixed;
     top: 0;
@@ -50,6 +46,53 @@ h1 {
     height: 100vh;
     object-fit: cover;
     z-index: -5;
+}
+
+h1 {
+    font-size: 98px;
+    letter-spacing: 50px;
+}
+#desktopInteractions {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    max-width: 1280px;
+    margin-bottom: 20px;
+}
+#desktopFullscreenButtonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+#desktopFullscreenButton {
+    width: 50px;
+}
+
+#desktopFullscreenText {
+    color: black;
+    font-size: 44px;
+    margin-right: 10px;
+    letter-spacing: 3px;
+}
+#desktopSoundButtonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+#desktopSoundButtonOn {
+    width: 50px;
+}
+#desktopSoundButtonOff {
+    width: 50px;
+}
+#desktopSoundText {
+    color: black;
+    font-size: 44px;
+    margin-right: 10px;
+    letter-spacing: 3px;
 }
 .canvas-container {
     width: 100%;

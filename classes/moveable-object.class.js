@@ -23,7 +23,6 @@ class MoveableObject extends DrawableObject {
   }
 
   hit() {
-    this.world.soundManager.play('hurt');
     setTimeout(() => {
       this.energy -= 1;
       if (this.energy < 0) {

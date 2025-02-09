@@ -53,20 +53,16 @@ class StartScreen {
       ctx.fillText("Tap to begin", this.width / 2, 120);
     }
 
-    if (window.innerWidth > 1280) {
+    if (window.innerWidth <= 1280) {
     ctx.font = "38px ZABARS";
     ctx.fillText("⛶", 1000, 80);
-    }
-    ctx.fillText("🔊", 1100, 80);
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "m") {
-        this.soundOn = !this.soundOn;
-        console.log("soundOn", this.soundOn);
-        ctx.fillText(this.soundOn ? "🔊" : "🔈", 1100, 80);
-      }
-    });
+    
 
+    ctx.fillText("🔊", 1100, 80);
     ctx.fillText("🔈", 1200, 80);
+    }
+    
+
 
     if (this.showInstructions) {
       ctx.fillStyle = "rgba(0, 0, 0, 0.8)";

@@ -16,7 +16,8 @@ class World {
   endboss = this.level.endboss[0];
   endbossAttack = false;
   throwCooldown = false;
-  gameStarted = false;c
+  gameStarted = false;
+  c;
   startScreen = new StartScreen();
   gameOver = false;
   gameStartTime;
@@ -35,10 +36,7 @@ class World {
 
   setWorld() {
     this.character.world = this;
-    
   }
-
-
 
   checkGameStart() {
     const startGame = () => {
@@ -46,36 +44,37 @@ class World {
         this.gameStarted = true;
         this.run();
         if (window.innerWidth <= 1280) {
-          document.getElementById('mobileOverlayContainerTop').classList.add('d-none');
-          document.getElementById('mobileOverlayContainerBottom').classList.remove('d-none');
+          document
+            .getElementById("mobileOverlayContainerTop")
+            .classList.add("d-none");
+          document
+            .getElementById("mobileOverlayContainerBottom")
+            .classList.remove("d-none");
         }
       }
     };
 
-    document.addEventListener('keydown', (e) => {
-      if (e.code === 'Enter' && window.innerWidth > 1280) {
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Enter" && window.innerWidth > 1280) {
         startGame();
       }
     });
 
     if (this.isMobile()) {
-      document.addEventListener('touchstart', startGame, { once: true });
+      document.addEventListener("touchstart", startGame, { once: true });
     }
   }
 
   isMobile() {
     if (window.innerWidth <= 1280) {
-      return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      return "ontouchstart" in window || navigator.maxTouchPoints > 0;
     }
     return false;
   }
 
-
-
-
   run() {
+    this.soundManager.play("background");
     setInterval(() => {
-
       setTimeout(() => {
         this.checkCollisions();
       }, 100);
@@ -103,9 +102,9 @@ class World {
   checkTrowObjects() {
     if (this.keyboard.D) {
       if (this.statusBarBottles.percentage > 9 && !this.throwCooldown) {
-        const throwPositionX = this.character.otherDirection 
-          ? this.character.x 
-          : this.character.x + 100; 
+        const throwPositionX = this.character.otherDirection
+          ? this.character.x
+          : this.character.x + 100;
         let throwableObject = new ThrowableObject(
           throwPositionX,
           this.character.y + 100,
@@ -113,7 +112,7 @@ class World {
           this
         );
         this.throwableObjects.push(throwableObject);
-        this.soundManager.play('throw');
+        this.soundManager.play("throw");
         this.throwCooldown = true;
         setTimeout(() => {
           this.throwCooldown = false;
@@ -135,8 +134,8 @@ class World {
   checkEndbossCollision() {
     let endboss = this.level.endboss[0];
     if (endboss && this.character.isColliding(endboss)) {
-        this.character.hit();
-        this.statusBarHP.setPercentage(this.character.energy);
+      this.character.hit();
+      this.statusBarHP.setPercentage(this.character.energy);
     }
   }
 
@@ -152,7 +151,6 @@ class World {
     this.level.bottles.forEach((bottle, index) => {
       if (this.character.isColliding(bottle)) {
         this.collectBottle(index);
-
       }
     });
   }
@@ -163,12 +161,14 @@ class World {
         if (bottle.isColliding(enemy)) {
           this.chickenDies(enemyIndex, bottleIndex);
         }
-        
       });
-      if (this.level.endboss[0] && bottle.isColliding(this.level.endboss[0]) && !this.level.endboss[0].endbossIsDead) {
+      if (
+        this.level.endboss[0] &&
+        bottle.isColliding(this.level.endboss[0]) &&
+        !this.level.endboss[0].endbossIsDead
+      ) {
         this.endbossHit(bottleIndex);
       }
-
     });
   }
 
@@ -186,16 +186,16 @@ class World {
       endboss.endbossIsDead = true;
     }
     if (endboss.endbossIsDead) {
-        setTimeout(() => {
-            this.level.endboss.splice(0, 1);
-        }, 1500);
+      setTimeout(() => {
+        this.level.endboss.splice(0, 1);
+      }, 1500);
     }
     this.throwableObjects.splice(bottleIndex, 1);
-    this.soundManager.play('endbossHurt');
+    this.soundManager.play("endbossHurt");
   }
 
   chickenDies(enemyIndex, bottleIndex) {
-    this.soundManager.play('chicken');
+    this.soundManager.play("chicken");
     this.level.enemies[enemyIndex].speed = 0;
     this.level.enemies[enemyIndex].chickenIsDead = true;
     setTimeout(() => {
@@ -207,10 +207,10 @@ class World {
   checkEndbossAlert() {
     let endboss = this.level.endboss[0];
     if (endboss) {
-        if (endboss.x - this.character.x < 400 && !endboss.endbossAttack) {
-          this.stopEndboss();
-          endboss.endbossAttack = true;
-        }
+      if (endboss.x - this.character.x < 400 && !endboss.endbossAttack) {
+        this.stopEndboss();
+        endboss.endbossAttack = true;
+      }
     }
   }
 
@@ -222,32 +222,34 @@ class World {
   }
 
   startEndbossAttack() {
-    
+    this.soundManager.play("chickenAngry");
     const EndbossAttacking = setInterval(() => {
-    const endboss = this.level.endboss[0];
-    if (this.character.x - (this.character.width)/2 < endboss.x) {
-      endboss.otherDirection = false;
-      this.level.endboss[0].x  -= 7.5;
-    } if (this.character.x - (this.character.width)/2 > endboss.x) {
-      endboss.otherDirection = true;
-      this.level.endboss[0].x += 7.5;
-    } if (this.level.endboss[0].endbossIsDead) {
-      clearInterval(EndbossAttacking);
-    }}, 50);
-}
+      const endboss = this.level.endboss[0];
+      if (this.character.x - this.character.width / 2 < endboss.x) {
+        endboss.otherDirection = false;
+        this.level.endboss[0].x -= 7.5;
+      }
+      if (this.character.x - this.character.width / 2 > endboss.x) {
+        endboss.otherDirection = true;
+        this.level.endboss[0].x += 7.5;
+      }
+      if (this.level.endboss[0].endbossIsDead) {
+        clearInterval(EndbossAttacking);
+      }
+    }, 50);
+  }
 
   collectCoin(index) {
-    this.soundManager.play('coin');
+    this.soundManager.play("coin");
     this.level.coins.splice(index, 1);
     this.statusBarCoin.setPercentage(this.statusBarCoin.percentage + 10);
   }
 
   collectBottle(index) {
-    this.soundManager.play('bottle');
+    this.soundManager.play("bottle");
     this.level.bottles.splice(index, 1);
     this.statusBarBottles.setPercentage(this.statusBarBottles.percentage + 10);
   }
-
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -314,10 +316,12 @@ class World {
 
   checkGameOver() {
     if (this.level.endboss[0]?.endbossIsDead && !this.gameOver) {
-      this.soundManager.play('victory');
+      this.soundManager.stopAll();
+      this.soundManager.play("victory");
       setTimeout(() => {
-      this.gameOver = true;
-        const gameTimeInSeconds = (new Date().getTime() - this.gameStartTime) / 1000;
+        this.gameOver = true;
+        const gameTimeInSeconds =
+          (new Date().getTime() - this.gameStartTime) / 1000;
         this.endScreen = new EndScreen(
           this.statusBarCoin.percentage / 10,
           this.statusBarHP.percentage / 20,
@@ -325,31 +329,39 @@ class World {
           gameTimeInSeconds,
           true // isVictory = true
         );
+        
         if (window.innerWidth <= 1280) {
-          document.getElementById('mobileOverlayContainerTop').classList.remove('d-none');
-          document.getElementById('mobileOverlayContainerBottom').classList.add('d-none');
+          document
+            .getElementById("mobileOverlayContainerTop")
+            .classList.remove("d-none");
+          document
+            .getElementById("mobileOverlayContainerBottom")
+            .classList.add("d-none");
         }
-
       }, 2000);
     }
 
     if (this.character.energy <= 0 && !this.gameOver) {
-      this.soundManager.play('defeat');
+      this.soundManager.stopAll();
+      this.soundManager.play("defeat");
       setTimeout(() => {
         this.gameOver = true;
         this.endScreen = new EndScreen(
-            this.statusBarCoin.percentage / 10,
-            0,
-            this.statusBarBottles.percentage / 10,
-            0,
-            false // isVictory = false
-          );
+          this.statusBarCoin.percentage / 10,
+          0,
+          this.statusBarBottles.percentage / 10,
+          0,
+          false // isVictory = false
+        );
         if (window.innerWidth <= 1280) {
-          document.getElementById('mobileOverlayContainerTop').classList.remove('d-none');
-          document.getElementById('mobileOverlayContainerBottom').classList.add('d-none');
+          document
+            .getElementById("mobileOverlayContainerTop")
+            .classList.remove("d-none");
+          document
+            .getElementById("mobileOverlayContainerBottom")
+            .classList.add("d-none");
         }
-      }, 1500);
+      }, 2000);
     }
   }
-
 }

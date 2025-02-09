@@ -17,6 +17,20 @@ function hideMobileControls() {
     }
 }
 
+function toggleFullscreen() {
+    if (canvas.fullscreenElement) {
+        canvas.exitFullscreen();
+    } else {
+        canvas.requestFullscreen();
+    }
+}
+function toggleSound() {
+    Object.values(this.sounds).forEach(audio => {
+        audio.load();
+        audio.volume = 0.0;
+        console.log(audio);
+    });
+}
 function bindMobileControls() {
     document.getElementById('mobileLeftButton').addEventListener('touchstart', (e) => {
         e.preventDefault();

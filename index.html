@@ -37,6 +37,17 @@
         <source src="./vid/test2.mp4" type="video/mp4">
     </video>
     <h1>EL POLLO LOCO</h1>
+    <div id="desktopInteractions">
+        <div id="desktopFullscreenButtonContainer" onclick="toggleFullscreen()">
+            <span id="desktopFullscreenText">Fullscreen:</span>
+            <img id="desktopFullscreenButton" src="./img/12_desktop_buttons/fullscreen.png" alt="fullscreen">
+        </div>
+        <div id="desktopSoundButtonContainer" onclick="toggleSound()">
+            <span id="desktopSoundText">Sound:</span>
+            <img id="desktopSoundButtonOn" src="./img/12_desktop_buttons/soundOn.png" alt="sound">
+            <img id="desktopSoundButtonOff" class="d-none" src="./img/12_desktop_buttons/soundOff.png" alt="sound">
+        </div>
+    </div>
     <div id="mobileHorizontalOverlay">
         <span id="mobileHorizontalOverlayText">Please rotate your device</span>
         <img id="mobileRotateButton" src="./img/11_mobile_buttons/rotate.png" alt="rotate">

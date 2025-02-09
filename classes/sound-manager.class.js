@@ -7,11 +7,14 @@ class SoundManager {
             bottleHit: new Audio('audio/bottle-hit.mp3'),
             throw: new Audio('audio/throw.mp3'),
             chicken: new Audio('audio/chicken.mp3'),
+            chickenAngry: new Audio('audio/chicken-angry.mp3'),
             hurt: new Audio('audio/hurt.mp3'),
             endbossHurt: new Audio('audio/endboss-hurt2.wav'),
             victory: new Audio('audio/won.mp3'),
             defeat: new Audio('audio/defeat.mp3'),
-            walk: new Audio('audio/walk.mp3')
+            walk: new Audio('audio/walk.mp3'),
+            background: new Audio('audio/background.mp3')
+
 
         };
 
