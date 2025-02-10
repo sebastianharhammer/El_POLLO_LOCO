@@ -342,10 +342,11 @@ class World {
     }
 
     if (this.character.energy <= 0 && !this.gameOver) {
-      this.soundManager.stopAll();
+      this.soundManager.pause("background");
       this.soundManager.play("defeat");
       setTimeout(() => {
         this.gameOver = true;
+
         this.endScreen = new EndScreen(
           this.statusBarCoin.percentage / 10,
           0,
@@ -363,5 +364,53 @@ class World {
         }
       }, 2000);
     }
+  }
+
+  resetGame() {
+    // Reset game state
+    this.character = new Character();
+    this.level = new Level(
+        [
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new SmallChicken(),
+            new SmallChicken(),
+            new SmallChicken(),
+            new SmallChicken(),
+            new SmallChicken(),
+            new SmallChicken(),
+        ],
+        [new Endboss()],
+        level1.clouds,
+        level1.backgroundObjects,
+        level1.coins,
+        level1.bottles
+    );
+    this.camera_x = 200;
+    this.throwableObjects = [];
+    this.endbossAttack = false;
+    this.throwCooldown = false;
+    this.gameOver = false;
+    this.gameStarted = false;
+    this.gameStartTime = new Date().getTime();
+    this.endScreen = null;
+
+    // Reset status bars
+    this.statusBarHP = new StatusBarHP();
+    this.statusBarCoin = new StatusBarCoin();
+    this.statusBarBottles = new StatusBarBottles();
+    this.statusBarEndbossHP = new StatusBarEndbossHP();
+
+    // Reset character world reference
+    this.setWorld();
+
+    // Reset sound
+    this.soundManager.stopAll();
   }
 }

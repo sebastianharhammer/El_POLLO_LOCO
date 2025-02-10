@@ -54,6 +54,9 @@ class StartScreen {
     }
 
     if (window.innerWidth <= 1280) {
+
+      canvas.requestFullscreen();
+
     ctx.font = "38px ZABARS";
     ctx.fillText("⛶", 1000, 80);
     

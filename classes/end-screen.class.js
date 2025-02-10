@@ -33,8 +33,10 @@ class EndScreen extends DrawableObject {
                 y: 580,
                 width: 200,
                 height: 50,
-                action: () => window.location.reload()
-
+                action: () => {
+                    world.resetGame();
+                    world.checkGameStart();
+                }
             },
             {
                 text: 'Main Menu',
@@ -43,11 +45,13 @@ class EndScreen extends DrawableObject {
                 width: 200,
                 height: 50,
                 action: () => {
-                    window.location.href = 'index.html';
+                    world.resetGame();
+                    world.showStartScreen();
                 }
             }
         ];
     }
+
 
     addClickListeners() {
         document.addEventListener('click', (event) => {

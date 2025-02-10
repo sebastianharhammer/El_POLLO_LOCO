@@ -82,6 +82,9 @@ h1 {
     align-items: center;
     width: 100%;
 }
+#desktopSoundButtonContainer:hover {
+    cursor: pointer;
+}
 #desktopSoundButtonOn {
     width: 50px;
 }

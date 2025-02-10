@@ -25,12 +25,18 @@ function toggleFullscreen() {
     }
 }
 function toggleSound() {
-    Object.values(this.sounds).forEach(audio => {
-        audio.load();
-        audio.volume = 0.0;
-        console.log(audio);
+    let soundManager = world.soundManager;
+    let isMuted = soundManager.sounds.background.volume === 0;
+    let SoundOn = document.getElementById('desktopSoundButtonOn');
+    let SoundOff = document.getElementById('desktopSoundButtonOff');
+    SoundOn.classList.toggle('d-none');
+    SoundOff.classList.toggle('d-none');
+    
+    Object.values(soundManager.sounds).forEach(audio => {
+        audio.volume = isMuted ? 0.2 : 0.0;
     });
 }
+
 function bindMobileControls() {
     document.getElementById('mobileLeftButton').addEventListener('touchstart', (e) => {
         e.preventDefault();

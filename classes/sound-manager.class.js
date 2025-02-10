@@ -38,4 +38,9 @@ class SoundManager {
             audio.currentTime = 0;
         });
     }
+    pause(soundName) {
+        if (this.sounds[soundName]) {
+            this.sounds[soundName].pause();
+        }
+    }
 } 
