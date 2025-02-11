@@ -66,6 +66,11 @@ h1 {
     align-items: center;
     width: 100%;
 }
+#desktopFullscreenButtonContainer:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
 #desktopFullscreenButton {
     width: 50px;
 }
@@ -84,6 +89,8 @@ h1 {
 }
 #desktopSoundButtonContainer:hover {
     cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 }
 #desktopSoundButtonOn {
     width: 50px;

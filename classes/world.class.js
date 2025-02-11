@@ -198,9 +198,9 @@ class World {
     this.soundManager.play("chicken");
     this.level.enemies[enemyIndex].speed = 0;
     this.level.enemies[enemyIndex].chickenIsDead = true;
+    this.throwableObjects.splice(bottleIndex, 1);
     setTimeout(() => {
       this.level.enemies.splice(enemyIndex, 1);
-      this.throwableObjects.splice(bottleIndex, 1);
     }, 1500);
   }
 
