@@ -81,6 +81,7 @@ class Character extends MoveableObject {
     setInterval(() => {
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight();
+        this.setCamera();
         this.otherDirection = false;
         this.getTimeStamp();
         this.world.soundManager.play('walk');

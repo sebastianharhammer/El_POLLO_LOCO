@@ -12,6 +12,8 @@ class MoveableObject extends DrawableObject {
     bottom: 0,
   };
   lastHit = 0;
+  world;
+
 
   getTimeStamp() {
     this.lastMovement = new Date().getTime();
@@ -159,17 +161,29 @@ class MoveableObject extends DrawableObject {
 
   moveRight() {
     this.x += this.speed;
-    setInterval(() => {
-      this.world.soundManager.play('walk');
-    }, 100);
     
   }
 
   moveLeft() {
     this.x -= this.speed;
-   
   }
 
+  setCamera() {
+    if (!this.otherDirection && this.world.camera_x > 200) {
+      this.world.camera_x -= 10;
+      console.log(this.world.camera_x);
+      if (this.world.camera_x <= 200) {
+        this.world.camera_x = 200;
+      }
+    }
+    if (this.otherDirection && this.world.camera_x < 1500) {
+      this.world.camera_x += 10;
+      console.log(this.world.camera_x);
+      if (this.world.camera_x >= 1500) {
+        this.world.camera_x = 1500;
+      }
+    }
+  }
   jump() {
     this.world.soundManager.play('jump');
     this.speedY = 30;
