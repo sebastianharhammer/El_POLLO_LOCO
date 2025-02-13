@@ -17,7 +17,7 @@ class StatusBarHP extends MoveableObject {
     this.y = 0;
     this.width = 200;
     this.height = 60;
-    this.setPercentage(20);
+    this.setPercentage(50);
   }
 
   setPercentage(percentage) {
@@ -27,15 +27,15 @@ class StatusBarHP extends MoveableObject {
   }
 
   resolveImageIndex() {
-    if (this.percentage == 20) {
+    if (this.percentage == 50) {
       return 5;
-    } else if (this.percentage > 16) {
+    } else if (this.percentage > 40) {
       return 4;
-    } else if (this.percentage > 12) {
+    } else if (this.percentage > 30) {
       return 3;
-    } else if (this.percentage > 8) {
+    } else if (this.percentage > 20) {
       return 2;
-    } else if (this.percentage > 4) {
+    } else if (this.percentage > 10) {
       return 1;
     } else {
       return 0;

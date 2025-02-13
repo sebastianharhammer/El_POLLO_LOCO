@@ -26,6 +26,7 @@ class World {
   endbossAttackInterval;
   isResetting = false;
   gameInterval;
+  charIsntDead = true;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
