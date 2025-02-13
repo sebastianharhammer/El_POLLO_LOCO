@@ -25,6 +25,7 @@ class World {
   soundManager = new SoundManager();
   endbossAttackInterval;
   isResetting = false;
+  gameInterval;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -76,7 +77,7 @@ class World {
 
   run() {
     this.soundManager.play("background");
-    setInterval(() => {
+    this.gameInterval = setInterval(() => {
       setTimeout(() => {
         this.checkCollisions();
       }, 100);
@@ -371,6 +372,7 @@ class World {
     clearInterval(this.character.animationInterval);
     clearInterval(this.character.movementInterval);
     clearInterval(this.endbossAttackInterval);
+    clearInterval(this.gameInterval);
 
     // Reset character
     this.character = new Character();
@@ -400,6 +402,6 @@ class World {
     setTimeout(() => {
       this.run();
       this.isResetting = false;
-    }, 100);
+    }, 1500);
   }
 }

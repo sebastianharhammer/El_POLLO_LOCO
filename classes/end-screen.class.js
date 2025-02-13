@@ -26,7 +26,6 @@ class EndScreen extends DrawableObject {
     }
 
     createButtons() {
-        // Define button positions and sizes
         this.buttons = [
             {
                 text: 'Play Again',
@@ -34,14 +33,22 @@ class EndScreen extends DrawableObject {
                 y: 580,
                 width: 200,
                 height: 50,
+                disabled: false,
                 action: () => {
-                    if (!this.isRestarting) {
+                    if (!this.isRestarting && !world.isResetting && !this.buttons[0].disabled) {
+                        this.buttons[0].disabled = true;
+                        this.buttons[0].text = 'Restarting...';
                         this.isRestarting = true;
-                        world.resetGame();
-                        // Reset the flag after a delay
+                        
                         setTimeout(() => {
-                            this.isRestarting = false;
-                        }, 1000);
+                            world.resetGame();
+                            // Reset button state after delay
+                            setTimeout(() => {
+                                this.isRestarting = false;
+                                this.buttons[0].disabled = false;
+                                this.buttons[0].text = 'Play Again';
+                            }, 1000);
+                        }, 1500);
                     }
                 }
             },
@@ -51,14 +58,23 @@ class EndScreen extends DrawableObject {
                 y: 650,
                 width: 200,
                 height: 50,
+                disabled: false,
                 action: () => {
-                    if (!this.isRestarting) {
+                    if (!this.isRestarting && !world.isResetting && !this.buttons[1].disabled) {
+                        this.buttons[1].disabled = true;
+                        this.buttons[1].text = 'Returning...';
                         this.isRestarting = true;
-                        world.resetGame();
-                        world.showStartScreen();
+                        
                         setTimeout(() => {
-                            this.isRestarting = false;
-                        }, 1000);
+                            world.resetGame();
+                            world.showStartScreen();
+                            // Reset button state after delay
+                            setTimeout(() => {
+                                this.isRestarting = false;
+                                this.buttons[1].disabled = false;
+                                this.buttons[1].text = 'Main Menu';
+                            }, 1000);
+                        }, 1500);
                     }
                 }
             }
@@ -133,7 +149,7 @@ class EndScreen extends DrawableObject {
         // Draw buttons
         this.buttons.forEach(button => {
             // Button background
-            ctx.fillStyle = button.isHovered ? '#4CAF50' : '#45a049';
+            ctx.fillStyle = button.disabled ? '#808080' : (button.isHovered ? '#4CAF50' : '#45a049');
             ctx.beginPath();
             ctx.roundRect(button.x, button.y, button.width, button.height, 10);
             ctx.fill();
