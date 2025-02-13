@@ -114,3 +114,53 @@ document.addEventListener('keyup', (e) => {
         keyboard.D = false;
     }
 });
+function resetGame() {
+    delete this.character;
+    this.character = new Character();
+    this.level = new Level(
+        [
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new SmallChicken(),
+            new SmallChicken(),
+            new SmallChicken(),
+            new SmallChicken(),
+            new SmallChicken(),
+            new SmallChicken(),
+        ],
+        [new Endboss()],
+        level1.clouds,
+        level1.backgroundObjects,
+        level1.coins,
+        level1.bottles
+    );
+    this.camera_x = 200;
+    this.throwableObjects = [];
+    this.endbossAttack = false;
+    this.throwCooldown = false;
+    this.gameOver = false;
+    this.gameStarted = false;
+    this.gameStartTime = new Date().getTime();
+    this.endScreen = null;
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Reset status bars
+    this.statusBarHP = new StatusBarHP();
+    this.statusBarCoin = new StatusBarCoin();
+    this.statusBarBottles = new StatusBarBottles();
+    this.statusBarEndbossHP = new StatusBarEndbossHP();
+
+    // Reset character world reference
+    this.setWorld();
+
+    // Reset sound
+    this.soundManager.stopAll();
+  }

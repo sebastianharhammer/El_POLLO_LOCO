@@ -5,6 +5,7 @@ class EndScreen extends DrawableObject {
     timeBonus = 0;
     isVictory = false;
     buttons = [];
+    isRestarting = false;
 
 
     constructor(coins, health, bottles, gameTime, isVictory) {
@@ -34,8 +35,14 @@ class EndScreen extends DrawableObject {
                 width: 200,
                 height: 50,
                 action: () => {
-                    world.resetGame();
-                    world.checkGameStart();
+                    if (!this.isRestarting) {
+                        this.isRestarting = true;
+                        world.resetGame();
+                        // Reset the flag after a delay
+                        setTimeout(() => {
+                            this.isRestarting = false;
+                        }, 1000);
+                    }
                 }
             },
             {
@@ -45,8 +52,14 @@ class EndScreen extends DrawableObject {
                 width: 200,
                 height: 50,
                 action: () => {
-                    world.resetGame();
-                    world.showStartScreen();
+                    if (!this.isRestarting) {
+                        this.isRestarting = true;
+                        world.resetGame();
+                        world.showStartScreen();
+                        setTimeout(() => {
+                            this.isRestarting = false;
+                        }, 1000);
+                    }
                 }
             }
         ];

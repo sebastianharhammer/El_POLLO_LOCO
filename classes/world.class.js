@@ -23,6 +23,8 @@ class World {
   gameStartTime;
   endScreen;
   soundManager = new SoundManager();
+  endbossAttackInterval;
+  isResetting = false;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -223,7 +225,7 @@ class World {
 
   startEndbossAttack() {
     this.soundManager.play("chickenAngry");
-    const EndbossAttacking = setInterval(() => {
+    this.endbossAttackInterval = setInterval(() => {
       const endboss = this.level.endboss[0];
       if (this.character.x - this.character.width / 2 < endboss.x) {
         endboss.otherDirection = false;
@@ -234,7 +236,7 @@ class World {
         this.level.endboss[0].x += 7.5;
       }
       if (this.level.endboss[0].endbossIsDead) {
-        clearInterval(EndbossAttacking);
+        clearInterval(this.endbossAttackInterval);
       }
     }, 50);
   }
@@ -315,13 +317,15 @@ class World {
   }
 
   checkGameOver() {
+    // Don't check for game over while resetting
+    if (this.isResetting) return;
+
     if (this.level.endboss[0]?.endbossIsDead && !this.gameOver) {
       this.soundManager.stopAll();
       this.soundManager.play("victory");
       setTimeout(() => {
         this.gameOver = true;
-        const gameTimeInSeconds =
-          (new Date().getTime() - this.gameStartTime) / 1000;
+        const gameTimeInSeconds = (new Date().getTime() - this.gameStartTime) / 1000;
         this.endScreen = new EndScreen(
           this.statusBarCoin.percentage / 10,
           this.statusBarHP.percentage / 20,
@@ -331,12 +335,8 @@ class World {
         );
         
         if (window.innerWidth <= 1280) {
-          document
-            .getElementById("mobileOverlayContainerTop")
-            .classList.remove("d-none");
-          document
-            .getElementById("mobileOverlayContainerBottom")
-            .classList.add("d-none");
+          document.getElementById("mobileOverlayContainerTop").classList.remove("d-none");
+          document.getElementById("mobileOverlayContainerBottom").classList.add("d-none");
         }
       }, 2000);
     }
@@ -346,7 +346,6 @@ class World {
       this.soundManager.play("defeat");
       setTimeout(() => {
         this.gameOver = true;
-
         this.endScreen = new EndScreen(
           this.statusBarCoin.percentage / 10,
           0,
@@ -355,51 +354,30 @@ class World {
           false // isVictory = false
         );
         if (window.innerWidth <= 1280) {
-          document
-            .getElementById("mobileOverlayContainerTop")
-            .classList.remove("d-none");
-          document
-            .getElementById("mobileOverlayContainerBottom")
-            .classList.add("d-none");
+          document.getElementById("mobileOverlayContainerTop").classList.remove("d-none");
+          document.getElementById("mobileOverlayContainerBottom").classList.add("d-none");
         }
       }, 2000);
     }
   }
 
   resetGame() {
-    // Reset game state
+    // Ensure we're not already in the process of resetting
+    if (this.isResetting) return;
+    this.isResetting = true;
+
+    // Stop all sounds and intervals first
+    this.soundManager.stopAll();
+    clearInterval(this.character.animationInterval);
+    clearInterval(this.character.movementInterval);
+    clearInterval(this.endbossAttackInterval);
+
+    // Reset character
     this.character = new Character();
-    this.level = new Level(
-        [
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new SmallChicken(),
-            new SmallChicken(),
-            new SmallChicken(),
-            new SmallChicken(),
-            new SmallChicken(),
-            new SmallChicken(),
-        ],
-        [new Endboss()],
-        level1.clouds,
-        level1.backgroundObjects,
-        level1.coins,
-        level1.bottles
-    );
-    this.camera_x = 200;
-    this.throwableObjects = [];
-    this.endbossAttack = false;
-    this.throwCooldown = false;
-    this.gameOver = false;
-    this.gameStarted = false;
-    this.gameStartTime = new Date().getTime();
-    this.endScreen = null;
+    this.character.world = this;
+
+    // Create a fresh level instance
+    this.level = createLevel1();
 
     // Reset status bars
     this.statusBarHP = new StatusBarHP();
@@ -407,10 +385,21 @@ class World {
     this.statusBarBottles = new StatusBarBottles();
     this.statusBarEndbossHP = new StatusBarEndbossHP();
 
-    // Reset character world reference
-    this.setWorld();
+    // Reset world properties
+    this.camera_x = 200;
+    this.throwableObjects = [];
+    this.endbossAttack = false;
+    this.throwCooldown = false;
+    this.gameOver = false;
+    this.gameStarted = true;
+    this.gameStartTime = new Date().getTime();
+    this.endScreen = null;
+    this.endboss = this.level.endboss[0];
 
-    // Reset sound
-    this.soundManager.stopAll();
+    // Add a small delay before starting game systems
+    setTimeout(() => {
+      this.run();
+      this.isResetting = false;
+    }, 100);
   }
 }

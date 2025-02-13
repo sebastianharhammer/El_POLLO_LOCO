@@ -1,6 +1,6 @@
 class SmallChicken extends MoveableObject {
-    width = 50;
-    height = 50;
+    width = 60;
+    height = 60;
     offset = {
 
 
@@ -28,7 +28,7 @@ class SmallChicken extends MoveableObject {
       this.loadImages(this.IMAGES_WALKING);
       this.loadImages(this.IMAGES_DEAD);
       this.x = 200 + Math.random() * 3500;
-      this.y = 540 + this.height;
+      this.y = 520 + this.height;
       this.animate();
     }
   

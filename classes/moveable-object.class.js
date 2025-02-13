@@ -32,7 +32,7 @@ class MoveableObject extends DrawableObject {
       } else {
         this.lastHit = new Date().getTime();
       }
-    }, 500);
+    }, 250);
   }
   isHurt() {
     let timePassed = new Date().getTime() - this.lastHit; //Diff in ms
@@ -60,12 +60,7 @@ class MoveableObject extends DrawableObject {
     }
   }
 
-  /*   if (character.x + character.width > chicken.x 
-  && character.y + character.height > chicken.y 
-  && character.x < chicken.x 
-  && character.y < chicken.y + chicken.height) */
 
-  //v2
   isColliding(mo) {
     return (
       this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
@@ -74,17 +69,6 @@ class MoveableObject extends DrawableObject {
       this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom
     );
   }
-
-  isJumpColliding(mo) {
-    return (
-      this.x + this.width > mo.x &&
-      this.x < mo.x + mo.width &&
-      this.y + this.height > mo.y &&
-      this.y + this.height < mo.y + mo.height/2 &&
-      this.speedY < 0
-    );
-  }
-
   //besser aus vid.
   /* isColliding (obj) {
     return  (
@@ -94,6 +78,17 @@ class MoveableObject extends DrawableObject {
       (this.Y + this.offsetY) <= (obj.Y + obj.height) &&
       ); 
       } */
+
+  isJumpColliding(mo) {
+    return (
+      this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
+      this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
+      this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
+      this.y + this.height - this.offset.bottom < mo.y + mo.height/2 &&
+      this.speedY < 0
+    );
+  }
+
 
   playAnimation(images) {
     let i = this.currentImage % images.length; //let i = 7 % 6; => 1 Rest 1

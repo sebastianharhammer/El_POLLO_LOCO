@@ -1,5 +1,5 @@
 class Character extends MoveableObject {
-  y = 400;
+  y = 300;
   energy = 20;
   IMAGES_WALKING = [
     "img/2_character_pepe/2_walk/W-21.png",
@@ -78,7 +78,7 @@ class Character extends MoveableObject {
     this.animate();
   }
   animate() {
-    setInterval(() => {
+    this.movementInterval = setInterval(() => {
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight();
         this.setCamera();
@@ -98,22 +98,19 @@ class Character extends MoveableObject {
       this.world.camera_x = -this.x + 200;
     }, 1000 / 60);
 
-    setInterval(() => {
+    this.animationInterval = setInterval(() => {
       if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
         this.getTimeStamp();
-
       } else if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
       } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
         this.playAnimation(this.IMAGES_WALKING);
-        
       } else {
         if (this.isLongIdle()) {
           this.playAnimation(this.IMAGES_LONG_IDLE);
-
         } else {
           this.playAnimation(this.IMAGES_IDLE);
         }
