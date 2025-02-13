@@ -79,19 +79,19 @@ class Character extends MoveableObject {
   }
   animate() {
     this.movementInterval = setInterval(() => {
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x && this.charIsntDead) {
+      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x && !this.isDead()) {
         this.moveRight();
         this.setCamera();
         this.otherDirection = false;
         this.getTimeStamp();
         this.world.soundManager.play('walk');
       }
-      if (this.world.keyboard.LEFT && this.x > 0 && this.charIsntDead) { 
+      if (this.world.keyboard.LEFT && this.x > 0 && !this.isDead()) { 
         this.moveLeft();
         this.otherDirection = true;
         this.getTimeStamp();
       }
-      if (this.world.keyboard.SPACE && !this.isAboveGround() && this.charIsntDead) {
+      if (this.world.keyboard.SPACE && !this.isAboveGround() && !this.isDead()) {
         this.jump();
         this.getTimeStamp();
       }
@@ -99,7 +99,7 @@ class Character extends MoveableObject {
     }, 1000 / 60);
 
     this.animationInterval = setInterval(() => {
-      if (this.isHurt()) {
+      if (this.isHurt() && !this.isDead()) {
         this.playAnimation(this.IMAGES_HURT);
         this.getTimeStamp();
       } else if (this.isDead()) {

@@ -204,7 +204,7 @@ canvas {
         display: none;
     }
 }
-@media (min-height: 720px) {
+@media only screen and (max-height: 720px) {
     .mobile-overlay-container-top {
         display: none;
     }
@@ -212,7 +212,7 @@ canvas {
         display: none;
     }
 }
-@media (max-height: 500px) {
+@media only screen and (max-height: 500px) {
     #mobileHorizontalOverlay {
         display: none;
     }
