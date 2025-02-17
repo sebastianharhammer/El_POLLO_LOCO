@@ -6,6 +6,7 @@ class EndScreen extends DrawableObject {
     isVictory = false;
     buttons = [];
     isRestarting = false;
+    showButtonsTimer = 0;
 
 
     constructor(coins, health, bottles, gameTime, isVictory) {
@@ -144,29 +145,32 @@ class EndScreen extends DrawableObject {
             ctx.letterSpacing = '3px';
             ctx.fillText(`Time Bonus: ${this.timeBonus}`, this.width/2, 260);
         } 
-        
 
-        // Draw buttons
-        this.buttons.forEach(button => {
-            // Button background
-            ctx.fillStyle = button.disabled ? '#808080' : (button.isHovered ? '#4CAF50' : '#45a049');
-            ctx.beginPath();
-            ctx.roundRect(button.x, button.y, button.width, button.height, 10);
-            ctx.fill();
+        // Only draw buttons after 2 seconds
+        if (this.showButtonsTimer >= 1000) {
+            this.buttons.forEach(button => {
+                // Button background
+                ctx.fillStyle = button.disabled ? '#808080' : (button.isHovered ? '#4CAF50' : '#45a049');
+                ctx.beginPath();
+                ctx.roundRect(button.x, button.y, button.width, button.height, 10);
+                ctx.fill();
 
-            // Button text
-            ctx.font = '28px ZABARS';
-            ctx.letterSpacing = '3px';
-            ctx.fillStyle = 'white';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+                // Button text
+                ctx.font = '28px ZABARS';
+                ctx.letterSpacing = '3px';
+                ctx.fillStyle = 'white';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
 
-            ctx.fillText(
-                button.text,
-                button.x + button.width/2,
-                button.y + button.height/2
-            );
-        });
+                ctx.fillText(
+                    button.text,
+                    button.x + button.width/2,
+                    button.y + button.height/2
+                );
+            });
+        } else {
+            this.showButtonsTimer += 1000/60; // Increment timer (assuming 60 FPS)
+        }
     }
 
     calculateScore(coins, health, bottles, gameTime) {

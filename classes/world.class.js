@@ -394,15 +394,19 @@ class World {
     this.endbossAttack = false;
     this.throwCooldown = false;
     this.gameOver = false;
-    this.gameStarted = true;
+    this.gameStarted = false;
     this.gameStartTime = new Date().getTime();
     this.endScreen = null;
     this.endboss = this.level.endboss[0];
 
     // Add a small delay before starting game systems
     setTimeout(() => {
-      this.run();
       this.isResetting = false;
     }, 1500);
+  }
+
+  showStartScreen() {
+    this.gameStarted = false;
+    this.startScreen = new StartScreen();
   }
 }
