@@ -55,10 +55,6 @@ class StartScreen {
 
     if (window.innerWidth <= 1280) {
 
-   
-
-    ctx.font = "38px ZABARS";
-    ctx.fillText("⛶", 1000, 80);
     
 
     ctx.fillText("🔊", 1100, 80);

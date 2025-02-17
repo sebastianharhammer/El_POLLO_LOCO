@@ -21,14 +21,19 @@ class SoundManager {
         // Pre-load all sounds
         Object.values(this.sounds).forEach(audio => {
             audio.load();
-            audio.volume = 0.2; // Set default volume to 20%
+            audio.volume = 0.2; 
         });
     }
 
     play(soundName) {
         if (this.sounds[soundName]) {
-            this.sounds[soundName].currentTime = 0; // Reset sound to start
-            this.sounds[soundName].play();
+            try {
+                this.sounds[soundName].currentTime = 0;
+                this.sounds[soundName].play();
+            } catch (error) {
+                console.error('Error playing sound:', error);
+                console.error('Sound name:', soundName);
+            }
         }
     }
 

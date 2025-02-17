@@ -77,7 +77,9 @@ class World {
   }
 
   run() {
+    if (this.gameStarted) {
     this.soundManager.play("background");
+    }
     this.gameInterval = setInterval(() => {
       setTimeout(() => {
         this.checkCollisions();

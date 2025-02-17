@@ -204,14 +204,7 @@ canvas {
         display: none;
     }
 }
-@media only screen and (max-height: 720px) {
-    .mobile-overlay-container-top {
-        display: none;
-    }
-    .mobile-overlay-container-bottom {
-        display: none;
-    }
-}
+
 @media only screen and (max-height: 500px) {
     #mobileHorizontalOverlay {
         display: none;
@@ -220,6 +213,15 @@ canvas {
 @media only screen and (max-height: 720px) {
     body {
         background-image: none;
+    }
+    #desktopInteractions {
+        display: none;
+    }
+    .mobile-overlay-container-top {
+        display: none;
+    }
+    .mobile-overlay-container-bottom {
+        display: none;
     }
     .canvas-container {
         display: block;
