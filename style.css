@@ -36,6 +36,7 @@ body {
     left: 50%;
     right: 50%;
     transform: translate(-50%, -50%);
+    filter: invert(1);
 }
 
 #backgroundVideo {
@@ -112,16 +113,32 @@ h1 {
     align-items: center;
 }
 .mobile-overlay-container-top {
-    position: fixed;
-    top: 0;
-    left: 5%;
-    right: 5%;
-    width: 100%;
+   display: flex;
+   justify-content: flex-end;
+   align-items: center;
+   width: 100%;
+   height: 100%;
+}
+.mobile-sound-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 200px;
+    padding-right: 25px;
+}
+.mobile-sound-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#mobileSoundButtonOn {
+    width: 40px;
+}
+#mobileSoundButtonOff {
+    width: 40px;
 }
 #mobileImpressumTitle {
     font-size: 32px;
-    letter-spacing: 3px;
-    color: rgb(255, 255, 255);
 }
 .mobile-overlay-container-bottom {
     position: absolute;
@@ -189,6 +206,7 @@ canvas {
     }
     .mobile-overlay-container-bottom {
         position: absolute;
+        z-index: 10;
     }
     canvas {
         width: 100%;
@@ -215,12 +233,6 @@ canvas {
         background-image: none;
     }
     #desktopInteractions {
-        display: none;
-    }
-    .mobile-overlay-container-top {
-        display: none;
-    }
-    .mobile-overlay-container-bottom {
         display: none;
     }
     .canvas-container {

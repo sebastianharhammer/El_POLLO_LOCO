@@ -52,17 +52,6 @@ class StartScreen {
       ctx.font = "42px ZABARS";
       ctx.fillText("Tap to begin", this.width / 2, 120);
     }
-
-    if (window.innerWidth <= 1280) {
-
-    
-
-    ctx.fillText("🔊", 1100, 80);
-    ctx.fillText("🔈", 1200, 80);
-    }
-    
-
-
     if (this.showInstructions) {
       ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
       ctx.fillRect(20, 100, 300, 200);
