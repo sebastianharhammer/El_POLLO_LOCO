@@ -9,7 +9,7 @@ class Endboss extends MoveableObject {
     bottom: 0,
   };
   percentage = 5;
-  energy = 5;
+  energy = 4;
   alert = false;
   endbossAttack = false;
   endbossIsDead = false;
