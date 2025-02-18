@@ -73,6 +73,8 @@ class ThrowableObject extends MoveableObject {
   handleBottleImpact() {
     this.y = 600;
     this.speedY = 0;
+    if (this.bottleInterval) clearInterval(this.bottleInterval);
+    if (this.throwInterval) clearInterval(this.throwInterval);
     this.animateSplash();
     this.world.soundManager.play('bottleHit');
   }
@@ -89,12 +91,13 @@ class ThrowableObject extends MoveableObject {
     if (this.splashInterval) clearInterval(this.splashInterval);
     let i = 0;
     this.splashInterval = setInterval(() => {
-      if (i < this.IMAGES_BOTTLE_SPLASH.length) {
-        this.img = this.imageCache[this.IMAGES_BOTTLE_SPLASH[i]];
-        i++;
-      } else {
-        clearInterval(this.splashInterval);
-      }
-    }, 1000/60);
+        if (i < this.IMAGES_BOTTLE_SPLASH.length) {
+            this.img = this.imageCache[this.IMAGES_BOTTLE_SPLASH[i]];
+            i++;
+        } else {
+            clearInterval(this.splashInterval);
+            this.splashInterval = null;
+        }
+    }, 100);
   }
 }

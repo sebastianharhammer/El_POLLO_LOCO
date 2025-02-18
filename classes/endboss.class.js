@@ -3,10 +3,10 @@ class Endboss extends MoveableObject {
   width = 300;
   y = 250;
   offset = {
-    top: 10,
-    left: 10,
-    right: 10,
-    bottom: 10,
+    top: 100,
+    left: 50,
+    right: 50,
+    bottom: 0,
   };
   percentage = 5;
   energy = 5;

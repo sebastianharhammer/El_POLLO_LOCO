@@ -27,6 +27,7 @@ class World {
   isResetting = false;
   gameInterval;
   charIsntDead = true;
+  chickenWhichDied = [];
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -81,9 +82,9 @@ class World {
     this.soundManager.play("background");
     }
     this.gameInterval = setInterval(() => {
-    /*   setTimeout(() => { */
+      setTimeout(() => {
         this.checkCollisions();
-     /*  }, 1000); */
+      }, 500);
       setTimeout(() => {
         this.checkEndbossCollision();
       }, 1000);
@@ -97,10 +98,16 @@ class World {
     }, 1000/60);
   }
 
+  clearChickenWhichDiedArray() {
+    this.chickenWhichDied = [];
+  }
+
   checkJumpCollision() {
     this.level.enemies.forEach((enemy, index) => {
-      if (this.character.isJumpColliding(enemy)) {
+      if (this.character.isJumpColliding(enemy) && !this.chickenWhichDied.includes(enemy)) {
         this.chickenDies(index, null);
+        this.chickenWhichDied.push(enemy);
+        enemy.isBeingKilled = true;
       }
     });
   }
@@ -130,7 +137,7 @@ class World {
 
   checkCollisions() {
     this.level.enemies.forEach((enemy) => {
-      if (this.character.isColliding(enemy) && !enemy.chickenIsDead) {
+      if (!enemy.isBeingKilled && !this.chickenWhichDied.includes(enemy) && this.character.isColliding(enemy)) {
         this.character.hit();
         this.statusBarHP.setPercentage(this.character.energy);
       }
@@ -205,9 +212,10 @@ class World {
     this.level.enemies[enemyIndex].speed = 0;
     this.level.enemies[enemyIndex].chickenIsDead = true;
     this.throwableObjects.splice(bottleIndex, 1);
+    this.chickenWhichDied.push(this.level.enemies[enemyIndex]);
     setTimeout(() => {
       this.level.enemies.splice(enemyIndex, 1);
-    }, 1200);
+    }, 1000);
   }
 
   checkEndbossAlert() {

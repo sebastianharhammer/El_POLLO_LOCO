@@ -12,6 +12,7 @@ class DrawableObject {
     this.img = new Image();
     this.img.src = path;
   }
+
   loadImages(arr) {
     arr.forEach((path) => {
       let img = new Image();
@@ -19,8 +20,9 @@ class DrawableObject {
       this.imageCache[path] = img;
     });
   }
+  
   drawFrame(ctx) {
-    if (this instanceof Character || this instanceof Chicken || this instanceof Bottle || this instanceof Coin || this instanceof SmallChicken) {
+    if (this instanceof Character || this instanceof Endboss || this instanceof Chicken || this instanceof Bottle || this instanceof Coin || this instanceof SmallChicken) {
       ctx.beginPath();
       ctx.lineWidth = "2";
       ctx.strokeStyle = "blue";
