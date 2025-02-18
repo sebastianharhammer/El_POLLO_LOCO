@@ -81,12 +81,12 @@ class World {
     this.soundManager.play("background");
     }
     this.gameInterval = setInterval(() => {
-      setTimeout(() => {
+    /*   setTimeout(() => { */
         this.checkCollisions();
-      }, 100);
+     /*  }, 1000); */
       setTimeout(() => {
         this.checkEndbossCollision();
-      }, 100);
+      }, 1000);
       this.checkTrowObjects();
       this.checkCoinCollisions();
       this.checkBottleCollisions();
@@ -94,7 +94,7 @@ class World {
       this.checkBottleHit();
       this.checkEndbossAlert();
       this.checkGameOver();
-    }, 50);
+    }, 20);
   }
 
   checkJumpCollision() {

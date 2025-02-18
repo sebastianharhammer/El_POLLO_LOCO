@@ -1,6 +1,5 @@
 class Character extends MoveableObject {
-  y = 400;
-  energy = 50;
+  energy = 200;
   IMAGES_WALKING = [
     "img/2_character_pepe/2_walk/W-21.png",
     "img/2_character_pepe/2_walk/W-22.png",
@@ -74,6 +73,7 @@ class Character extends MoveableObject {
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_IDLE);
     this.loadImages(this.IMAGES_LONG_IDLE);
+    this.y = 300;
     this.applyGravity();
     this.animate();
   }
