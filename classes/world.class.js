@@ -66,7 +66,7 @@ class World {
     });
 
     if (this.isMobile()) {
-      document.addEventListener("touchstart", startGame, { once: true });
+      document.addEventListener("touchstart", startGame);
     }
   }
 
@@ -378,6 +378,12 @@ class World {
     if (this.isResetting) return;
     this.isResetting = true;
 
+    // Remove existing touch event listeners before resetting
+    const existingTouchListeners = document.getElementsByTagName("*");
+    for (let element of existingTouchListeners) {
+        element.removeEventListener("touchstart", () => {});
+    }
+
     // Stop all sounds and intervals first
     this.soundManager.stopAll();
     clearInterval(this.character.animationInterval);
@@ -412,6 +418,8 @@ class World {
     // Add a small delay before starting game systems
     setTimeout(() => {
       this.isResetting = false;
+      // Re-initialize game start detection
+      this.checkGameStart();
     }, 1500);
   }
 

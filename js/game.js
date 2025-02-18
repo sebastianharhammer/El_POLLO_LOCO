@@ -29,8 +29,12 @@ function toggleSound() {
     let isMuted = soundManager.sounds.background.volume === 0;
     let SoundOn = document.getElementById('desktopSoundButtonOn');
     let SoundOff = document.getElementById('desktopSoundButtonOff');
+    let MobileSoundOn = document.getElementById('mobileSoundButtonOn');
+    let MobileSoundOff = document.getElementById('mobileSoundButtonOff');
     SoundOn.classList.toggle('d-none');
     SoundOff.classList.toggle('d-none');
+    MobileSoundOn.classList.toggle('d-none');
+    MobileSoundOff.classList.toggle('d-none');
     
     Object.values(soundManager.sounds).forEach(audio => {
         audio.volume = isMuted ? 0.2 : 0.0;

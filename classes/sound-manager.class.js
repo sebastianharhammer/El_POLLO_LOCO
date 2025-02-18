@@ -23,9 +23,30 @@ class SoundManager {
             audio.load();
             audio.volume = 0.2; 
         });
+
+        this.initialized = false;
+        this.pendingSounds = [];
+
+        // Add initialization method
+        document.addEventListener('click', () => this.initialize(), { once: true });
+        document.addEventListener('keydown', () => this.initialize(), { once: true });
+    }
+
+    initialize() {
+        if (this.initialized) return;
+        this.initialized = true;
+        
+        // Play any sounds that were requested before initialization
+        this.pendingSounds.forEach(soundName => this.play(soundName));
+        this.pendingSounds = [];
     }
 
     play(soundName) {
+        if (!this.initialized) {
+            this.pendingSounds.push(soundName);
+            return;
+        }
+
         if (this.sounds[soundName]) {
             try {
                 this.sounds[soundName].currentTime = 0;
