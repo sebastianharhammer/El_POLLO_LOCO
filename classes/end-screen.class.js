@@ -43,7 +43,6 @@ class EndScreen extends DrawableObject {
                         
                         setTimeout(() => {
                             world.resetGame();
-                            // Reset button state after delay
                             setTimeout(() => {
                                 this.isRestarting = false;
                                 this.buttons[0].disabled = false;
@@ -53,32 +52,6 @@ class EndScreen extends DrawableObject {
                     }
                 }
             },
-            {
-                text: 'Main Menu',
-                x: this.width/2 - 100,
-                y: 650,
-                width: 200,
-                height: 50,
-                disabled: false,
-                action: () => {
-                    if (!this.isRestarting && !world.isResetting && !this.buttons[1].disabled) {
-                        this.buttons[1].disabled = true;
-                        this.buttons[1].text = 'Returning...';
-                        this.isRestarting = true;
-                        
-                        setTimeout(() => {
-                            world.resetGame();
-                            world.showStartScreen();
-                            // Reset button state after delay
-                            setTimeout(() => {
-                                this.isRestarting = false;
-                                this.buttons[1].disabled = false;
-                                this.buttons[1].text = 'Main Menu';
-                            }, 1000);
-                        }, 1500);
-                    }
-                }
-            }
         ];
     }
 
@@ -86,14 +59,11 @@ class EndScreen extends DrawableObject {
     addClickListeners() {
         document.addEventListener('click', (event) => {
             if (!this.isVisible()) return;
-
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
-            
             const clickX = (event.clientX - rect.left) * scaleX;
             const clickY = (event.clientY - rect.top) * scaleY;
-
             this.buttons.forEach(button => {
                 if (this.isClickInButton(clickX, clickY, button)) {
                     button.action();
@@ -101,17 +71,13 @@ class EndScreen extends DrawableObject {
             });
         });
 
-        // Add hover effect with scaling
         document.addEventListener('mousemove', (event) => {
             if (!this.isVisible()) return;
-
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
-            
             const mouseX = (event.clientX - rect.left) * scaleX;
             const mouseY = (event.clientY - rect.top) * scaleY;
-
             this.buttons.forEach(button => {
                 button.isHovered = this.isClickInButton(mouseX, mouseY, button);
             });
@@ -119,7 +85,6 @@ class EndScreen extends DrawableObject {
     }
 
     isVisible() {
-        // This should return true when the end screen is being displayed
         return world.gameOver;
     }
 
@@ -132,13 +97,10 @@ class EndScreen extends DrawableObject {
 
     draw(ctx) {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-        
-        // Draw the main content
         ctx.font = '30px ZABARS';
         ctx.fillStyle = 'white';
         ctx.letterSpacing = '3px';
         ctx.textAlign = 'center';
-        
         if (this.isVictory) {
             ctx.fillText(`Final Score: ${this.score}`, this.width/2, 220);
             ctx.font = '32px ZABARS';
@@ -146,22 +108,17 @@ class EndScreen extends DrawableObject {
             ctx.fillText(`Time Bonus: ${this.timeBonus}`, this.width/2, 260);
         } 
 
-        // Only draw buttons after 2 seconds
-        if (this.showButtonsTimer >= 1000) {
+        if (this.showButtonsTimer >= 750) {
             this.buttons.forEach(button => {
-                // Button background
                 ctx.fillStyle = button.disabled ? '#808080' : (button.isHovered ? '#4CAF50' : '#45a049');
                 ctx.beginPath();
                 ctx.roundRect(button.x, button.y, button.width, button.height, 10);
                 ctx.fill();
-
-                // Button text
                 ctx.font = '28px ZABARS';
                 ctx.letterSpacing = '3px';
                 ctx.fillStyle = 'white';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-
                 ctx.fillText(
                     button.text,
                     button.x + button.width/2,
@@ -169,7 +126,7 @@ class EndScreen extends DrawableObject {
                 );
             });
         } else {
-            this.showButtonsTimer += 1000/60; // Increment timer (assuming 60 FPS)
+            this.showButtonsTimer += 1000/60;
         }
     }
 

@@ -1,5 +1,5 @@
 class Character extends MoveableObject {
-  y = 300;
+  y = 400;
   energy = 50;
   IMAGES_WALKING = [
     "img/2_character_pepe/2_walk/W-21.png",
@@ -84,7 +84,6 @@ class Character extends MoveableObject {
         this.setCamera();
         this.otherDirection = false;
         this.getTimeStamp();
-        this.world.soundManager.play('walk');
       }
       if (this.world.keyboard.LEFT && this.x > 0 && !this.isDead()) { 
         this.moveLeft();

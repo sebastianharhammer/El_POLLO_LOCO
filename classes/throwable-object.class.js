@@ -13,9 +13,21 @@ class ThrowableObject extends MoveableObject {
   }
   IMAGES_BOTTLE = [
     "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
+    /* "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png", */
     "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
+   /*  "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png", */
     "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png",
+   /*  "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png", */
     "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png",
+   /*  "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png",
+    "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png", */
   ];
   IMAGES_BOTTLE_THROW = [
     "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
@@ -69,10 +81,8 @@ class ThrowableObject extends MoveableObject {
   animateThrow() {
     if (this.throwInterval) clearInterval(this.throwInterval);
     this.throwInterval = setInterval(() => {
-      setTimeout(() => {
         this.playAnimation(this.IMAGES_BOTTLE_THROW);
-      }, 250);
-    }, 1000/60);
+    }, 35);
   }
 
   animateSplash() {
