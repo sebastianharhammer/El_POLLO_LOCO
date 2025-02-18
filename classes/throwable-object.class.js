@@ -21,10 +21,6 @@ class ThrowableObject extends MoveableObject {
     "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
     "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
     "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png",
-    "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png",
-    "./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
-    "./img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
-    "./img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png",
     "./img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png"
   ];
   IMAGES_BOTTLE_SPLASH = [
@@ -42,20 +38,22 @@ class ThrowableObject extends MoveableObject {
     }
     
     this.statusBarBottles.setPercentage(this.statusBarBottles.percentage - 10);
+    this.world.soundManager.play('throw');
     
-
     this.speedY = 30;
     this.applyGravity();
     
     const throwingLeft = this.world.character.otherDirection;
     const THROW_SPEED = 20;
     
-    let bottleInterval = setInterval(() => {
+    if (this.bottleInterval) clearInterval(this.bottleInterval);
+    
+    this.bottleInterval = setInterval(() => {
         this.x += throwingLeft ? -THROW_SPEED : THROW_SPEED;
         this.animateThrow();
         if (this.y >= 600) {
             this.handleBottleImpact();
-            clearInterval(bottleInterval);
+            clearInterval(this.bottleInterval);
         }
     }, 50);
   }
@@ -68,17 +66,15 @@ class ThrowableObject extends MoveableObject {
   }
 
 
-  animate() {
-    setInterval(() => {
-      this.playAnimation(this.IMAGES_BOTTLE);
-      }, 50);
+  animateThrow() {
+    if (this.throwInterval) clearInterval(this.throwInterval);
+    this.throwInterval = setInterval(() => {
+      setTimeout(() => {
+        this.playAnimation(this.IMAGES_BOTTLE_THROW);
+      }, 250);
+    }, 1000/60);
   }
 
-  animateThrow() {
-    setInterval(() => {
-      this.playAnimation(this.IMAGES_BOTTLE_THROW);
-    }, 50);
-  }
   animateSplash() {
     if (this.splashInterval) clearInterval(this.splashInterval);
     let i = 0;
@@ -89,6 +85,6 @@ class ThrowableObject extends MoveableObject {
       } else {
         clearInterval(this.splashInterval);
       }
-    }, 50);
+    }, 1000/60);
   }
 }
