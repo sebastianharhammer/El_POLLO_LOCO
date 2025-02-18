@@ -94,7 +94,7 @@ class World {
       this.checkBottleHit();
       this.checkEndbossAlert();
       this.checkGameOver();
-    }, 20);
+    }, 1000/60);
   }
 
   checkJumpCollision() {
@@ -207,7 +207,7 @@ class World {
     this.throwableObjects.splice(bottleIndex, 1);
     setTimeout(() => {
       this.level.enemies.splice(enemyIndex, 1);
-    }, 1500);
+    }, 1200);
   }
 
   checkEndbossAlert() {
