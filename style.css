@@ -15,9 +15,9 @@ body {
 }
 #mobileHorizontalOverlay {
     position: absolute;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.75);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
     z-index: 10;
     margin: 0;
     display: flex;
@@ -26,7 +26,7 @@ body {
 }
 #mobileHorizontalOverlayText {
     color: white;
-    font-size: 24px;
+    font-size: 36px;
     letter-spacing: 3px;
     margin-bottom: 40vh; 
 }
@@ -35,6 +35,7 @@ body {
     top: 70%;
     left: 50%;
     right: 50%;
+    width: 150px;
     transform: translate(-50%, -50%);
     filter: invert(1);
 }
@@ -217,7 +218,7 @@ canvas {
         display: none;
     }
 }
-@media (min-height: 930px) {
+@media (min-height: 935px) {
     #mobileHorizontalOverlay {
         display: none;
     }
@@ -234,6 +235,7 @@ canvas {
     }
     #desktopInteractions {
         display: none;
+        margin-bottom: 0;
     }
     .canvas-container {
         display: block;

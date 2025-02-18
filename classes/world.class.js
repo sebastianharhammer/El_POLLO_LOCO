@@ -333,7 +333,8 @@ class World {
     if (this.isResetting) return;
 
     if (this.level.endboss[0]?.endbossIsDead && !this.gameOver) {
-      this.soundManager.stopAll();
+      this.soundManager.pause("background");
+      this.soundManager.pause("chickenAngry");
       this.soundManager.play("victory");
       setTimeout(() => {
         this.gameOver = true;
