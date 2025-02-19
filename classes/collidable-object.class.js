@@ -5,4 +5,7 @@ class CollidableObject extends MoveableObject {
         right: 0,
         bottom: 0,
     };
+
+    
 }
+

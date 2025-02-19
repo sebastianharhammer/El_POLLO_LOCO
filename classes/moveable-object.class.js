@@ -34,6 +34,23 @@ class MoveableObject extends DrawableObject {
       }
     }, 250);
   }
+
+  endbossHit(bottleIndex) {
+    let endboss = this.level.endboss[0];
+    endboss.hit();
+    this.statusBarEndbossHP.setPercentage(endboss.energy);
+    if (endboss.energy <= 0) {
+      endboss.endbossIsDead = true;
+    }
+    if (endboss.endbossIsDead) {
+      setTimeout(() => {
+        this.level.endboss.splice(0, 1);
+      }, 1500);
+    }
+    this.throwableObjects.splice(bottleIndex, 1);
+    this.soundManager.play("endbossHurt");
+  }
+
   isHurt() {
     let timePassed = new Date().getTime() - this.lastHit; //Diff in ms
     timePassed = timePassed / 1000; //Diff in s
@@ -41,6 +58,52 @@ class MoveableObject extends DrawableObject {
   }
   isDead() {
     return this.energy == 0;
+  }
+
+  chickenDies(enemyIndex, bottleIndex) {
+    this.soundManager.play("chicken");
+    this.level.enemies[enemyIndex].speed = 0;
+    this.level.enemies[enemyIndex].chickenIsDead = true;
+    this.throwableObjects.splice(bottleIndex, 1);
+    this.chickenWhichDied.push(this.level.enemies[enemyIndex]);
+    setTimeout(() => {
+      this.level.enemies.splice(enemyIndex, 1);
+    }, 1000);
+  }
+
+  checkEndbossAlert() {
+    let endboss = this.level.endboss[0];
+    if (endboss) {
+      if (endboss.x - this.character.x < 400 && !endboss.endbossAttack) {
+        this.stopEndboss();
+        endboss.endbossAttack = true;
+      }
+    }
+  }
+
+  stopEndboss() {
+    this.level.endboss[0].speed = 0;
+    setTimeout(() => {
+      this.startEndbossAttack();
+    }, 1000);
+  }
+
+  startEndbossAttack() {
+    this.soundManager.play("chickenAngry");
+    this.endbossAttackInterval = setInterval(() => {
+      const endboss = this.level.endboss[0];
+      if (this.character.x - this.character.width / 2 < endboss.x) {
+        endboss.otherDirection = false;
+        this.level.endboss[0].x -= 7.5;
+      }
+      if (this.character.x - this.character.width / 2 > endboss.x) {
+        endboss.otherDirection = true;
+        this.level.endboss[0].x += 7.5;
+      }
+      if (this.level.endboss[0].endbossIsDead) {
+        clearInterval(this.endbossAttackInterval);
+      }
+    }, 50);
   }
 
   applyGravity() {
@@ -91,7 +154,9 @@ class MoveableObject extends DrawableObject {
     this.currentImage++;
   }
 
-  //chicken
+  
+
+  
   isChickenColliding(bottle) {
     return this.isColliding(bottle);
   }

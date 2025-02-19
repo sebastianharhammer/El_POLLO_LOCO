@@ -28,4 +28,10 @@ class Coin extends MoveableObject {
         }, 250);
     }
 
+    collectCoin(index) {
+        this.soundManager.play("coin");
+        this.level.coins.splice(index, 1);
+        this.statusBarCoin.setPercentage(this.statusBarCoin.percentage + 10);
+      }
+
 }
