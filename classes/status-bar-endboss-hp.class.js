@@ -32,7 +32,6 @@ class StatusBarEndbossHP extends MoveableObject {
      * @param {number} percentage - The current health percentage (0-5).
      */
     setPercentage(percentage) {
-      console.log(percentage);
       this.percentage = percentage;
       let path = this.IMAGES[this.resolveImageIndex()];
       this.img = this.imageCache[path];
