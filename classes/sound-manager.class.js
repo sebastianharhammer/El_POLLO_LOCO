@@ -17,7 +17,8 @@ class SoundManager {
             victory: new Audio('audio/won.mp3'),
             defeat: new Audio('audio/defeat.mp3'),
             background: new Audio('audio/background.mp3'),
-            walking: new Audio('audio/walk.mp3')
+            walking: new Audio('audio/walk.mp3'),
+            dead: new Audio('audio/dead.mp3')
 
         };
 
@@ -27,6 +28,7 @@ class SoundManager {
         });
         this.sounds.walking.volume = 0.8;
         this.sounds.hurt.volume = 0.6;
+        this.sounds.dead.volume = 0.6;
 
         this.initialized = false;
         this.pendingSounds = [];

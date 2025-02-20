@@ -73,6 +73,7 @@ class Character extends MoveableObject {
   lastWalkingSoundTime = 0;
   lastHitSoundTime = 0;
 
+
   /**
    * Creates a new Character instance and initializes its properties and animations.
    */
@@ -186,6 +187,7 @@ class Character extends MoveableObject {
       this.getTimeStamp();
     } else if (this.isDead()) {
       this.playAnimation(this.IMAGES_DEAD);
+      this.handleDeathSound();
     } else if (this.isAboveGround()) {
       this.playAnimation(this.IMAGES_JUMPING);
     } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
@@ -235,6 +237,11 @@ class Character extends MoveableObject {
           this.world.soundManager.play("hurt");
           this.lastHitSoundTime = currentTime;
       }
+    }
+  }
+  handleDeathSound() {
+    if (this.world && this.world.soundManager) {
+      this.world.soundManager.play("dead");
     }
   }
 
