@@ -24,12 +24,12 @@ class StatusBarEndbossHP extends MoveableObject {
       this.y = 20;
       this.width = 400;
       this.height = 120;
-      this.setPercentage(5);
+      this.setPercentage(200);
     }
   
     /**
      * Updates the status bar's appearance based on the current health percentage.
-     * @param {number} percentage - The current health percentage (0-5).
+     * @param {number} percentage - The current health percentage (0-5)
      */
     setPercentage(percentage) {
       this.percentage = percentage;

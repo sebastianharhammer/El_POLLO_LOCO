@@ -45,16 +45,16 @@ class StatusBarHP extends MoveableObject {
   resolveImageIndex() {
     if (this.percentage == 200) {
       return 5;
-    } else if (this.percentage > 160) {
+    } else if (this.percentage < 199 && this.percentage >= 150) {
       return 4;
-    } else if (this.percentage > 120) {
+    } else if (this.percentage < 149 && this.percentage >= 100) {
       return 3;
-    } else if (this.percentage > 80) {
+    } else if (this.percentage < 99 && this.percentage >= 50) {
       return 2;
-    } else if (this.percentage > 40) {
+    } else if (this.percentage < 49 && this.percentage >= 1) {
       return 1;
     } else {
       return 0;
-    }
+    } 
   }
 }
