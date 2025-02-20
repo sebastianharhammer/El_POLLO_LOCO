@@ -24,7 +24,7 @@ class StatusBarEndbossHP extends MoveableObject {
       this.y = 20;
       this.width = 400;
       this.height = 120;
-      this.setPercentage(200);
+      this.setPercentage(5);
     }
   
     /**

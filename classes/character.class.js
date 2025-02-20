@@ -63,12 +63,15 @@ class Character extends MoveableObject {
   ];
   world;
   speed = 5;
+  walkingSound = false;
   offset = {
     top: 100,
     left: 20,  
     right: 30,
     bottom: 10,
   };
+  lastWalkingSoundTime = 0;
+  lastHitSoundTime = 0;
 
   /**
    * Creates a new Character instance and initializes its properties and animations.
@@ -179,6 +182,7 @@ class Character extends MoveableObject {
   updateCharacterAnimation() {
     if (this.isHurt() && !this.isDead()) {
       this.playAnimation(this.IMAGES_HURT);
+      this.handleHitSound();
       this.getTimeStamp();
     } else if (this.isDead()) {
       this.playAnimation(this.IMAGES_DEAD);
@@ -186,6 +190,7 @@ class Character extends MoveableObject {
       this.playAnimation(this.IMAGES_JUMPING);
     } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
       this.playAnimation(this.IMAGES_WALKING);
+      this.handleWalkingSound();
     } else {
       this.handleIdleAnimation();
     }
@@ -200,6 +205,36 @@ class Character extends MoveableObject {
       this.playAnimation(this.IMAGES_LONG_IDLE);
     } else {
       this.playAnimation(this.IMAGES_IDLE);
+    }
+  }
+
+  /**
+   * Handles the walking sound for the character.
+   * @private
+   */
+  handleWalkingSound() {
+    if (this.world && this.world.soundManager) {
+      const currentTime = Date.now();
+      if ((this.canMoveRight() || this.canMoveLeft()) && !this.isAboveGround() && 
+          currentTime - this.lastWalkingSoundTime >= 300) {
+          this.world.soundManager.play("walking");
+          this.lastWalkingSoundTime = currentTime;
+      }
+    }
+  }
+
+  /**
+   * Handles the hit sound for the character.
+   * @private
+   */
+  handleHitSound() {
+    if (this.world && this.world.soundManager) {
+      const currentTime = Date.now();
+      if (this.isHurt() && !this.isDead() && 
+          currentTime - this.lastHitSoundTime >= 300) {
+          this.world.soundManager.play("hurt");
+          this.lastHitSoundTime = currentTime;
+      }
     }
   }
 

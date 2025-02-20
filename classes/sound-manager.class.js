@@ -16,13 +16,17 @@ class SoundManager {
             endbossHurt: new Audio('audio/endboss-hurt2.wav'),
             victory: new Audio('audio/won.mp3'),
             defeat: new Audio('audio/defeat.mp3'),
-            background: new Audio('audio/background.mp3')
+            background: new Audio('audio/background.mp3'),
+            walking: new Audio('audio/walk.mp3')
+
         };
 
         Object.values(this.sounds).forEach(audio => {
             audio.load();
             audio.volume = 0.2; 
         });
+        this.sounds.walking.volume = 0.8;
+        this.sounds.hurt.volume = 0.6;
 
         this.initialized = false;
         this.pendingSounds = [];
@@ -82,4 +86,5 @@ class SoundManager {
             this.sounds[soundName].pause();
         }
     }
+
 } 

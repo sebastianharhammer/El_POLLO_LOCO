@@ -18,7 +18,7 @@ class MoveableObject extends DrawableObject {
   lastHit = 0;
   world;
   energy = 100;
-
+  
   /**
    * Records the current timestamp for movement tracking.
    */
@@ -217,6 +217,7 @@ class MoveableObject extends DrawableObject {
   moveRight() {
     this.x += this.speed;
   }
+  
 
   /**
    * Moves the object to the left.
