@@ -1,35 +1,8 @@
-class World {
-  character = new Character();
-  level = level1;
-  canvas;
-  ctx;
-  keyboard;
-  camera_x = 200;
-  statusBarHP = new StatusBarHP();
-  statusBarCoin = new StatusBarCoin();
-  statusBarBottles = new StatusBarBottles();
-  statusBarEndbossHP = new StatusBarEndbossHP();
-  throwableObjects = [];
-  bottles = level1.bottles;
-  coins = level1.coins;
-  chickenIsDead;
-  endboss = this.level.endboss[0];
-  endbossAttack = false;
-  throwCooldown = false;
-  gameStarted = false;
-  c;
-  startScreen = new StartScreen();
-  gameOver = false;
-  gameStartTime;
-  endScreen;
-  soundManager = new SoundManager();
-  endbossAttackInterval;
-  isResetting = false;
-  gameInterval;
-  charIsntDead = true;
-  chickenWhichDied = [];
+class World extends Var {
+  
 
   constructor(canvas, keyboard) {
+    super();
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
@@ -49,16 +22,22 @@ class World {
         this.gameStarted = true;
         this.run();
         if (window.innerWidth <= 1280) {
-          document.getElementById("mobileOverlayContainerTop").classList.add("d-none");
-          document.getElementById("mobileOverlayContainerBottom").classList.remove("d-none");
+          document
+            .getElementById("mobileOverlayContainerTop")
+            .classList.add("d-none");
+          document
+            .getElementById("mobileOverlayContainerBottom")
+            .classList.remove("d-none");
         }
       }
     };
+
     document.addEventListener("keydown", (e) => {
       if (e.code === "Enter" && window.innerWidth > 1280) {
         startGame();
       }
     });
+
     if (this.isMobile()) {
       document.addEventListener("touchstart", startGame);
     }
@@ -182,8 +161,83 @@ class World {
     return timePassed < 1;
   }
 
+  endbossHit(bottleIndex) {
+    let endboss = this.level.endboss[0];
+    endboss.hit();
+    this.statusBarEndbossHP.setPercentage(endboss.energy);
+    if (endboss.energy <= 0) {
+      endboss.endbossIsDead = true;
+    }
+    if (endboss.endbossIsDead) {
+      setTimeout(() => {
+        this.level.endboss.splice(0, 1);
+      }, 1500);
+    }
+    this.throwableObjects.splice(bottleIndex, 1);
+    this.soundManager.play("endbossHurt");
+  }
+
+  chickenDies(enemyIndex, bottleIndex) {
+    this.soundManager.play("chicken");
+    this.level.enemies[enemyIndex].speed = 0;
+    this.level.enemies[enemyIndex].chickenIsDead = true;
+    this.throwableObjects.splice(bottleIndex, 1);
+    this.chickenWhichDied.push(this.level.enemies[enemyIndex]);
+    setTimeout(() => {
+      this.level.enemies.splice(enemyIndex, 1);
+    }, 1000);
+  }
+
+  checkEndbossAlert() {
+    let endboss = this.level.endboss[0];
+    if (endboss) {
+      if (endboss.x - this.character.x < 400 && !endboss.endbossAttack) {
+        this.stopEndboss();
+        endboss.endbossAttack = true;
+      }
+    }
+  }
+
+  stopEndboss() {
+    this.level.endboss[0].speed = 0;
+    setTimeout(() => {
+      this.startEndbossAttack();
+    }, 1000);
+  }
+
+  startEndbossAttack() {
+    this.soundManager.play("chickenAngry");
+    this.endbossAttackInterval = setInterval(() => {
+      const endboss = this.level.endboss[0];
+      if (this.character.x - this.character.width / 2 < endboss.x) {
+        endboss.otherDirection = false;
+        this.level.endboss[0].x -= 7.5;
+      }
+      if (this.character.x - this.character.width / 2 > endboss.x) {
+        endboss.otherDirection = true;
+        this.level.endboss[0].x += 7.5;
+      }
+      if (this.level.endboss[0].endbossIsDead) {
+        clearInterval(this.endbossAttackInterval);
+      }
+    }, 50);
+  }
+
+  collectCoin(index) {
+    this.soundManager.play("coin");
+    this.level.coins.splice(index, 1);
+    this.statusBarCoin.setPercentage(this.statusBarCoin.percentage + 10);
+  }
+
+  collectBottle(index) {
+    this.soundManager.play("bottle");
+    this.level.bottles.splice(index, 1);
+    this.statusBarBottles.setPercentage(this.statusBarBottles.percentage + 10);
+  }
+
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
     if (!this.gameStarted) {
       this.startScreen.draw(this.ctx);
     } else if (this.gameOver) {
@@ -192,12 +246,14 @@ class World {
       this.ctx.translate(this.camera_x, 0);
       this.addObjectsToMap(this.level.backgroundObjects);
       this.addObjectsToMap(this.level.clouds);
+
       this.ctx.translate(-this.camera_x, 0);
       this.addToMap(this.statusBarHP);
       this.addToMap(this.statusBarCoin);
       this.addToMap(this.statusBarBottles);
       this.addToMap(this.statusBarEndbossHP);
       this.ctx.translate(this.camera_x, 0);
+
       this.addToMap(this.character);
       this.addObjectsToMap(this.level.enemies);
       this.addObjectsToMap(this.level.endboss);
@@ -243,7 +299,9 @@ class World {
   }
 
   checkGameOver() {
+    // Don't check for game over while resetting
     if (this.isResetting) return;
+
     if (this.level.endboss[0]?.endbossIsDead && !this.gameOver) {
       this.soundManager.pause("background");
       this.soundManager.pause("chickenAngry");

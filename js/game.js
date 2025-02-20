@@ -119,52 +119,20 @@ document.addEventListener('keyup', (e) => {
     }
 });
 function resetGame() {
-    delete this.character;
-    this.character = new Character();
-    this.level = new Level(
-        [
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new Chicken(),
-            new SmallChicken(),
-            new SmallChicken(),
-            new SmallChicken(),
-            new SmallChicken(),
-            new SmallChicken(),
-            new SmallChicken(),
-        ],
-        [new Endboss()],
-        level1.clouds,
-        level1.backgroundObjects,
-        level1.coins,
-        level1.bottles
-    );
-    this.camera_x = 200;
-    this.throwableObjects = [];
-    this.endbossAttack = false;
-    this.throwCooldown = false;
-    this.gameOver = false;
-    this.gameStarted = false;
-    this.gameStartTime = new Date().getTime();
-    this.endScreen = null;
-    let canvas = document.getElementById("canvas");
-    let ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Stop all intervals and sounds
+    world.soundManager.stopAll();
+    clearInterval(world.character.animationInterval);
+    clearInterval(world.character.movementInterval);
+    clearInterval(world.endbossAttackInterval);
+    clearInterval(world.gameInterval);
 
-    // Reset status bars
-    this.statusBarHP = new StatusBarHP();
-    this.statusBarCoin = new StatusBarCoin();
-    this.statusBarBottles = new StatusBarBottles();
-    this.statusBarEndbossHP = new StatusBarEndbossHP();
+    // Create new world instance with existing canvas and keyboard
+    world = new World(canvas, keyboard);
 
-    // Reset character world reference
-    this.setWorld();
-
-    // Reset sound
-    this.soundManager.stopAll();
-  }
+    // Remove existing touch event listeners and rebind
+    const existingTouchListeners = document.getElementsByTagName("*");
+    for (let element of existingTouchListeners) {
+        element.removeEventListener("touchstart", () => {});
+    }
+    bindMobileControls();
+}

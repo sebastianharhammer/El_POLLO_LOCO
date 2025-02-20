@@ -33,12 +33,6 @@ class Bottle extends MoveableObject {
         }
     }
 
-    collectBottle(index) {
-        this.soundManager.play("bottle");
-        this.level.bottles.splice(index, 1);
-        this.statusBarBottles.setPercentage(this.statusBarBottles.percentage + 10);
-      }
-
 
 
 }

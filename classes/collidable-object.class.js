@@ -6,6 +6,14 @@ class CollidableObject extends MoveableObject {
         bottom: 0,
     };
 
-    
+    checkJumpCollision() {
+        this.level.enemies.forEach((enemy, index) => {
+          if (this.character.isJumpColliding(enemy) && !this.chickenWhichDied.includes(enemy)) {
+            this.chickenDies(index, null);
+            this.chickenWhichDied.push(enemy);
+            enemy.isBeingKilled = true;
+          }
+        });
+      }
 }
 
