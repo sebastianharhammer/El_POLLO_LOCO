@@ -83,6 +83,10 @@ class GameManager {
         this.world.gameStarted = false;
         this.world.gameStartTime = new Date().getTime();
         this.world.endScreen = null;
+        
+        if (this.world.startScreen) {
+            this.world.startScreen.cleanup();
+        }
     }
 
     /**

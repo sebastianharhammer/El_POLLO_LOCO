@@ -32,15 +32,28 @@ class World extends Var {
     const startGame = () => {
       if (!this.gameStarted) {
         this.gameStarted = true;
+        if (this.startScreen) {
+          this.startScreen.cleanup();
+        }
         this.run();
         this.updateMobileOverlay();
       }
     };
+
     document.addEventListener(
       "keydown",
       (e) => e.code === "Enter" && window.innerWidth > 1280 && startGame()
     );
-    this.isMobile() && document.addEventListener("touchstart", startGame);
+
+    // Modified touch handler to ignore button clicks
+    if (this.isMobile()) {
+      document.addEventListener("touchstart", (e) => {
+        // Don't start game if touch is on a button
+        if (e.target.tagName !== 'BUTTON') {
+          startGame();
+        }
+      });
+    }
   }
   /**
    * Updates the mobile overlay based on screen width
