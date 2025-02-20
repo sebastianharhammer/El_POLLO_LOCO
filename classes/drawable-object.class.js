@@ -1,3 +1,7 @@
+/**
+ * Base class for all drawable objects in the game.
+ * Provides basic functionality for loading and drawing images.
+ */
 class DrawableObject {
   x = 120;
   y = 250;
@@ -8,11 +12,19 @@ class DrawableObject {
   currentImage = 0;
   
 
+  /**
+   * Loads a single image from the specified path.
+   * @param {string} path - The path to the image file.
+   */
   loadImage(path) {
     this.img = new Image();
     this.img.src = path;
   }
 
+  /**
+   * Loads multiple images and stores them in the imageCache.
+   * @param {string[]} arr - Array of image paths to load.
+   */
   loadImages(arr) {
     arr.forEach((path) => {
       let img = new Image();
@@ -21,8 +33,12 @@ class DrawableObject {
     });
   }
   
-  drawFrame(ctx) {
-    if (this instanceof Character || this instanceof Endboss || this instanceof Chicken || this instanceof Bottle || this instanceof Coin || this instanceof SmallChicken) {
+  /**
+   * Draws a debug frame around specific game objects for collision detection visualization.
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+   */
+  drawFrame(ctx) { 
+    if (this instanceof Character || this instanceof ThrowableObject || this instanceof Endboss || this instanceof Chicken || this instanceof Bottle || this instanceof Coin || this instanceof SmallChicken) {
       ctx.beginPath();
       ctx.lineWidth = "2";
       ctx.strokeStyle = "blue";
@@ -36,6 +52,10 @@ class DrawableObject {
     }
   }
 
+  /**
+   * Draws the object's current image on the canvas.
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+   */
   draw(ctx) {
     try {
       ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -44,5 +64,4 @@ class DrawableObject {
       console.log('Image path:', this.img.src);
     }
   }
-
 }

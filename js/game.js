@@ -1,8 +1,13 @@
+/** @type {HTMLCanvasElement} */
 let canvas;
+/** @type {World} */
 let world;
+/** @type {Keyboard} */
 let keyboard = new Keyboard();
 
-
+/**
+ * Initializes the game by setting up the canvas, world, and mobile controls
+ */
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
@@ -10,6 +15,9 @@ function init() {
     hideMobileControls();
 }
 
+/**
+ * Hides mobile controls when on the start screen and viewport width is <= 1280px
+ */
 function hideMobileControls() {
     if (world.startScreen instanceof StartScreen && window.innerWidth <= 1280) {
         document.getElementById('mobileOverlayContainerTop').classList.add('d-none');
@@ -17,6 +25,9 @@ function hideMobileControls() {
     }
 }
 
+/**
+ * Toggles the canvas between fullscreen and normal mode
+ */
 function toggleFullscreen() {
     if (canvas.fullscreenElement) {
         canvas.exitFullscreen();
@@ -24,6 +35,10 @@ function toggleFullscreen() {
         canvas.requestFullscreen();
     }
 }
+
+/**
+ * Toggles the game sound on/off and updates the UI accordingly
+ */
 function toggleSound() {
     let soundManager = world.soundManager;
     let isMuted = soundManager.sounds.background.volume === 0;
@@ -35,13 +50,25 @@ function toggleSound() {
     SoundOff.classList.toggle('d-none');
     MobileSoundOn.classList.toggle('d-none');
     MobileSoundOff.classList.toggle('d-none');
-    
     Object.values(soundManager.sounds).forEach(audio => {
         audio.volume = isMuted ? 0.2 : 0.0;
     });
 }
 
+/**
+ * Binds all mobile control touch events
+ */
 function bindMobileControls() {
+    bindMobileLeftButton();
+    bindMobileRightButton();
+    bindMobileJumpButton();
+    bindMobileThrowButton();
+}
+
+/**
+ * Binds touch events for the mobile left movement button
+ */
+function bindMobileLeftButton() {
     document.getElementById('mobileLeftButton').addEventListener('touchstart', (e) => {
         e.preventDefault();
         keyboard.LEFT = true;
@@ -50,6 +77,12 @@ function bindMobileControls() {
         e.preventDefault();
         keyboard.LEFT = false;
     });
+}
+
+/**
+ * Binds touch events for the mobile right movement button
+ */
+function bindMobileRightButton() {
     document.getElementById('mobileRightButton').addEventListener('touchstart', (e) => {
         e.preventDefault();
         keyboard.RIGHT = true;
@@ -58,6 +91,12 @@ function bindMobileControls() {
         e.preventDefault();
         keyboard.RIGHT = false;
     });
+}
+
+/**
+ * Binds touch events for the mobile jump button
+ */
+function bindMobileJumpButton() {
     document.getElementById('mobileJumpButton').addEventListener('touchstart', (e) => {
         e.preventDefault();
         keyboard.SPACE = true;
@@ -66,6 +105,12 @@ function bindMobileControls() {
         e.preventDefault();
         keyboard.SPACE = false;
     });
+}
+
+/**
+ * Binds touch events for the mobile throw button
+ */
+function bindMobileThrowButton() {
     document.getElementById('mobileThrowButton').addEventListener('touchstart', (e) => {
         e.preventDefault();
         keyboard.D = true;
@@ -76,7 +121,10 @@ function bindMobileControls() {
     });
 }
 
-
+/**
+ * Event listener for keyboard keydown events
+ * @param {KeyboardEvent} e - The keyboard event object
+ */
 document.addEventListener('keydown', (e) => {
     if (e.keyCode == 39) {
         keyboard.RIGHT = true;
@@ -98,6 +146,10 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+/**
+ * Event listener for keyboard keyup events
+ * @param {KeyboardEvent} e - The keyboard event object
+ */
 document.addEventListener('keyup', (e) => {
     if (e.keyCode == 39) {
         keyboard.RIGHT = false;
@@ -118,21 +170,3 @@ document.addEventListener('keyup', (e) => {
         keyboard.D = false;
     }
 });
-function resetGame() {
-    // Stop all intervals and sounds
-    world.soundManager.stopAll();
-    clearInterval(world.character.animationInterval);
-    clearInterval(world.character.movementInterval);
-    clearInterval(world.endbossAttackInterval);
-    clearInterval(world.gameInterval);
-
-    // Create new world instance with existing canvas and keyboard
-    world = new World(canvas, keyboard);
-
-    // Remove existing touch event listeners and rebind
-    const existingTouchListeners = document.getElementsByTagName("*");
-    for (let element of existingTouchListeners) {
-        element.removeEventListener("touchstart", () => {});
-    }
-    bindMobileControls();
-}

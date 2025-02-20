@@ -1,3 +1,7 @@
+/**
+ * Represents a playable character in the game that can move, jump, and animate.
+ * @extends MoveableObject
+ */
 class Character extends MoveableObject {
   energy = 200;
   IMAGES_WALKING = [
@@ -65,6 +69,10 @@ class Character extends MoveableObject {
     right: 30,
     bottom: 10,
   };
+
+  /**
+   * Creates a new Character instance and initializes its properties and animations.
+   */
   constructor() {
     super().loadImage("img/2_character_pepe/2_walk/W-21.png");
     this.loadImages(this.IMAGES_WALKING);
@@ -77,43 +85,129 @@ class Character extends MoveableObject {
     this.applyGravity();
     this.animate();
   }
+  
+  /**
+   * Initializes both movement and animation intervals for the character.
+   */
   animate() {
-    this.movementInterval = setInterval(() => {
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x && !this.isDead()) {
-        this.moveRight();
-        this.setCamera();
-        this.otherDirection = false;
-        this.getTimeStamp();
-      }
-      if (this.world.keyboard.LEFT && this.x > 0 && !this.isDead()) { 
-        this.moveLeft();
-        this.otherDirection = true;
-        this.getTimeStamp();
-      }
-      if (this.world.keyboard.SPACE && !this.isAboveGround() && !this.isDead()) {
-        this.jump();
-        this.getTimeStamp();
-      }
-      this.world.camera_x = -this.x + 200;
-    }, 1000 / 60);
+    this.initializeMovementInterval();
+    this.initializeAnimationInterval();
+  }
 
+  /**
+   * Sets up the interval for handling character movement and camera updates.
+   * @private
+   */
+  initializeMovementInterval() {
+    this.movementInterval = setInterval(() => {
+      this.handleMovement();
+      this.updateCamera();
+    }, 1000 / 60);
+  }
+
+  /**
+   * Handles character movement based on keyboard input.
+   * @private
+   */
+  handleMovement() {
+    if (this.canMoveRight()) {
+      this.moveRight();
+      this.setCamera();
+      this.otherDirection = false;
+      this.getTimeStamp();
+    }
+    if (this.canMoveLeft()) {
+      this.moveLeft();
+      this.otherDirection = true;
+      this.getTimeStamp();
+    }
+    if (this.canJump()) {
+      this.jump();
+      this.getTimeStamp();
+    }
+  }
+
+  /**
+   * Checks if the character can move right.
+   * @returns {boolean} True if the character can move right, false otherwise.
+   * @private
+   */
+  canMoveRight() {
+    return this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x && !this.isDead();
+  }
+
+  /**
+   * Checks if the character can move left.
+   * @returns {boolean} True if the character can move left, false otherwise.
+   * @private
+   */
+  canMoveLeft() {
+    return this.world.keyboard.LEFT && this.x > 0 && !this.isDead();
+  }
+
+  /**
+   * Checks if the character can jump.
+   * @returns {boolean} True if the character can jump, false otherwise.
+   * @private
+   */
+  canJump() {
+    return this.world.keyboard.SPACE && !this.isAboveGround() && !this.isDead();
+  }
+
+  /**
+   * Updates the camera position relative to the character.
+   * @private
+   */
+  updateCamera() {
+    this.world.camera_x = -this.x + 200;
+  }
+
+  /**
+   * Sets up the interval for handling character animations.
+   * @private
+   */
+  initializeAnimationInterval() {
     this.animationInterval = setInterval(() => {
-      if (this.isHurt() && !this.isDead()) {
-        this.playAnimation(this.IMAGES_HURT);
-        this.getTimeStamp();
-      } else if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
-      } else if (this.isAboveGround()) {
-        this.playAnimation(this.IMAGES_JUMPING);
-      } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-        this.playAnimation(this.IMAGES_WALKING);
-      } else {
-        if (this.isLongIdle()) {
-          this.playAnimation(this.IMAGES_LONG_IDLE);
-        } else {
-          this.playAnimation(this.IMAGES_IDLE);
-        }
-      }
+      this.updateCharacterAnimation();
     }, 100);
+  }
+
+  /**
+   * Updates the character's animation based on its current state.
+   * @private
+   */
+  updateCharacterAnimation() {
+    if (this.isHurt() && !this.isDead()) {
+      this.playAnimation(this.IMAGES_HURT);
+      this.getTimeStamp();
+    } else if (this.isDead()) {
+      this.playAnimation(this.IMAGES_DEAD);
+    } else if (this.isAboveGround()) {
+      this.playAnimation(this.IMAGES_JUMPING);
+    } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+      this.playAnimation(this.IMAGES_WALKING);
+    } else {
+      this.handleIdleAnimation();
+    }
+  }
+
+  /**
+   * Handles the character's idle animation states.
+   * @private
+   */
+  handleIdleAnimation() {
+    if (this.isLongIdle()) {
+      this.playAnimation(this.IMAGES_LONG_IDLE);
+    } else {
+      this.playAnimation(this.IMAGES_IDLE);
+    }
+  }
+
+  /**
+   * Checks if the character is dead (energy is 0).
+   * @returns {boolean} True if the character is dead, false otherwise.
+   */
+  isDead() {
+    return this.energy <= 0;
   }
 }

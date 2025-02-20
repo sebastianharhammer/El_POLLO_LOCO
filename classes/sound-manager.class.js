@@ -1,3 +1,7 @@
+/**
+ * Manages audio playback for the game, handling sound loading, playing, and control.
+ * Initializes sounds on first user interaction to comply with browser autoplay policies.
+ */
 class SoundManager {
     constructor() {
         this.sounds = {
@@ -12,13 +16,9 @@ class SoundManager {
             endbossHurt: new Audio('audio/endboss-hurt2.wav'),
             victory: new Audio('audio/won.mp3'),
             defeat: new Audio('audio/defeat.mp3'),
-            walk: new Audio('audio/walk.mp3'),
             background: new Audio('audio/background.mp3')
-
-
         };
 
-        // Pre-load all sounds
         Object.values(this.sounds).forEach(audio => {
             audio.load();
             audio.volume = 0.2; 
@@ -27,26 +27,31 @@ class SoundManager {
         this.initialized = false;
         this.pendingSounds = [];
 
-        // Add initialization method
         document.addEventListener('click', () => this.initialize(), { once: true });
         document.addEventListener('keydown', () => this.initialize(), { once: true });
     }
 
+    /**
+     * Initializes the sound manager if not already initialized.
+     * Plays any sounds that were queued before initialization.
+     */
     initialize() {
         if (this.initialized) return;
         this.initialized = true;
-        
-        // Play any sounds that were requested before initialization
         this.pendingSounds.forEach(soundName => this.play(soundName));
         this.pendingSounds = [];
     }
 
+    /**
+     * Plays a sound by its name.
+     * If the sound manager isn't initialized, the sound is queued for later playback.
+     * @param {string} soundName - The name of the sound to play (e.g., 'jump', 'coin', 'bottle')
+     */
     play(soundName) {
         if (!this.initialized) {
             this.pendingSounds.push(soundName);
             return;
         }
-
         if (this.sounds[soundName]) {
             try {
                 this.sounds[soundName].currentTime = 0;
@@ -58,12 +63,20 @@ class SoundManager {
         }
     }
 
+    /**
+     * Stops all currently playing sounds and resets their playback position.
+     */
     stopAll() {
         Object.values(this.sounds).forEach(audio => {
             audio.pause();
             audio.currentTime = 0;
         });
     }
+
+    /**
+     * Pauses playback of a specific sound.
+     * @param {string} soundName - The name of the sound to pause
+     */
     pause(soundName) {
         if (this.sounds[soundName]) {
             this.sounds[soundName].pause();

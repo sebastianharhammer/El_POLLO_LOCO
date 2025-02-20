@@ -1,4 +1,8 @@
-class SmallChicken extends MoveableObject {
+/**
+ * Represents a small chicken enemy that extends CollidableObject.
+ * @extends CollidableObject
+ */
+class SmallChicken extends CollidableObject {
     width = 60;
     height = 60;
     offset = {
@@ -21,6 +25,10 @@ class SmallChicken extends MoveableObject {
   
   
 
+    /**
+     * Creates a new SmallChicken instance.
+     * Initializes the chicken's position, loads images, and starts animation.
+     */
     constructor() {
       super().loadImage("img/3_enemies_chicken/chicken_small/1_walk/1_w.png");
       this.loadImages(this.IMAGES_WALKING);
@@ -31,6 +39,10 @@ class SmallChicken extends MoveableObject {
     }
   
 
+    /**
+     * Handles the chicken's animation by setting up intervals for movement and sprite animation.
+     * Updates the chicken's position and switches between walking and dead animations based on state.
+     */
     animate() {
       setInterval(() => {
         this.moveChicken();

@@ -187,7 +187,8 @@ canvas {
     font-family: 'ZABARS';
     src: url('./font/ZABARS/Zabars.ttf') format('truetype');
 }
-@media (min-width: 1280px) {
+@media (min-width: 1280px) and (hover: hover) and (pointer: fine) {
+    /* Only apply desktop styles when device has hover capability (mouse/touchpad) */
     .mobile-overlay-container-top {
         display: none;
     }
@@ -195,7 +196,8 @@ canvas {
         display: none;
     }
 }
-@media only screen and (max-width: 1280px) {
+@media (hover: none) and (pointer: coarse), (max-width: 1280px) {
+    /* Apply mobile styles for touch devices or smaller screens */
     body {
         background-image: none;
     }

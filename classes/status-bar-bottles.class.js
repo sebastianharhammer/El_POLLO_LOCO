@@ -1,3 +1,7 @@
+/**
+ * Represents a status bar that displays bottle collection progress
+ * @extends MoveableObject
+ */
 class StatusBarBottles extends MoveableObject {
     percentage = 0;
   
@@ -12,6 +16,10 @@ class StatusBarBottles extends MoveableObject {
     ];
   
 
+    /**
+     * Creates a new StatusBarBottles instance
+     * Initializes the status bar position, dimensions and starting percentage
+     */
     constructor() {
       super();
       this.loadImages(this.IMAGES);
@@ -22,12 +30,20 @@ class StatusBarBottles extends MoveableObject {
       this.setPercentage(0);
     }
   
+    /**
+     * Updates the percentage and corresponding image of the status bar
+     * @param {number} percentage - The new percentage value (0-100)
+     */
     setPercentage(percentage) {
       this.percentage = percentage;
       let path = this.IMAGES[this.resolveImageIndex()];
       this.img = this.imageCache[path];
     }
   
+    /**
+     * Determines which image index to use based on the current percentage
+     * @returns {number} Index of the image to display (0-5)
+     */
     resolveImageIndex() {
       if (this.percentage == 100) {
         return 5;

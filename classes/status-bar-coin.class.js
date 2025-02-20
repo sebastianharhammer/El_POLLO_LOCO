@@ -1,3 +1,7 @@
+/**
+ * Represents a coin status bar that displays the coin collection progress
+ * @extends MoveableObject
+ */
 class StatusBarCoin extends MoveableObject {
     percentage = 0;
   
@@ -12,6 +16,10 @@ class StatusBarCoin extends MoveableObject {
     ];
   
 
+    /**
+     * Creates a new coin status bar
+     * @constructor
+     */
     constructor() {
       super();
       this.loadImages(this.IMAGES);
@@ -22,12 +30,21 @@ class StatusBarCoin extends MoveableObject {
       this.setPercentage(0);
     }
   
+    /**
+     * Updates the status bar's appearance based on the given percentage
+     * @param {number} percentage - The percentage value (0-100) representing coins collected
+     */
     setPercentage(percentage) {
       this.percentage = percentage;
       let path = this.IMAGES[this.resolveImageIndex()];
       this.img = this.imageCache[path];
     }
   
+    /**
+     * Determines which image index to use based on the current percentage
+     * @returns {number} The index of the image to display (0-5)
+     * @private
+     */
     resolveImageIndex() {
       if (this.percentage == 100) {
         return 5;

@@ -1,3 +1,7 @@
+/**
+ * Represents a status bar displaying the end boss's health points.
+ * @extends MoveableObject
+ */
 class StatusBarEndbossHP extends MoveableObject {
   
     IMAGES = [
@@ -9,6 +13,10 @@ class StatusBarEndbossHP extends MoveableObject {
       "img/7_statusbars/2_statusbar_endboss/green/green100.png",
     ];
   
+    /**
+     * Creates a new StatusBarEndbossHP instance.
+     * Initializes position, dimensions and initial health percentage.
+     */
     constructor() {
       super();
       this.loadImages(this.IMAGES);
@@ -19,6 +27,10 @@ class StatusBarEndbossHP extends MoveableObject {
       this.setPercentage(5);
     }
   
+    /**
+     * Updates the status bar's appearance based on the current health percentage.
+     * @param {number} percentage - The current health percentage (0-5).
+     */
     setPercentage(percentage) {
       console.log(percentage);
       this.percentage = percentage;
@@ -26,6 +38,10 @@ class StatusBarEndbossHP extends MoveableObject {
       this.img = this.imageCache[path];
     }
   
+    /**
+     * Determines which image to display based on the current health percentage.
+     * @returns {number} The index of the image to display in the IMAGES array.
+     */
     resolveImageIndex() {
       if (this.percentage == 5) {
         return 5;

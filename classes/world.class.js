@@ -1,63 +1,81 @@
+/**
+ * Represents the game world that manages all game objects, collisions, and rendering
+ * @extends Var
+ */
 class World extends Var {
-  
-
+  /**
+   * Creates a new World instance
+   * @param {HTMLCanvasElement} canvas - The canvas element for rendering
+   * @param {Keyboard} keyboard - The keyboard input handler
+   */
   constructor(canvas, keyboard) {
     super();
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    this.gameManager = new GameManager(this);
     this.draw();
     this.setWorld();
     this.checkGameStart();
     this.gameStartTime = new Date().getTime();
   }
-
+  /**
+   * Sets the world reference in the character object
+   */
   setWorld() {
     this.character.world = this;
   }
-
+  /**
+   * Checks for game start conditions and adds event listeners
+   */
   checkGameStart() {
     const startGame = () => {
       if (!this.gameStarted) {
         this.gameStarted = true;
         this.run();
-        if (window.innerWidth <= 1280) {
-          document
-            .getElementById("mobileOverlayContainerTop")
-            .classList.add("d-none");
-          document
-            .getElementById("mobileOverlayContainerBottom")
-            .classList.remove("d-none");
-        }
+        this.updateMobileOverlay();
       }
     };
-
-    document.addEventListener("keydown", (e) => {
-      if (e.code === "Enter" && window.innerWidth > 1280) {
-        startGame();
-      }
-    });
-
-    if (this.isMobile()) {
-      document.addEventListener("touchstart", startGame);
+    document.addEventListener(
+      "keydown",
+      (e) => e.code === "Enter" && window.innerWidth > 1280 && startGame()
+    );
+    this.isMobile() && document.addEventListener("touchstart", startGame);
+  }
+  /**
+   * Updates the mobile overlay based on screen width
+   */
+  updateMobileOverlay() {
+    if (window.innerWidth <= 1280) {
+      const topOverlay = document.getElementById("mobileOverlayContainerTop");
+      const bottomOverlay = document.getElementById(
+        "mobileOverlayContainerBottom"
+      );
+      topOverlay.classList.add("d-none");
+      bottomOverlay.classList.remove("d-none");
     }
   }
-
+  /**
+   * Checks if the device is mobile based on screen width and touch capabilities
+   * @returns {boolean} True if device is mobile, false otherwise
+   */
   isMobile() {
     if (window.innerWidth <= 1280) {
       return "ontouchstart" in window || navigator.maxTouchPoints > 0;
     }
     return false;
   }
-
+  /**
+   * Starts the main game loop and collision checks
+   */
   run() {
     if (this.gameStarted) {
-    this.soundManager.play("background");
+      this.soundManager.play("background");
     }
     this.gameInterval = setInterval(() => {
       setTimeout(() => {
         this.checkCollisions();
-      }, 500);
+      }, 1000);
       setTimeout(() => {
         this.checkEndbossCollision();
       }, 1000);
@@ -68,52 +86,81 @@ class World extends Var {
       this.checkBottleHit();
       this.checkEndbossAlert();
       this.checkGameOver();
-    }, 1000/60);
+    }, 1000 / 60);
   }
-
-
+  /**
+   * Checks for jump collisions with enemies and handles their removal
+   */
   checkJumpCollision() {
     this.level.enemies.forEach((enemy, index) => {
-      if (this.character.isJumpColliding(enemy) && !this.chickenWhichDied.includes(enemy)) {
-        this.chickenDies(index, null);
-        this.chickenWhichDied.push(enemy);
-        enemy.isBeingKilled = true;
-      }
+      if (this.character.isJumpColliding(enemy)) {
+        enemy.handleChickenCollision(this, index, null);
+        if (enemy.chickenIsDead && !enemy.scheduledForRemoval) {
+          enemy.scheduledForRemoval = true;
+          setTimeout(() => {
+            const currentIndex = this.level.enemies.indexOf(enemy);
+            if (currentIndex !== -1) {
+              this.level.enemies.splice(currentIndex, 1);
+            }}, 1000);}}
     });
   }
-
+  /**
+   * Checks if a bottle can be thrown based on available bottles and cooldown
+   * @returns {boolean} True if bottle can be thrown, false otherwise
+   */
   checkTrowObjects() {
-    if (this.keyboard.D) {
-      if (this.statusBarBottles.percentage > 9 && !this.throwCooldown) {
-        const throwPositionX = this.character.otherDirection
-          ? this.character.x
-          : this.character.x + 100;
-        let throwableObject = new ThrowableObject(
-          throwPositionX,
-          this.character.y + 100,
-          this.statusBarBottles,
-          this
-        );
-        this.throwableObjects.push(throwableObject);
-        this.soundManager.play("throw");
-        this.throwCooldown = true;
-        setTimeout(() => {
-          this.throwCooldown = false;
-        }, 250);
-      } else if (this.statusBarBottles.percentage <= 9) {
-      }
+    if (this.keyboard.D && this.canThrowBottle()) {
+      this.throwBottle();
     }
   }
-
+  /**
+   * Checks if a bottle can be thrown based on available bottles and cooldown
+   * @returns {boolean} True if bottle can be thrown, false otherwise
+   */
+  canThrowBottle() {
+    return this.statusBarBottles.percentage > 9 && !this.throwCooldown;
+  }
+  /**
+   * Creates and throws a new bottle object
+   * @private
+   */
+  throwBottle() {
+    const throwPositionX = this.character.otherDirection
+      ? this.character.x
+      : this.character.x + 100;
+    let throwableObject = new ThrowableObject(
+      throwPositionX,
+      this.character.y + 100,
+      this.statusBarBottles,
+      this
+    );
+    this.throwableObjects.push(throwableObject);
+    this.soundManager.play("throw");
+    this.throwCooldown = true;
+    setTimeout(() => {
+      this.throwCooldown = false;
+    }, 250);
+  }
+  /**
+   * Checks for collisions with enemies and updates the character's health
+   */
   checkCollisions() {
     this.level.enemies.forEach((enemy) => {
-      if (!enemy.isBeingKilled && !this.chickenWhichDied.includes(enemy) && this.character.isColliding(enemy)) {
+      if (
+        !enemy.isBeingKilled &&
+        !enemy.chickenIsDead &&
+        !this.chickenWhichDied.includes(enemy) &&
+        this.character.isColliding(enemy) &&
+        !this.character.isJumpColliding(enemy)
+      ) {
         this.character.hit();
         this.statusBarHP.setPercentage(this.character.energy);
       }
     });
   }
-
+  /**
+   * Checks for collisions with the endboss and updates the character's health
+   */
   checkEndbossCollision() {
     let endboss = this.level.endboss[0];
     if (endboss && this.character.isColliding(endboss)) {
@@ -121,7 +168,9 @@ class World extends Var {
       this.statusBarHP.setPercentage(this.character.energy);
     }
   }
-
+  /**
+   * Checks for collisions with coins and updates the coin count
+   */
   checkCoinCollisions() {
     this.level.coins.forEach((coin, index) => {
       if (this.character.isColliding(coin)) {
@@ -129,7 +178,9 @@ class World extends Var {
       }
     });
   }
-
+  /**
+   * Checks for collisions with bottles and updates the bottle count
+   */
   checkBottleCollisions() {
     this.level.bottles.forEach((bottle, index) => {
       if (this.character.isColliding(bottle)) {
@@ -137,57 +188,55 @@ class World extends Var {
       }
     });
   }
-
+  /**
+   * Checks for collisions with bottles and updates the bottle count
+   */
   checkBottleHit() {
     this.throwableObjects.forEach((bottle, bottleIndex) => {
-      this.level.enemies.forEach((enemy, enemyIndex) => {
-        if (bottle.isColliding(enemy)) {
-          this.chickenDies(enemyIndex, bottleIndex);
-        }
-      });
-      if (
-        this.level.endboss[0] &&
-        bottle.isColliding(this.level.endboss[0]) &&
-        !this.level.endboss[0].endbossIsDead
-      ) {
-        this.endbossHit(bottleIndex);
-      }
+      this.checkBottleEnemyCollisions(bottle, bottleIndex);
+      this.checkBottleEndbossCollision(bottle, bottleIndex);
     });
   }
-
-  isHurt() {
-    let timePassed = new Date().getTime() - this.lastHit; //Diff in ms
-    timePassed = timePassed / 1000; //Diff in s
-    return timePassed < 1;
+  /**
+   * Checks for collisions with enemies and updates the bottle count
+   */
+  checkBottleEnemyCollisions(bottle, bottleIndex) {
+    this.level.enemies.forEach((enemy, enemyIndex) => {
+      bottle.handleChickenCollision(this, enemyIndex, bottleIndex);
+      this.handleDeadEnemy(enemy);
+    });
   }
-
-  endbossHit(bottleIndex) {
-    let endboss = this.level.endboss[0];
-    endboss.hit();
-    this.statusBarEndbossHP.setPercentage(endboss.energy);
-    if (endboss.energy <= 0) {
-      endboss.endbossIsDead = true;
+  /**
+   * Checks for collisions with the endboss and updates the bottle count
+   */
+  checkBottleEndbossCollision(bottle, bottleIndex) {
+    if (this.level.endboss[0]) {
+      bottle.handleEndbossCollision(this, bottleIndex);
     }
-    if (endboss.endbossIsDead) {
-      setTimeout(() => {
-        this.level.endboss.splice(0, 1);
-      }, 1500);
-    }
-    this.throwableObjects.splice(bottleIndex, 1);
-    this.soundManager.play("endbossHurt");
   }
-
-  chickenDies(enemyIndex, bottleIndex) {
-    this.soundManager.play("chicken");
-    this.level.enemies[enemyIndex].speed = 0;
-    this.level.enemies[enemyIndex].chickenIsDead = true;
-    this.throwableObjects.splice(bottleIndex, 1);
-    this.chickenWhichDied.push(this.level.enemies[enemyIndex]);
+  /**
+   * Handles the removal of dead enemies
+   */
+  handleDeadEnemy(enemy) {
+    if (enemy.chickenIsDead && !enemy.scheduledForRemoval) {
+      enemy.scheduledForRemoval = true;
+      this.scheduleEnemyRemoval(enemy);
+    }
+  }
+  /**
+   * Schedules the removal of an enemy after a delay
+   */
+  scheduleEnemyRemoval(enemy) {
     setTimeout(() => {
-      this.level.enemies.splice(enemyIndex, 1);
+      const currentIndex = this.level.enemies.indexOf(enemy);
+      if (currentIndex !== -1) {
+        this.level.enemies.splice(currentIndex, 1);
+      }
     }, 1000);
   }
-
+  /**
+   * Checks for the endboss alert and stops the endboss attack
+   */
   checkEndbossAlert() {
     let endboss = this.level.endboss[0];
     if (endboss) {
@@ -197,14 +246,25 @@ class World extends Var {
       }
     }
   }
-
+  /**
+   * Checks if the character is dead
+   * @returns {boolean} True if the character is dead, false otherwise
+   */
+  isDead() {
+    return this.energy == 0;
+  }
+  /**
+   * Stops the endboss and starts the endboss attack
+   */
   stopEndboss() {
     this.level.endboss[0].speed = 0;
     setTimeout(() => {
       this.startEndbossAttack();
     }, 1000);
   }
-
+  /**
+   * Starts the endboss attack
+   */
   startEndbossAttack() {
     this.soundManager.play("chickenAngry");
     this.endbossAttackInterval = setInterval(() => {
@@ -222,178 +282,136 @@ class World extends Var {
       }
     }, 50);
   }
-
+  /**
+   * Collects a coin and updates the coin count
+   * @param {number} index - The index of the coin to collect
+   */
   collectCoin(index) {
     this.soundManager.play("coin");
     this.level.coins.splice(index, 1);
     this.statusBarCoin.setPercentage(this.statusBarCoin.percentage + 10);
   }
-
+  /**
+   * Collects a bottle and updates the bottle count
+   * @param {number} index - The index of the bottle to collect
+   */
   collectBottle(index) {
     this.soundManager.play("bottle");
     this.level.bottles.splice(index, 1);
     this.statusBarBottles.setPercentage(this.statusBarBottles.percentage + 10);
   }
-
+  /**
+   * Renders a frame of the game
+   */
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
     if (!this.gameStarted) {
       this.startScreen.draw(this.ctx);
     } else if (this.gameOver) {
       this.endScreen.draw(this.ctx);
     } else {
-      this.ctx.translate(this.camera_x, 0);
-      this.addObjectsToMap(this.level.backgroundObjects);
-      this.addObjectsToMap(this.level.clouds);
-
-      this.ctx.translate(-this.camera_x, 0);
-      this.addToMap(this.statusBarHP);
-      this.addToMap(this.statusBarCoin);
-      this.addToMap(this.statusBarBottles);
-      this.addToMap(this.statusBarEndbossHP);
-      this.ctx.translate(this.camera_x, 0);
-
-      this.addToMap(this.character);
-      this.addObjectsToMap(this.level.enemies);
-      this.addObjectsToMap(this.level.endboss);
-      this.addObjectsToMap(this.level.bottles);
-      this.addObjectsToMap(this.level.coins);
-      this.addObjectsToMap(this.throwableObjects);
-      this.ctx.translate(-this.camera_x, 0);
+      this.drawGameWorld();
     }
-
-    let self = this;
-    requestAnimationFrame(function () {
-      self.draw();
-    });
+    requestAnimationFrame(() => this.draw());
   }
-
+  /**
+   * Draws the game world
+   */
+  drawGameWorld() {
+    this.drawBackgroundLayer();
+    this.drawUILayer();
+    this.drawGameObjects();
+  }
+  /**
+   * Draws the background layer
+   */
+  drawBackgroundLayer() {
+    this.ctx.translate(this.camera_x, 0);
+    this.addObjectsToMap(this.level.backgroundObjects);
+    this.addObjectsToMap(this.level.clouds);
+    this.ctx.translate(-this.camera_x, 0);
+  }
+  /**
+   * Draws the UI layer
+   */
+  drawUILayer() {
+    this.addToMap(this.statusBarHP);
+    this.addToMap(this.statusBarCoin);
+    this.addToMap(this.statusBarBottles);
+    this.addToMap(this.statusBarEndbossHP);
+  }
+  /**
+   * Draws the game objects
+   */
+  drawGameObjects() {
+    this.ctx.translate(this.camera_x, 0);
+    this.addToMap(this.character);
+    this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.endboss);
+    this.addObjectsToMap(this.level.bottles);
+    this.addObjectsToMap(this.level.coins);
+    this.addObjectsToMap(this.throwableObjects);
+    this.ctx.translate(-this.camera_x, 0);
+  }
+  /**
+   * Adds objects to the map
+   * @param {Array} objects - The objects to add
+   * @private
+   */
   addObjectsToMap(objects) {
     objects.forEach((object) => {
       this.addToMap(object);
     });
   }
-
+  /**
+   * Adds a movable object to the game world with proper direction handling
+   * @param {MovableObject} mo - The movable object to add
+   * @private
+   */
   addToMap(mo) {
     if (mo.otherDirection) {
       this.flipImage(mo);
     }
     mo.draw(this.ctx);
-    mo.drawFrame(this.ctx);
+    /* mo.drawFrame(this.ctx); */
     if (mo.otherDirection) {
       this.flipImageBack(mo);
     }
   }
-
+  /**
+   * Flips an image horizontally for opposite direction rendering
+   * @param {MovableObject} mo - The movable object to flip
+   * @private
+   */
   flipImage(mo) {
     this.ctx.save();
     this.ctx.translate(mo.width, 0);
     this.ctx.scale(-1, 1);
     mo.x = mo.x * -1;
   }
-
+  /**
+   * Flips an image back to its original direction
+   * @param {MovableObject} mo - The movable object to flip back
+   */
   flipImageBack(mo) {
     mo.x = mo.x * -1;
     this.ctx.restore();
   }
-
+  /**
+   * Checks if the game is over
+   */
   checkGameOver() {
-    // Don't check for game over while resetting
-    if (this.isResetting) return;
+    if (this.gameManager.isResetting) return;
 
     if (this.level.endboss[0]?.endbossIsDead && !this.gameOver) {
-      this.soundManager.pause("background");
-      this.soundManager.pause("chickenAngry");
-      this.soundManager.play("victory");
-      setTimeout(() => {
-        this.gameOver = true;
-        const gameTimeInSeconds = (new Date().getTime() - this.gameStartTime) / 1000;
-        this.endScreen = new EndScreen(
-          this.statusBarCoin.percentage / 10,
-          this.statusBarHP.percentage / 20,
-          this.statusBarBottles.percentage / 10,
-          gameTimeInSeconds,
-          true // isVictory = true
-        );
-        
-        if (window.innerWidth <= 1280) {
-          document.getElementById("mobileOverlayContainerTop").classList.remove("d-none");
-          document.getElementById("mobileOverlayContainerBottom").classList.add("d-none");
-        }
-      }, 2000);
-    }
-
-    if (this.character.energy <= 0 && !this.gameOver) {
-      this.soundManager.pause("background");
-      this.soundManager.play("defeat");
-      setTimeout(() => {
-        this.gameOver = true;
-        this.endScreen = new EndScreen(
-          this.statusBarCoin.percentage / 10,
-          0,
-          this.statusBarBottles.percentage / 10,
-          0,
-          false // isVictory = false
-        );
-        if (window.innerWidth <= 1280) {
-          document.getElementById("mobileOverlayContainerTop").classList.remove("d-none");
-          document.getElementById("mobileOverlayContainerBottom").classList.add("d-none");
-        }
-      }, 2000);
+      this.gameManager.handleGameOver(true);
+    } else if (this.character.energy <= 0 && !this.gameOver) {
+      this.gameManager.handleGameOver(false);
     }
   }
-
-  resetGame() {
-    // Ensure we're not already in the process of resetting
-    if (this.isResetting) return;
-    this.isResetting = true;
-
-    // Remove existing touch event listeners before resetting
-    const existingTouchListeners = document.getElementsByTagName("*");
-    for (let element of existingTouchListeners) {
-        element.removeEventListener("touchstart", () => {});
-    }
-
-    // Stop all sounds and intervals first
-    this.soundManager.stopAll();
-    clearInterval(this.character.animationInterval);
-    clearInterval(this.character.movementInterval);
-    clearInterval(this.endbossAttackInterval);
-    clearInterval(this.gameInterval);
-
-    // Reset character
-    this.character = new Character();
-    this.character.world = this;
-
-    // Create a fresh level instance
-    this.level = createLevel1();
-
-    // Reset status bars
-    this.statusBarHP = new StatusBarHP();
-    this.statusBarCoin = new StatusBarCoin();
-    this.statusBarBottles = new StatusBarBottles();
-    this.statusBarEndbossHP = new StatusBarEndbossHP();
-
-    // Reset world properties
-    this.camera_x = 200;
-    this.throwableObjects = [];
-    this.endbossAttack = false;
-    this.throwCooldown = false;
-    this.gameOver = false;
-    this.gameStarted = false;
-    this.gameStartTime = new Date().getTime();
-    this.endScreen = null;
-    this.endboss = this.level.endboss[0];
-
-    // Add a small delay before starting game systems
-    setTimeout(() => {
-      this.isResetting = false;
-      // Re-initialize game start detection
-      this.checkGameStart();
-    }, 1500);
-  }
-
+  /**
+   * Shows the Start Screen
+   */
   showStartScreen() {
     this.gameStarted = false;
     this.startScreen = new StartScreen();

@@ -1,4 +1,8 @@
-class Endboss extends MoveableObject {
+/**
+ * Represents the end boss enemy in the game, extending CollidableObject.
+ * The end boss is a large chicken with various states including walking, alert, attacking, hurt, and dead.
+ */
+class Endboss extends CollidableObject {
   height = 400;
   width = 300;
   y = 250;
@@ -51,6 +55,10 @@ class Endboss extends MoveableObject {
     "img/4_enemie_boss_chicken/5_dead/G26.png",
   ];
 
+  /**
+   * Creates a new Endboss instance.
+   * Initializes the boss with walking animation and positions it at x=3500.
+   */
   constructor() {
     super().loadImage(this.IMAGES_WALKING[0]);
     this.loadImages(this.IMAGES_WALKING);
@@ -62,6 +70,11 @@ class Endboss extends MoveableObject {
     this.animate();
   }
 
+  /**
+   * Handles the animation logic for the end boss.
+   * Updates movement and animation states based on the boss's current condition.
+   * Animations include walking, alert, attack, hurt, and death sequences.
+   */
   animate() {
     setInterval(() => {
       if (!this.endbossAttack) {
