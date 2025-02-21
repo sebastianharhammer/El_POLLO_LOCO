@@ -74,9 +74,12 @@ class SoundManager {
      */
     stopAll() {
         Object.values(this.sounds).forEach(audio => {
-            audio.pause();
-            audio.currentTime = 0;
+            audio.load();
+            audio.volume = 0.0; 
         });
+        this.victory.volume = 0.2;
+        this.defeat.volume = 0.2;
+        this.background.volume = 0.0;
     }
 
     /**

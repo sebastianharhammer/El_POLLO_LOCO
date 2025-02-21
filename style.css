@@ -199,7 +199,6 @@ canvas {
     }
 }
 @media (hover: none) and (pointer: coarse) {
-    /* Apply mobile styles for touch devices or smaller screens */
     body {
         background-image: none;
     }
@@ -301,7 +300,7 @@ canvas {
         margin-bottom: 0;
     }
 }
-@media (min-aspect-ratio: 5/4) and (hover: none) and (pointer: coarse)  {
+@media (min-aspect-ratio: 5/4) and (hover: none) and (pointer: coarse) and (max-width: 1367px) {
     h1 {
         display: none;
     }

@@ -18,7 +18,7 @@ class GameManager {
     resetGame() {
         if (this.isResetting) return;
         this.isResetting = true;
-
+        this.soundManager.stopAll();
         this.cleanupEventListeners();
         this.cleanupIntervals();
         this.resetWorldEntities();

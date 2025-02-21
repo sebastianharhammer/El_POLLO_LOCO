@@ -14,10 +14,8 @@ function init() {
     bindMobileControls();
     hideMobileControls();
     
-    // Load saved sound state
     const savedMuted = JSON.parse(localStorage.getItem('isMuted'));
     if (savedMuted !== null) {
-        // If sound should be muted, call toggleSound()
         if (savedMuted) {
             toggleSound();
         }
@@ -85,12 +83,9 @@ function saveSoundState(isMuted) {
  * @param {boolean} isMuted - Whether the sound should be muted
  */
 function updateSoundVolumes(soundManager, isMuted) {
-    // Set default volume for most sounds
     Object.values(soundManager.sounds).forEach(audio => {
         audio.volume = isMuted ? 0.0 : 0.2;
     });
-    
-    // Set specific volumes for certain sound effects
     soundManager.sounds.walking.volume = isMuted ? 0.0 : 0.8;
     soundManager.sounds.hurt.volume = isMuted ? 0.0 : 0.6;
     soundManager.sounds.dead.volume = isMuted ? 0.0 : 0.6;

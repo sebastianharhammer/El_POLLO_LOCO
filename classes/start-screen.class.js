@@ -50,8 +50,18 @@ class StartScreen {
    */
   createInstructionsButton() {
     if (window.innerWidth >= 1280 && !this.isTouchEnabled()) {
-    this.instructionsBtn = document.createElement('button');
-    this.instructionsBtn.innerText = 'Instructions';
+      this.instructionsBtn = this.createButton('Instructions');
+      this.styleInstructionsButton();
+      this.setupInstructionsButtonPosition();
+      this.setupInstructionsButtonEvents();
+      document.body.appendChild(this.instructionsBtn);
+    }
+  }
+
+  /**
+   * Applies styles to the instructions button.
+   */
+  styleInstructionsButton() {
     this.instructionsBtn.style.cssText = `
       position: absolute;
       font-family: ZABARS;
@@ -63,23 +73,32 @@ class StartScreen {
       border: none;
       border-radius: 5px;
     `;
-    
-    const updateButtonPosition = () => {
-      const rect = canvas.getBoundingClientRect();
-      this.instructionsBtn.style.left = `${rect.left + 50}px`;
-      this.instructionsBtn.style.top = `${rect.top + 40}px`;
-    };
+  }
 
+  /**
+   * Sets up the position updating logic for the instructions button.
+   */
+  setupInstructionsButtonPosition() {
+    const updateButtonPosition = () => {
+      if (this.instructionsBtn) {
+        const rect = canvas.getBoundingClientRect();
+        this.instructionsBtn.style.left = `${rect.left + 50}px`;
+        this.instructionsBtn.style.top = `${rect.top + 40}px`;
+      }
+    };
+    
+    window.addEventListener('resize', updateButtonPosition);
+    updateButtonPosition();
+  }
+
+  /**
+   * Sets up event listeners for the instructions button.
+   */
+  setupInstructionsButtonEvents() {
     this.instructionsBtn.addEventListener('click', () => {
       this.showInstructions = !this.showInstructions;
     });
-
-    window.addEventListener('resize', updateButtonPosition);
-    
-    updateButtonPosition();
-    
-    document.body.appendChild(this.instructionsBtn);
-  }}
+  }
 
   /**
    * Creates and positions the impressum button.
