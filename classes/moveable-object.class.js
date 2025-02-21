@@ -31,8 +31,8 @@ class MoveableObject extends DrawableObject {
    * @returns {boolean} True if object has been idle for more than 5 seconds.
    */
   isLongIdle() {
-    let timePassed = new Date().getTime() - this.lastMovement; //Diff in ms
-    timePassed = timePassed / 1000; //Diff in s
+    let timePassed = new Date().getTime() - this.lastMovement; 
+    timePassed = timePassed / 1000; 
     return timePassed > 5;
   }
 
@@ -55,8 +55,8 @@ class MoveableObject extends DrawableObject {
    * @returns {boolean} True if the object was hit within the last 0.5 seconds.
    */
   isHurt() {
-    let timePassed = new Date().getTime() - this.lastHit; //Diff in ms
-    timePassed = timePassed / 1000; //Diff in s
+    let timePassed = new Date().getTime() - this.lastHit; 
+    timePassed = timePassed / 1000; 
     return timePassed < 0.5;
   }
 
@@ -198,12 +198,12 @@ class MoveableObject extends DrawableObject {
       this.speed = 0;
     } else {
       if (this.otherDirection) {
-        this.x += this.speed; // Moving right
+        this.x += this.speed;
         if (this.x >= 3700) {
           this.otherDirection = false;
         }
       } else {
-        this.x -= this.speed; // Moving left
+        this.x -= this.speed;
         if (this.x <= 3300) {
           this.otherDirection = true;
         }

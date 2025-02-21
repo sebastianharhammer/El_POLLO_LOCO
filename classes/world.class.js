@@ -44,11 +44,8 @@ class World extends Var {
       "keydown",
       (e) => e.code === "Enter" && window.innerWidth > 1280 && startGame()
     );
-
-    // Modified touch handler to ignore button clicks
     if (this.isMobile()) {
       document.addEventListener("touchstart", (e) => {
-        // Don't start game if touch is on a button
         if (e.target.tagName !== 'BUTTON') {
           startGame();
         }
@@ -73,7 +70,7 @@ class World extends Var {
    * @returns {boolean} True if device is mobile, false otherwise
    */
   isMobile() {
-    if (window.innerWidth <= 1280) {
+    if (window.innerWidth <= 1280 || this.startScreen.isTouchEnabled()) {
       return "ontouchstart" in window || navigator.maxTouchPoints > 0;
     }
     return false;

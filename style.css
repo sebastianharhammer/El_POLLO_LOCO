@@ -187,8 +187,7 @@ canvas {
     font-family: 'ZABARS';
     src: url('./font/ZABARS/Zabars.ttf') format('truetype');
 }
-@media (min-width: 1280px) /* and (hover: hover) and (pointer: fine) */ {
-    /* Only apply desktop styles when device has hover capability (mouse/touchpad) */
+@media (hover: hover) and (pointer: fine) {
     .mobile-overlay-container-top {
         display: none;
     }
@@ -199,7 +198,7 @@ canvas {
         display: none;
     }
 }
-@media /* (hover: none) and (pointer: coarse), */ (max-width: 1280px) {
+@media (hover: none) and (pointer: coarse) {
     /* Apply mobile styles for touch devices or smaller screens */
     body {
         background-image: none;
@@ -302,7 +301,7 @@ canvas {
         margin-bottom: 0;
     }
 }
-@media (min-aspect-ratio: 5/4) and (hover: none) and (pointer: coarse) and (max-width: 1280px) {
+@media (min-aspect-ratio: 5/4) and (hover: none) and (pointer: coarse)  {
     h1 {
         display: none;
     }

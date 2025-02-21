@@ -22,12 +22,15 @@ class StartScreen {
    * Creates a new StartScreen instance and initializes the start screen.
    */
   constructor() {
-    this.loadImage("img/9_intro_outro_screens/start/startscreen_1.png"); // Adjust path to your image
+    this.loadImage("img/9_intro_outro_screens/start/startscreen_1.png"); 
     this.createInstructionsButton();
     this.createImpressumButton();
     this.isTouchEnabled();
   }
-
+  /**
+   * Checks if touch events are enabled.
+   * @returns {boolean} True if touch events are enabled, false otherwise.
+   */
   isTouchEnabled() {
     return ( 'ontouchstart' in window ) || 
            ( navigator.maxTouchPoints > 0 ) || 
@@ -61,22 +64,18 @@ class StartScreen {
       border-radius: 5px;
     `;
     
-    // Position the button relative to the canvas
     const updateButtonPosition = () => {
       const rect = canvas.getBoundingClientRect();
       this.instructionsBtn.style.left = `${rect.left + 50}px`;
       this.instructionsBtn.style.top = `${rect.top + 40}px`;
     };
 
-    // Add click handler
     this.instructionsBtn.addEventListener('click', () => {
       this.showInstructions = !this.showInstructions;
     });
 
-    // Update position on window resize
     window.addEventListener('resize', updateButtonPosition);
     
-    // Initial position
     updateButtonPosition();
     
     document.body.appendChild(this.instructionsBtn);
@@ -159,7 +158,6 @@ class StartScreen {
       document.body.removeChild(this.impressumBtn);
       this.impressumBtn = null;
     }
-    // Reset overlay states
     this.showInstructions = false;
     this.showImpressum = false;
   }
@@ -234,11 +232,9 @@ class StartScreen {
    * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
    */
   drawInstructions(ctx) {
-    // Don't show instructions if screen width is 1280px or less
     if (window.innerWidth <= 1280 && this.isTouchEnabled()) {
       return;
     }
-
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
     ctx.fillRect(20, 120, 300, 200);
     ctx.fillStyle = "white";

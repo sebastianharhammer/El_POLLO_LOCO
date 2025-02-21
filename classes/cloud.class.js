@@ -44,8 +44,8 @@ class Cloud extends MoveableObject {
         if (this.x < -this.width) {
             let randomCloud = Math.floor(Math.random() * this.IMAGES_CLOUD.length);
             this.loadImage(this.IMAGES_CLOUD[randomCloud]);
-            this.x = 2500 + Math.random() * 500; // Spawn new cloud on the right
-            this.y = 20 + Math.random() * 50; // Slight random height variation
+            this.x = 2500 + Math.random() * 500;
+            this.y = 20 + Math.random() * 50;
         }
     }
 }
