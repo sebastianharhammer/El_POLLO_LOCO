@@ -87,6 +87,7 @@ class GameManager {
         if (this.world.startScreen) {
             this.world.startScreen.cleanup();
         }
+        this.world.startScreen = new StartScreen();
     }
 
     /**
