@@ -144,7 +144,7 @@ class GameManager {
      * @returns {void}
      */
     updateMobileOverlayForEndScreen() {
-        if (window.innerWidth <= 1280) {
+        if (window.innerWidth <= 1280 && this.world.startScreen.isTouchEnabled()) {
             const topOverlay = document.getElementById("mobileOverlayContainerTop");
             const bottomOverlay = document.getElementById("mobileOverlayContainerBottom");
             topOverlay.classList.remove("d-none");

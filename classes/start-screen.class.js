@@ -25,8 +25,14 @@ class StartScreen {
     this.loadImage("img/9_intro_outro_screens/start/startscreen_1.png"); // Adjust path to your image
     this.createInstructionsButton();
     this.createImpressumButton();
+    this.isTouchEnabled();
   }
 
+  isTouchEnabled() {
+    return ( 'ontouchstart' in window ) || 
+           ( navigator.maxTouchPoints > 0 ) || 
+           ( navigator.msMaxTouchPoints > 0 );
+}
   /**
    * Loads the background image for the start screen.
    * @param {string} path - The file path to the image.
@@ -40,7 +46,7 @@ class StartScreen {
    * Creates and positions the instructions button.
    */
   createInstructionsButton() {
-    if (window.innerWidth >= 1280) {
+    if (window.innerWidth >= 1280 && !this.isTouchEnabled()) {
     this.instructionsBtn = document.createElement('button');
     this.instructionsBtn.innerText = 'Instructions';
     this.instructionsBtn.style.cssText = `
@@ -166,11 +172,11 @@ class StartScreen {
     this.drawBackground(ctx);
     this.drawMainTitle(ctx);
 
-    if (window.innerWidth > 1280) {
+    if (window.innerWidth > 1280 && !this.isTouchEnabled()) {
        if (this.showInstructions) {
       this.drawInstructions(ctx);
     }
-      this.drawDesktopControls(ctx);
+    this.drawDesktopControls(ctx); 
     } else {
       this.drawMobileControls(ctx);
     }
@@ -229,7 +235,7 @@ class StartScreen {
    */
   drawInstructions(ctx) {
     // Don't show instructions if screen width is 1280px or less
-    if (window.innerWidth <= 1280) {
+    if (window.innerWidth <= 1280 && this.isTouchEnabled()) {
       return;
     }
 
