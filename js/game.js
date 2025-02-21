@@ -13,13 +13,12 @@ function init() {
     world = new World(canvas, keyboard);
     bindMobileControls();
     hideMobileControls();
-    
-    const savedMuted = JSON.parse(localStorage.getItem('isMuted'));
-    if (savedMuted !== null) {
-        if (savedMuted) {
+    setTimeout(() => {
+        const savedMuted = JSON.parse(localStorage.getItem('isMuted'));
+        if (savedMuted !== null && savedMuted) {
             toggleSound();
         }
-    }
+    }, 100);
 }
 
 /**
@@ -47,7 +46,9 @@ function toggleFullscreen() {
  * Toggles the game sound on/off and updates the UI accordingly
  */
 function toggleSound() {
-    let soundManager = world.soundManager;
+    let soundManager = world?.soundManager;
+    if (!soundManager || !soundManager.sounds?.background) return;
+    
     let isMuted = soundManager.sounds.background.volume === 0;
     toggleSoundButtons();
     isMuted = !isMuted;
@@ -83,12 +84,23 @@ function saveSoundState(isMuted) {
  * @param {boolean} isMuted - Whether the sound should be muted
  */
 function updateSoundVolumes(soundManager, isMuted) {
+    if (!soundManager?.sounds) return;
+    
     Object.values(soundManager.sounds).forEach(audio => {
-        audio.volume = isMuted ? 0.0 : 0.2;
+        if (audio) {
+            audio.volume = isMuted ? 0.0 : 0.2;
+        }
     });
-    soundManager.sounds.walking.volume = isMuted ? 0.0 : 0.8;
-    soundManager.sounds.hurt.volume = isMuted ? 0.0 : 0.6;
-    soundManager.sounds.dead.volume = isMuted ? 0.0 : 0.6;
+    
+    if (soundManager.sounds.walking) {
+        soundManager.sounds.walking.volume = isMuted ? 0.0 : 0.8;
+    }
+    if (soundManager.sounds.hurt) {
+        soundManager.sounds.hurt.volume = isMuted ? 0.0 : 0.6;
+    }
+    if (soundManager.sounds.dead) {
+        soundManager.sounds.dead.volume = isMuted ? 0.0 : 0.6;
+    }
 }
 
 /**

@@ -49,12 +49,12 @@ class StartScreen {
    * Creates and positions the instructions button.
    */
   createInstructionsButton() {
-    if (window.innerWidth >= 1280 && !this.isTouchEnabled()) {
-      this.instructionsBtn = this.createButton('Instructions');
-      this.styleInstructionsButton();
-      this.setupInstructionsButtonPosition();
-      this.setupInstructionsButtonEvents();
-      document.body.appendChild(this.instructionsBtn);
+    if (!this.isTouchEnabled()) {
+        this.instructionsBtn = this.createButton('Instructions');
+        this.styleInstructionsButton();
+        this.setupInstructionsButtonPosition();
+        this.setupInstructionsButtonEvents();
+        document.body.appendChild(this.instructionsBtn);
     }
   }
 
@@ -144,12 +144,14 @@ class StartScreen {
    */
   setupImpressumButtonPosition() {
     const updateButtonPosition = () => {
-      const rect = canvas.getBoundingClientRect();
-      this.impressumBtn.style.right = `${window.innerWidth - (rect.right - 50)}px`;
-      if (window.innerWidth <= 1280) {
-        this.impressumBtn.style.top = `${rect.top + 10}px`;
-      } else {
-        this.impressumBtn.style.top = `${rect.top + 40}px`;
+      if (this.impressumBtn) {
+        const rect = canvas.getBoundingClientRect();
+        this.impressumBtn.style.right = `${window.innerWidth - (rect.right - 50)}px`;
+        if (window.innerWidth <= 1280) {
+          this.impressumBtn.style.top = `${rect.top + 10}px`;
+        } else {
+          this.impressumBtn.style.top = `${rect.top + 40}px`;
+        }
       }
     };
     window.addEventListener('resize', updateButtonPosition);
@@ -189,18 +191,17 @@ class StartScreen {
     this.drawBackground(ctx);
     this.drawMainTitle(ctx);
 
-    if (window.innerWidth > 1280 && !this.isTouchEnabled()) {
-       if (this.showInstructions) {
-      this.drawInstructions(ctx);
-    }
-    this.drawDesktopControls(ctx); 
+    if (this.isTouchEnabled()) {
+        this.drawMobileControls(ctx);
     } else {
-      this.drawMobileControls(ctx);
+        this.drawDesktopControls(ctx);
     }
 
-   
+    if (this.showInstructions && !this.isTouchEnabled()) {
+        this.drawInstructions(ctx);
+    }
     if (this.showImpressum) {
-      this.drawImpressum(ctx);
+        this.drawImpressum(ctx);
     }
   }
 
@@ -251,7 +252,7 @@ class StartScreen {
    * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
    */
   drawInstructions(ctx) {
-    if (window.innerWidth <= 1280 && this.isTouchEnabled()) {
+    if (this.isTouchEnabled()) {
       return;
     }
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";

@@ -44,10 +44,12 @@ class World extends Var {
         this.updateMobileOverlay();
       }
     };
+
     document.addEventListener(
       "keydown",
-      (e) => e.code === "Enter" && window.innerWidth > 1280 && startGame()
+      (e) => e.code === "Enter" && !this.startScreen.isTouchEnabled() && startGame()
     );
+
     if (this.isMobile()) {
       document.addEventListener("touchstart", (e) => {
         if (e.target.tagName !== 'BUTTON') {

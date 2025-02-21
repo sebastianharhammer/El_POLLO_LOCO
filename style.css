@@ -329,6 +329,45 @@ canvas {
         border-radius: 0;
     }
 }
+@media (max-width: 1280px) {
+    canvas {
+        width: 100vw;
+    }
+    h1 {
+        font-size: 40px;
+    }
+    #desktopFullscreenButton {
+        width: 60px;
+    }
+    #desktopSoundButtonOn {
+        width: 60px;
+    }
+    #desktopSoundButtonOff {
+        width: 60px;
+    }
+    #desktopFullscreenText {
+        font-size: 20px;
+    }
+    #desktopSoundText {
+        font-size: 20px;
+    }
+}
+@media (max-width: 900px) {
+    h1 {
+        font-size: 30px;
+        letter-spacing: 10px;
+    }
+    #desktopFullscreenButton {
+        width: 40px;
+    }
+    #desktopSoundButtonOn {
+        width: 40px;
+    }
+    #desktopSoundButtonOff {
+        width: 40px;
+    }
+    
+}
 
 /* 
 @media only screen and (max-height: 500px) {
