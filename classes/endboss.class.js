@@ -2,10 +2,11 @@
  * Represents the end boss enemy in the game, extending CollidableObject.
  * The end boss is a large chicken with various states including walking, alert, attacking, hurt, and dead.
  */
-class Endboss extends CollidableObject {
+class Endboss extends MoveableObject {
   height = 400;
   width = 300;
   y = 250;
+  x = 3500;
   offset = {
     top: 100,
     left: 50,
@@ -14,10 +15,14 @@ class Endboss extends CollidableObject {
   };
   percentage = 5;
   energy = 4;
+  speed = 0.5;
   alert = false;
   endbossAttack = false;
   endbossIsDead = false;
   endbossIsHurt = false;
+  soundManager = new SoundManager();
+  keyboard = new Keyboard();
+  world;
   IMAGES_WALKING = [
     "img/4_enemie_boss_chicken/1_walk/G1.png",
     "img/4_enemie_boss_chicken/1_walk/G2.png",
@@ -63,7 +68,6 @@ class Endboss extends CollidableObject {
     this.loadImages(this.IMAGES_ATTACK);
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_DEAD);
-    this.x = 3500;
     this.animate();
   }
 
@@ -95,6 +99,38 @@ class Endboss extends CollidableObject {
     if (this.endbossAttack) {
       
     }
+  }
+
+  /**
+   * Stops the endboss and starts the endboss attack
+   */
+  stopEndboss() {
+    this.speed = 0;
+    setTimeout(() => {
+      this.startEndbossAttack();
+    }, 1000);
+  }
+
+  /**
+   * Starts the endboss attack
+   */
+  startEndbossAttack() {
+    if (!this.world) return;
+    this.soundManager.play("chickenAngry");
+    this.endbossAttackInterval = setInterval(() => {
+        if (!this.world || !this.world.character) return;
+        if (this.world.character.x - this.world.character.width / 2 < this.x) {
+            this.otherDirection = false;
+            this.x -= 7.5;
+        }
+        if (this.world.character.x - this.world.character.width / 2 > this.x) {
+            this.otherDirection = true;
+            this.x += 7.5;
+        }
+        if (this.endbossIsDead) {
+            clearInterval(this.endbossAttackInterval);
+        }
+    }, 50);
   }
   
 }

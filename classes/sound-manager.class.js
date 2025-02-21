@@ -77,9 +77,9 @@ class SoundManager {
             audio.load();
             audio.volume = 0.0; 
         });
-        this.victory.volume = 0.2;
-        this.defeat.volume = 0.2;
-        this.background.volume = 0.0;
+        this.sounds.victory.volume = 0.2;
+        this.sounds.defeat.volume = 0.2;
+        this.sounds.background.volume = 0.0;
     }
 
     /**

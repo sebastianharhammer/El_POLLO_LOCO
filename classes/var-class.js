@@ -11,7 +11,6 @@ class Var {
     this.statusBarBottles = new StatusBarBottles();
     this.statusBarEndbossHP = new StatusBarEndbossHP();
     this.throwableObjects = [];
-    /* this.ThrowAbleObjects = new ThrowableObject(); */
     this.bottles = level1.bottles;
     this.coins = level1.coins;
     this.chickenIsDead;

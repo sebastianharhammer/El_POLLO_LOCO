@@ -9,6 +9,7 @@ class GameManager {
     constructor(world) {
         this.world = world;
         this.isResetting = false;
+        this.soundManager = new SoundManager();
     }
 
     /**
@@ -18,7 +19,6 @@ class GameManager {
     resetGame() {
         if (this.isResetting) return;
         this.isResetting = true;
-        this.soundManager.stopAll();
         this.cleanupEventListeners();
         this.cleanupIntervals();
         this.resetWorldEntities();
@@ -96,6 +96,7 @@ class GameManager {
      */
     handleGameOver(isVictory) {
         this.updateGameSounds(isVictory);
+        this.soundManager.stopAll();
         setTimeout(() => this.showEndScreen(isVictory), 2000);
     }
 

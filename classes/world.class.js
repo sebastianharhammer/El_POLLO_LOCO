@@ -18,6 +18,8 @@ class World extends Var {
     this.setWorld();
     this.checkGameStart();
     this.gameStartTime = new Date().getTime();
+   /*  this.endboss = new Endboss();
+    this.endboss.setWorld(this); */
   }
   
   /**
@@ -25,6 +27,7 @@ class World extends Var {
    */
   setWorld() {
     this.character.world = this;
+    this.endboss.world = this;
   }
 
   /**
@@ -256,7 +259,7 @@ class World extends Var {
     let endboss = this.level.endboss[0];
     if (endboss) {
       if (endboss.x - this.character.x < 400 && !endboss.endbossAttack) {
-        this.stopEndboss();
+        this.level.endboss[0].stopEndboss();
         endboss.endbossAttack = true;
       }
     }
@@ -268,36 +271,6 @@ class World extends Var {
    */
   isDead() {
     return this.energy == 0;
-  }
-  /**
-   * Stops the endboss and starts the endboss attack
-   */
-  stopEndboss() {
-    this.level.endboss[0].speed = 0;
-    setTimeout(() => {
-      this.startEndbossAttack();
-    }, 1000);
-  }
-
-  /**
-   * Starts the endboss attack
-   */
-  startEndbossAttack() {
-    this.soundManager.play("chickenAngry");
-    this.endbossAttackInterval = setInterval(() => {
-      const endboss = this.level.endboss[0];
-      if (this.character.x - this.character.width / 2 < endboss.x) {
-        endboss.otherDirection = false;
-        this.level.endboss[0].x -= 7.5;
-      }
-      if (this.character.x - this.character.width / 2 > endboss.x) {
-        endboss.otherDirection = true;
-        this.level.endboss[0].x += 7.5;
-      }
-      if (this.level.endboss[0].endbossIsDead) {
-        clearInterval(this.endbossAttackInterval);
-      }
-    }, 50);
   }
 
   /**
