@@ -43,17 +43,14 @@ class CollidableObject extends MoveableObject {
             let endboss = world.level.endboss[0];
             endboss.hit();
             world.statusBarEndbossHP.setPercentage(endboss.energy);
-            
             if (endboss.energy <= 0) {
                 endboss.endbossIsDead = true;
             }
-            
             if (endboss.endbossIsDead) {
                 setTimeout(() => {
                     world.level.endboss.splice(0, 1);
                 }, 1500);
             }
-            
             world.throwableObjects.splice(bottleIndex, 1);
             world.soundManager.play("endbossHurt");
             return true;
@@ -79,7 +76,6 @@ class CollidableObject extends MoveableObject {
             if (bottleIndex !== null) {
                 world.throwableObjects.splice(bottleIndex, 1);
             }
-            
             world.chickenWhichDied.push(enemy);
             setTimeout(() => {
                 world.level.enemies.splice(enemyIndex, 1);

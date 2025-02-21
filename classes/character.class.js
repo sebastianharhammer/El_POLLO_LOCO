@@ -239,6 +239,9 @@ class Character extends MoveableObject {
       }
     }
   }
+  /**
+   * Handles the death sound for the character.
+   */
   handleDeathSound() {
     if (this.world && this.world.soundManager) {
       this.world.soundManager.play("dead");
