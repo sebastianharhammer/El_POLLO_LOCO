@@ -19,12 +19,14 @@ class World extends Var {
     this.checkGameStart();
     this.gameStartTime = new Date().getTime();
   }
+  
   /**
    * Sets the world reference in the character object
    */
   setWorld() {
     this.character.world = this;
   }
+
   /**
    * Checks for game start conditions and adds event listeners
    */
@@ -39,7 +41,6 @@ class World extends Var {
         this.updateMobileOverlay();
       }
     };
-
     document.addEventListener(
       "keydown",
       (e) => e.code === "Enter" && window.innerWidth > 1280 && startGame()
@@ -52,9 +53,11 @@ class World extends Var {
       });
     }
   }
+
   /**
    * Updates the mobile overlay based on screen width
    */
+
   updateMobileOverlay() {
     if (window.innerWidth <= 1280) {
       const topOverlay = document.getElementById("mobileOverlayContainerTop");
@@ -65,6 +68,7 @@ class World extends Var {
       bottomOverlay.classList.remove("d-none");
     }
   }
+
   /**
    * Checks if the device is mobile based on screen width and touch capabilities
    * @returns {boolean} True if device is mobile, false otherwise
@@ -75,6 +79,7 @@ class World extends Var {
     }
     return false;
   }
+
   /**
    * Starts the main game loop and collision checks
    */
@@ -98,6 +103,7 @@ class World extends Var {
       this.checkGameOver();
     }, 1000 / 60);
   }
+
   /**
    * Checks for jump collisions with enemies and handles their removal
    */
@@ -107,13 +113,12 @@ class World extends Var {
         enemy.handleChickenCollision(this, index, null);
         if (enemy.chickenIsDead && !enemy.scheduledForRemoval) {
           enemy.scheduledForRemoval = true;
-          setTimeout(() => {
-            const currentIndex = this.level.enemies.indexOf(enemy);
-            if (currentIndex !== -1) {
-              this.level.enemies.splice(currentIndex, 1);
-            }}, 1000);}}
+          this.scheduleEnemyRemoval(enemy);
+        }
+      }
     });
   }
+
   /**
    * Checks if a bottle can be thrown based on available bottles and cooldown
    * @returns {boolean} True if bottle can be thrown, false otherwise
@@ -123,6 +128,7 @@ class World extends Var {
       this.throwBottle();
     }
   }
+
   /**
    * Checks if a bottle can be thrown based on available bottles and cooldown
    * @returns {boolean} True if bottle can be thrown, false otherwise
@@ -130,6 +136,7 @@ class World extends Var {
   canThrowBottle() {
     return this.statusBarBottles.percentage > 9 && !this.throwCooldown;
   }
+
   /**
    * Creates and throws a new bottle object
    * @private
@@ -151,13 +158,13 @@ class World extends Var {
       this.throwCooldown = false;
     }, 250);
   }
+
   /**
    * Checks for collisions with enemies and updates the character's health
    */
   checkCollisions() {
     this.level.enemies.forEach((enemy) => {
-      if (
-        !enemy.isBeingKilled &&
+      if (!enemy.isBeingKilled &&
         !enemy.chickenIsDead &&
         !this.chickenWhichDied.includes(enemy) &&
         this.character.isColliding(enemy) &&
@@ -168,6 +175,7 @@ class World extends Var {
       }
     });
   }
+
   /**
    * Checks for collisions with the endboss and updates the character's health
    */
@@ -178,6 +186,7 @@ class World extends Var {
       this.statusBarHP.setPercentage(this.character.energy);
     }
   }
+
   /**
    * Checks for collisions with coins and updates the coin count
    */
@@ -188,6 +197,7 @@ class World extends Var {
       }
     });
   }
+
   /**
    * Checks for collisions with bottles and updates the bottle count
    */
@@ -198,32 +208,25 @@ class World extends Var {
       }
     });
   }
+
   /**
    * Checks for collisions with bottles and updates the bottle count
    */
   checkBottleHit() {
     this.throwableObjects.forEach((bottle, bottleIndex) => {
-      this.checkBottleEnemyCollisions(bottle, bottleIndex);
-      this.checkBottleEndbossCollision(bottle, bottleIndex);
+      this.level.enemies.forEach((enemy, enemyIndex) => {
+        bottle.handleChickenCollision(this, enemyIndex, bottleIndex);
+        if (enemy.chickenIsDead && !enemy.scheduledForRemoval) {
+          enemy.scheduledForRemoval = true;
+          this.scheduleEnemyRemoval(enemy);
+        }
+      });
+      if (this.level.endboss[0]) {
+        bottle.handleEndbossCollision(this, bottleIndex);
+      }
     });
   }
-  /**
-   * Checks for collisions with enemies and updates the bottle count
-   */
-  checkBottleEnemyCollisions(bottle, bottleIndex) {
-    this.level.enemies.forEach((enemy, enemyIndex) => {
-      bottle.handleChickenCollision(this, enemyIndex, bottleIndex);
-      this.handleDeadEnemy(enemy);
-    });
-  }
-  /**
-   * Checks for collisions with the endboss and updates the bottle count
-   */
-  checkBottleEndbossCollision(bottle, bottleIndex) {
-    if (this.level.endboss[0]) {
-      bottle.handleEndbossCollision(this, bottleIndex);
-    }
-  }
+
   /**
    * Handles the removal of dead enemies
    */
@@ -233,6 +236,7 @@ class World extends Var {
       this.scheduleEnemyRemoval(enemy);
     }
   }
+
   /**
    * Schedules the removal of an enemy after a delay
    */
@@ -244,6 +248,7 @@ class World extends Var {
       }
     }, 1000);
   }
+
   /**
    * Checks for the endboss alert and stops the endboss attack
    */
@@ -256,6 +261,7 @@ class World extends Var {
       }
     }
   }
+
   /**
    * Checks if the character is dead
    * @returns {boolean} True if the character is dead, false otherwise
@@ -272,6 +278,7 @@ class World extends Var {
       this.startEndbossAttack();
     }, 1000);
   }
+
   /**
    * Starts the endboss attack
    */
@@ -292,6 +299,7 @@ class World extends Var {
       }
     }, 50);
   }
+
   /**
    * Collects a coin and updates the coin count
    * @param {number} index - The index of the coin to collect
@@ -301,6 +309,7 @@ class World extends Var {
     this.level.coins.splice(index, 1);
     this.statusBarCoin.setPercentage(this.statusBarCoin.percentage + 10);
   }
+
   /**
    * Collects a bottle and updates the bottle count
    * @param {number} index - The index of the bottle to collect
@@ -310,6 +319,7 @@ class World extends Var {
     this.level.bottles.splice(index, 1);
     this.statusBarBottles.setPercentage(this.statusBarBottles.percentage + 10);
   }
+
   /**
    * Renders a frame of the game
    */
@@ -324,45 +334,29 @@ class World extends Var {
     }
     requestAnimationFrame(() => this.draw());
   }
+
   /**
    * Draws the game world
    */
   drawGameWorld() {
-    this.drawBackgroundLayer();
-    this.drawUILayer();
-    this.drawGameObjects();
-  }
-  /**
-   * Draws the background layer
-   */
-  drawBackgroundLayer() {
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addObjectsToMap(this.level.clouds);
     this.ctx.translate(-this.camera_x, 0);
-  }
-  /**
-   * Draws the UI layer
-   */
-  drawUILayer() {
-    this.addToMap(this.statusBarHP);
-    this.addToMap(this.statusBarCoin);
-    this.addToMap(this.statusBarBottles);
-    this.addToMap(this.statusBarEndbossHP);
-  }
-  /**
-   * Draws the game objects
-   */
-  drawGameObjects() {
+    [this.statusBarHP, this.statusBarCoin, this.statusBarBottles, this.statusBarEndbossHP]
+      .forEach(bar => this.addToMap(bar));
     this.ctx.translate(this.camera_x, 0);
-    this.addToMap(this.character);
-    this.addObjectsToMap(this.level.enemies);
-    this.addObjectsToMap(this.level.endboss);
-    this.addObjectsToMap(this.level.bottles);
-    this.addObjectsToMap(this.level.coins);
-    this.addObjectsToMap(this.throwableObjects);
+    [
+      [this.character],
+      this.level.enemies,
+      this.level.endboss,
+      this.level.bottles,
+      this.level.coins,
+      this.throwableObjects
+    ].forEach(objects => this.addObjectsToMap(objects));
     this.ctx.translate(-this.camera_x, 0);
   }
+
   /**
    * Adds objects to the map
    * @param {Array} objects - The objects to add
@@ -373,6 +367,7 @@ class World extends Var {
       this.addToMap(object);
     });
   }
+
   /**
    * Adds a movable object to the game world with proper direction handling
    * @param {MovableObject} mo - The movable object to add
@@ -388,6 +383,7 @@ class World extends Var {
       this.flipImageBack(mo);
     }
   }
+
   /**
    * Flips an image horizontally for opposite direction rendering
    * @param {MovableObject} mo - The movable object to flip
@@ -399,6 +395,7 @@ class World extends Var {
     this.ctx.scale(-1, 1);
     mo.x = mo.x * -1;
   }
+
   /**
    * Flips an image back to its original direction
    * @param {MovableObject} mo - The movable object to flip back
@@ -407,6 +404,7 @@ class World extends Var {
     mo.x = mo.x * -1;
     this.ctx.restore();
   }
+
   /**
    * Checks if the game is over
    */
@@ -419,6 +417,7 @@ class World extends Var {
       this.gameManager.handleGameOver(false);
     }
   }
+
   /**
    * Shows the Start Screen
    */
