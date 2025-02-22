@@ -42,6 +42,7 @@ class World extends Var {
         if (this.startScreen) {
           this.startScreen.cleanup();
         }
+        this.soundManager.play("background");
         this.run();
         this.updateMobileOverlay();
       }
@@ -121,7 +122,6 @@ class World extends Var {
         this.soundManager.muteAll();
     } else {
         this.soundManager.unmuteAll();
-        this.soundManager.play("background");
     }
   }
 

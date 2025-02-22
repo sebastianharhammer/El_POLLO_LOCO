@@ -3,7 +3,7 @@
  * @extends MoveableObject
  */
 class StatusBarHP extends MoveableObject {
-  percentage = 100;
+  percentage = 200;
 
   /** @type {string[]} Array of image paths for different health states */
   IMAGES = [
@@ -26,6 +26,7 @@ class StatusBarHP extends MoveableObject {
     this.width = 200;
     this.height = 60;
     this.setPercentage(200);
+    this.handleDefeatSound();
   }
 
   /**
@@ -56,5 +57,13 @@ class StatusBarHP extends MoveableObject {
     } else {
       return 0;
     } 
+  }
+  /**
+   * Handles the defeat sound for the status bar.
+   */
+  handleDefeatSound() {
+    if (this.world && this.world.soundManager && this.percentage < 1) {
+      this.world.soundManager.play("defeat");
+    }
   }
 }

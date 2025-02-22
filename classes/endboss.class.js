@@ -87,6 +87,8 @@ class Endboss extends MoveableObject {
       if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
       } else if (this.endbossIsDead) {
+        this.soundManager.pause("chickenAngry");
+        this.soundManager.play("endbossHurt");
         this.playAnimation(this.IMAGES_DEAD);
       } else if (this.alert && !this.endbossAttack) {
         this.playAnimation(this.IMAGES_ALERT);

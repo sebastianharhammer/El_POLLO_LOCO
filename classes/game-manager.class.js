@@ -96,9 +96,11 @@ class GameManager {
      * @returns {void}
      */
     handleGameOver(isVictory) {
-        this.updateGameSounds(isVictory);
-        this.soundManager.stopAll();
-        setTimeout(() => this.showEndScreen(isVictory), 2000);
+        this.world.soundManager.stopAll();
+        setTimeout(() => {
+            this.updateGameSounds(isVictory); 
+            setTimeout(() => this.showEndScreen(isVictory), 2000);
+        }, 100);
     }
 
     /**
@@ -108,8 +110,6 @@ class GameManager {
      */
     updateGameSounds(isVictory) {
         const soundType = isVictory ? "victory" : "defeat";
-        this.world.soundManager.pause("background");
-        !isVictory && this.world.soundManager.pause("chickenAngry");
         this.world.soundManager.play(soundType);
     }
 

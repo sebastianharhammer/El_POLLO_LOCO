@@ -186,8 +186,8 @@ class Character extends MoveableObject {
       this.handleHitSound();
       this.getTimeStamp();
     } else if (this.isDead()) {
-      this.playAnimation(this.IMAGES_DEAD);
       this.handleDeathSound();
+      this.playAnimation(this.IMAGES_DEAD);
     } else if (this.isAboveGround()) {
       this.playAnimation(this.IMAGES_JUMPING);
     } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
@@ -218,8 +218,9 @@ class Character extends MoveableObject {
     if (this.world && this.world.soundManager) {
       const currentTime = Date.now();
       if ((this.canMoveRight() || this.canMoveLeft()) && !this.isAboveGround() && 
-          currentTime - this.lastWalkingSoundTime >= 300) {
+          currentTime - this.lastWalkingSoundTime >= 250) {
           this.world.soundManager.play("walking");
+          console.log("walking sound");
           this.lastWalkingSoundTime = currentTime;
       }
     }
@@ -241,25 +242,23 @@ class Character extends MoveableObject {
   }
   /**
    * Handles the death sound for the character.
+   * @private
    */
   handleDeathSound() {
     if (this.world && this.world.soundManager) {
-      this.world.soundManager.play("dead");
+        const deadSound = this.world.soundManager.sounds.dead;
+        if (deadSound) {
+          deadSound.addEventListener('ended', () => {
+            this.world.soundManager.play("defeat");
+          }, { once: true });
+        }
+      }
     }
-  }
-  /**
-   * Handles the defeat sound for the character.
-   */
-  handleDefeatSound() {
-    if (this.world && this.world.soundManager) {
-      this.world.soundManager.play("defeat");
-    }
-  }
-  /**
-   * Checks if the character is dead (energy is 0).
-   * @returns {boolean} True if the character is dead, false otherwise.
-   */
-  isDead() {
+    /**
+     * Checks if the character is dead (energy is 0).
+     * @returns {boolean} True if the character is dead, false otherwise.
+    */
+   isDead() {
     return this.energy <= 0;
   }
 }

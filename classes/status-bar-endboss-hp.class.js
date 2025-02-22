@@ -28,6 +28,10 @@ class StatusBarEndbossHP extends MoveableObject {
     }
   
     /**
+     * Handles the defeat sound for the status bar.
+     */
+  
+    /**
      * Updates the status bar's appearance based on the current health percentage.
      * @param {number} percentage - The current health percentage (0-5)
      */

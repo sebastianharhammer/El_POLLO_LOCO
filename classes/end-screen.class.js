@@ -32,6 +32,8 @@ class EndScreen extends DrawableObject {
         this.width = 1280;
         
         if (isVictory) {
+            this.world.soundManager.stopAll();
+            this.world.soundManager.play("victory");
             this.calculateScore(coins, health, bottles, gameTime);
         }
 
@@ -96,7 +98,7 @@ class EndScreen extends DrawableObject {
             this.buttons[0].disabled = true;
             this.buttons[0].text = 'Restarting...';
             this.isRestarting = true;
-            this.world.soundManager.play("defeat");
+            
             
             setTimeout(() => {
                 if (this.world?.gameManager) {

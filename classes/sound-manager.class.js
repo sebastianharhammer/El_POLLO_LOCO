@@ -13,9 +13,8 @@ class SoundManager {
             victory: new Audio('audio/won.mp3'),
             defeat: new Audio('audio/defeat.mp3'),
             walk: new Audio('audio/walk.mp3'),
-            background: new Audio('audio/background.mp3')
-
-
+            background: new Audio('audio/background.mp3'),
+            dead: new Audio('audio/dead.mp3')
         };
 
         // Pre-load all sounds and set default volume
@@ -23,6 +22,7 @@ class SoundManager {
             audio.load();
             audio.volume = 0.2;
         });
+        this.sounds.walk.volume = 0.5;
 
         this.initialized = false;
         this.pendingSounds = [];
