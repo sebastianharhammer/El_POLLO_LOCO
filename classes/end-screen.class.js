@@ -11,6 +11,7 @@ class EndScreen extends DrawableObject {
     buttons = [];
     isRestarting = false;
     showButtonsTimer = 0;
+    world;
 
     /**
      * Creates an instance of EndScreen.
@@ -22,6 +23,7 @@ class EndScreen extends DrawableObject {
      */
     constructor(coins, health, bottles, gameTime, isVictory) {
         super();
+        this.world = world;
         this.isVictory = isVictory;
         this.loadImage(isVictory ? this.WIN_IMAGE : this.LOSE_IMAGE);
         this.x = 0;
@@ -87,13 +89,19 @@ class EndScreen extends DrawableObject {
      * @private
      */
     handlePlayAgainClick() {
-        if (!this.isRestarting && !world.gameManager.isResetting && !this.buttons[0].disabled) {
+        if (!this.isRestarting && 
+            !this.world?.gameManager?.isResetting && 
+            !this.buttons[0].disabled) {
+            
             this.buttons[0].disabled = true;
             this.buttons[0].text = 'Restarting...';
             this.isRestarting = true;
+            this.world.soundManager.play("defeat");
             
             setTimeout(() => {
-                world.gameManager.resetGame();
+                if (this.world?.gameManager) {
+                    this.world.gameManager.resetGame();
+                }
                 setTimeout(() => {
                     this.isRestarting = false;
                     this.buttons[0].disabled = false;
@@ -153,7 +161,7 @@ class EndScreen extends DrawableObject {
      * @returns {boolean} True if the game is over
      */
     isVisible() {
-        return world.gameOver;
+        return this.world?.gameOver || false;
     }
 
     /**

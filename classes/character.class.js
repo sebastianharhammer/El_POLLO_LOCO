@@ -247,7 +247,14 @@ class Character extends MoveableObject {
       this.world.soundManager.play("dead");
     }
   }
-
+  /**
+   * Handles the defeat sound for the character.
+   */
+  handleDefeatSound() {
+    if (this.world && this.world.soundManager) {
+      this.world.soundManager.play("defeat");
+    }
+  }
   /**
    * Checks if the character is dead (energy is 0).
    * @returns {boolean} True if the character is dead, false otherwise.

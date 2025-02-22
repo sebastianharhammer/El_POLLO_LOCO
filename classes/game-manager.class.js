@@ -9,7 +9,7 @@ class GameManager {
     constructor(world) {
         this.world = world;
         this.isResetting = false;
-        this.soundManager = new SoundManager();
+        this.soundManager = world.soundManager;
     }
 
     /**

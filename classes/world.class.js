@@ -7,12 +7,14 @@ class World extends Var {
    * Creates a new World instance
    * @param {HTMLCanvasElement} canvas - The canvas element for rendering
    * @param {Keyboard} keyboard - The keyboard input handler
+   * @param {SoundManager} soundManager - The sound manager for playing sounds
    */
-  constructor(canvas, keyboard) {
+  constructor(canvas, keyboard, soundManager) {
     super();
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    this.soundManager = soundManager;
     this.gameManager = new GameManager(this);
     this.draw();
     this.setWorld();
@@ -106,7 +108,21 @@ class World extends Var {
       this.checkBottleHit();
       this.checkEndbossAlert();
       this.checkGameOver();
+      this.checkSound();
     }, 1000 / 60);
+  }
+
+  /**
+   * Checks the sound state and updates the sound manager accordingly
+   */
+  checkSound() {
+    const isMuted = localStorage.getItem('isMuted') === 'true';
+    if (isMuted) {
+        this.soundManager.muteAll();
+    } else {
+        this.soundManager.unmuteAll();
+        this.soundManager.play("background");
+    }
   }
 
   /**

@@ -25,8 +25,35 @@ class StartScreen {
     this.loadImage("img/9_intro_outro_screens/start/startscreen_1.png"); 
     this.createInstructionsButton();
     this.createImpressumButton();
+    this.initializeSoundButtonStates();
     this.isTouchEnabled();
   }
+
+  /**
+   * Initializes sound button states based on localStorage
+   */
+  initializeSoundButtonStates() {
+    const savedMuted = JSON.parse(localStorage.getItem('isMuted'));
+    if (savedMuted !== null) {
+      let SoundOn = document.getElementById('desktopSoundButtonOn');
+      let SoundOff = document.getElementById('desktopSoundButtonOff');
+      let MobileSoundOn = document.getElementById('mobileSoundButtonOn');
+      let MobileSoundOff = document.getElementById('mobileSoundButtonOff');
+      
+      if (savedMuted) {
+        SoundOn?.classList.add('d-none');
+        MobileSoundOn?.classList.add('d-none');
+        SoundOff?.classList.remove('d-none');
+        MobileSoundOff?.classList.remove('d-none');
+      } else {
+        SoundOn?.classList.remove('d-none');
+        MobileSoundOn?.classList.remove('d-none');
+        SoundOff?.classList.add('d-none');
+        MobileSoundOff?.classList.add('d-none');
+      }
+    }
+  }
+
   /**
    * Checks if touch events are enabled.
    * @returns {boolean} True if touch events are enabled, false otherwise.
@@ -35,7 +62,8 @@ class StartScreen {
     return ( 'ontouchstart' in window ) || 
            ( navigator.maxTouchPoints > 0 ) || 
            ( navigator.msMaxTouchPoints > 0 );
-}
+  }
+
   /**
    * Loads the background image for the start screen.
    * @param {string} path - The file path to the image.
@@ -163,7 +191,7 @@ class StartScreen {
    */
   setupImpressumButtonEvents() {
     this.impressumBtn.addEventListener('click', () => {
-      this.showImpressum = !this.showImpressum;
+      window.location.href = 'imprint.html';
     });
   }
 
@@ -199,9 +227,6 @@ class StartScreen {
 
     if (this.showInstructions && !this.isTouchEnabled()) {
         this.drawInstructions(ctx);
-    }
-    if (this.showImpressum) {
-        this.drawImpressum(ctx);
     }
   }
 
@@ -271,41 +296,6 @@ class StartScreen {
 
     instructionsText.forEach((text, index) => {
       ctx.fillText(text, 40, 160 + index * 30);
-    });
-  }
-
-  /**
-   * Draws the impressum overlay.
-   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
-   */
-  drawImpressum(ctx) {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-    if (window.innerWidth <= 1280) {
-    ctx.fillRect(this.width - 320, 300, 300, 280);
-    } else {
-      ctx.fillRect(this.width - 320, 100, 300, 280);
-    }
-    ctx.fillStyle = "white";
-    ctx.textAlign = "left";
-    ctx.font = "12px Times New Roman";
-
-    const impressumText = [
-      "Responsible for Content:",
-      "Information according to § 5 TMG",
-      "Sebastian Harhammer",
-      "Fort-Skelly-Straße 30",
-      "93053 Regensburg",
-      "Germany",
-      "sebastian.harhammer@gmail.com",
-      "All rights reserved"
-    ];
-
-    impressumText.forEach((text, index) => {
-      if (window.innerWidth <= 1280) {
-        ctx.fillText(text, this.width - 300, 340 + index * 30);
-      } else {
-        ctx.fillText(text, this.width - 300, 140 + index * 30);
-      }
     });
   }
 }

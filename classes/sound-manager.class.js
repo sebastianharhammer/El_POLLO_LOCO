@@ -1,120 +1,137 @@
-/**
- * Manages audio playback for the game, handling sound loading, playing, and control.
- * Initializes sounds on first user interaction to comply with browser autoplay policies.
- */
 class SoundManager {
     constructor() {
-        this.sounds = {};
+        this.sounds = {
+            jump: new Audio('audio/jump.mp3'),
+            coin: new Audio('audio/coin.mp3'),
+            bottle: new Audio('audio/bottle.mp3'),
+            bottleHit: new Audio('audio/bottle-hit.mp3'),
+            throw: new Audio('audio/throw.mp3'),
+            chicken: new Audio('audio/chicken.mp3'),
+            chickenAngry: new Audio('audio/chicken-angry.mp3'),
+            hurt: new Audio('audio/hurt.mp3'),
+            endbossHurt: new Audio('audio/endboss-hurt2.wav'),
+            victory: new Audio('audio/won.mp3'),
+            defeat: new Audio('audio/defeat.mp3'),
+            walk: new Audio('audio/walk.mp3'),
+            background: new Audio('audio/background.mp3')
+
+
+        };
+
+        // Pre-load all sounds and set default volume
+        Object.values(this.sounds).forEach(audio => {
+            audio.load();
+            audio.volume = 0.2;
+        });
+
         this.initialized = false;
         this.pendingSounds = [];
-        this.soundPaths = {
-            jump: 'audio/jump.mp3',
-            coin: 'audio/coin.mp3',
-            bottle: 'audio/bottle.mp3',
-            bottleHit: 'audio/bottle-hit.mp3',
-            throw: 'audio/throw.mp3',
-            chicken: 'audio/chicken.mp3',
-            chickenAngry: 'audio/chicken-angry.mp3',
-            hurt: 'audio/hurt.mp3',
-            endbossHurt: 'audio/endboss-hurt2.wav',
-            victory: 'audio/won.mp3',
-            defeat: 'audio/defeat.mp3',
-            background: 'audio/background.mp3',
-            walking: 'audio/walk.mp3',
-            dead: 'audio/dead.mp3'
-        };
+        this.isMuted = localStorage.getItem('isMuted') === 'true';
+        this.backgroundMusicPlaying = false;
+
+        // Add initialization method
         document.addEventListener('click', () => this.initialize(), { once: true });
         document.addEventListener('keydown', () => this.initialize(), { once: true });
     }
 
     /**
-     * Initializes the sound manager if not already initialized.
-     * Loads sounds and plays any sounds that were queued before initialization.
+     * Plays a sound if it exists
+     * @param {string} name - Name of the sound to play
      */
-    initialize() {
-        if (this.initialized) return;
-        Object.entries(this.soundPaths).forEach(([name, path]) => {
-            try {
-                const audio = new Audio();
-                audio.preload = 'none';
-                audio.volume = 0.2;
-                Object.defineProperty(this.sounds, name, {
-                    get: () => {
-                        if (!audio.src) {
-                            audio.src = path;
-                        }
-                        return audio;
-                    }
-                });
-                if (name === 'walking') audio.volume = 0.8;
-                if (name === 'hurt' || name === 'dead') audio.volume = 0.6;
-            } catch (error) {
-                console.warn(`Failed to initialize sound: ${name}`, error);
-            }
-        });
+    async play(name) {
+        if (!this.initialized || this.isMuted) return;
+        
+        const sound = this.sounds[name];
+        if (!sound) return;
 
-        this.initialized = true;
-        this.pendingSounds.forEach(soundName => this.play(soundName));
-        this.pendingSounds = [];
-    }
-
-    /**
-     * Plays a sound by its name.
-     * If the sound manager isn't initialized, the sound is queued for later playback.
-     * @param {string} soundName - The name of the sound to play
-     */
-    play(soundName) {
-        if (!this.initialized) {
-            this.pendingSounds.push(soundName);
-            return;
-        }
-        if (this.sounds[soundName]) {
-            try {
-                const sound = this.sounds[soundName];
-                sound.currentTime = 0;
-                const playPromise = sound.play();
-                
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.warn(`Error playing sound ${soundName}:`, error);
-                    });
+        try {
+            if (name === 'background') {
+                if (!this.backgroundMusicPlaying) {
+                    this.backgroundMusicPlaying = true;
+                    sound.loop = true;
+                    await sound.play().catch(() => {});
                 }
-            } catch (error) {
-                console.warn(`Error playing sound ${soundName}:`, error);
+            } else if (name === 'defeat' || name === 'victory') {
+                // For end game sounds, ensure they play from the start
+                sound.currentTime = 0;
+                this.stopAll(); // Stop all other sounds first
+                await sound.play().catch(() => {});
+            } else {
+                // For other sounds, reset and play
+                sound.currentTime = 0;
+                await sound.play().catch(() => {});
             }
+        } catch (error) {
+            console.log('Sound play error:', error);
         }
     }
 
     /**
-     * Stops all currently playing sounds and resets their playback position.
+     * Pauses a specific sound
+     * @param {string} name - Name of the sound to pause
+     */
+    pause(name) {
+        const sound = this.sounds[name];
+        if (sound && !sound.paused) {
+            sound.pause();
+            if (name === 'background') {
+                this.backgroundMusicPlaying = false;
+            }
+            sound.currentTime = 0;
+        }
+    }
+
+    /**
+     * Stops all sounds
      */
     stopAll() {
         Object.values(this.sounds).forEach(audio => {
-            try {
+            if (!audio.paused) {
                 audio.pause();
                 audio.currentTime = 0;
-                audio.volume = 0.0;
-            } catch (error) {
-                console.warn('Error stopping sound:', error);
             }
         });
-        
-        if (this.sounds.victory) this.sounds.victory.volume = 0.2;
-        if (this.sounds.defeat) this.sounds.defeat.volume = 0.2;
-        if (this.sounds.background) this.sounds.background.volume = 0.0;
+        this.backgroundMusicPlaying = false;
     }
 
     /**
-     * Pauses playback of a specific sound.
-     * @param {string} soundName - The name of the sound to pause
+     * Mutes all sounds
      */
-    pause(soundName) {
-        if (this.sounds[soundName]) {
-            try {
-                this.sounds[soundName].pause();
-            } catch (error) {
-                console.warn(`Error pausing sound ${soundName}:`, error);
+    muteAll() {
+        this.isMuted = true;
+        this.stopAll();
+        Object.values(this.sounds).forEach(audio => {
+            audio.volume = 0;
+        });
+    }
+
+    /**
+     * Unmutes all sounds
+     */
+    unmuteAll() {
+        this.isMuted = false;
+        Object.values(this.sounds).forEach(audio => {
+            if (audio === this.sounds.walk) {
+                audio.volume = 0.8;
+            } else if (audio === this.sounds.hurt || audio === this.sounds.endbossHurt) {
+                audio.volume = 0.6;
+            } else {
+                audio.volume = 0.2;
             }
+        });
+    }
+
+    /**
+     * Initializes the sound manager
+     */
+    initialize() {
+        if (this.initialized) return;
+        this.initialized = true;
+        
+        // Play any pending sounds
+        while (this.pendingSounds.length > 0) {
+            const sound = this.pendingSounds.shift();
+            this.play(sound);
         }
     }
 } 

@@ -4,21 +4,45 @@ let canvas;
 let world;
 /** @type {Keyboard} */
 let keyboard = new Keyboard();
+/** @type {SoundManager} */
+let soundManager = new SoundManager();
 
 /**
  * Initializes the game by setting up the canvas, world, and mobile controls
  */
 function init() {
     canvas = document.getElementById('canvas');
-    world = new World(canvas, keyboard);
+    world = new World(canvas, keyboard, soundManager);
     bindMobileControls();
     hideMobileControls();
-    setTimeout(() => {
-        const savedMuted = JSON.parse(localStorage.getItem('isMuted'));
-        if (savedMuted !== null && savedMuted) {
-            toggleSound();
-        }
-    }, 100);
+    
+    initSound();
+    
+    // Initialize sound button states based on localStorage
+    const isMuted = localStorage.getItem('isMuted') === 'true';
+    const soundOn = document.getElementById('desktopSoundButtonOn');
+    const soundOff = document.getElementById('desktopSoundButtonOff');
+    const mobileSoundOn = document.getElementById('mobileSoundButtonOn');
+    const mobileSoundOff = document.getElementById('mobileSoundButtonOff');
+    
+    // Set initial button visibility
+    soundOff.classList.toggle('d-none', !isMuted);
+    soundOn.classList.toggle('d-none', isMuted);
+    mobileSoundOn.classList.toggle('d-none', isMuted);
+    mobileSoundOff.classList.toggle('d-none', !isMuted);
+    
+    // Set initial sound state
+    if (isMuted) {
+        world.soundManager.muteAll();
+
+    }
+}
+
+/**
+ * Initializes the sound manager and sound effects
+ */
+function initSound() {
+    soundManager.initialize();
 }
 
 /**
@@ -46,36 +70,34 @@ function toggleFullscreen() {
  * Toggles the game sound on/off and updates the UI accordingly
  */
 function toggleSound() {
-    let soundManager = world?.soundManager;
-    if (!soundManager || !soundManager.sounds?.background) return;
+    if (!world?.soundManager) return;
     
-    let isMuted = soundManager.sounds.background.volume === 0;
-    toggleSoundButtons();
-    isMuted = !isMuted;
-    saveSoundState(isMuted);
-    updateSoundVolumes(soundManager, isMuted);
-}
+    // Toggle the mute state
+    const isMuted = localStorage.getItem('isMuted') !== 'true';
+    
+    // Update UI elements
+    const soundOn = document.getElementById('desktopSoundButtonOn');
+    const soundOff = document.getElementById('desktopSoundButtonOff');
+    const mobileSoundOn = document.getElementById('mobileSoundButtonOn');
+    const mobileSoundOff = document.getElementById('mobileSoundButtonOff');
+    
+    soundOff.classList.toggle('d-none', !isMuted);
+    soundOn.classList.toggle('d-none', isMuted);
+    mobileSoundOn.classList.toggle('d-none', isMuted);
+    mobileSoundOff.classList.toggle('d-none', !isMuted);
 
-/**
- * Toggles visibility of sound control buttons
- */
-function toggleSoundButtons() {
-    let SoundOn = document.getElementById('desktopSoundButtonOn');
-    let SoundOff = document.getElementById('desktopSoundButtonOff');
-    let MobileSoundOn = document.getElementById('mobileSoundButtonOn');
-    let MobileSoundOff = document.getElementById('mobileSoundButtonOff');
-    SoundOn.classList.toggle('d-none');
-    SoundOff.classList.toggle('d-none');
-    MobileSoundOn.classList.toggle('d-none');
-    MobileSoundOff.classList.toggle('d-none');
-}
-
-/**
- * Saves the current sound state to localStorage
- * @param {boolean} isMuted - Whether the sound is muted
- */
-function saveSoundState(isMuted) {
-    localStorage.setItem('isMuted', JSON.stringify(isMuted));
+    // Update sound state
+    if (isMuted) {
+        world.soundManager.muteAll();
+    } else {
+        world.soundManager.unmuteAll();
+        // Only play background music if game has started
+        if (world.gameStarted && !world.gameOver) {
+            world.soundManager.play("background");
+        }
+    }
+    
+    localStorage.setItem('isMuted', isMuted);
 }
 
 /**
@@ -84,23 +106,23 @@ function saveSoundState(isMuted) {
  * @param {boolean} isMuted - Whether the sound should be muted
  */
 function updateSoundVolumes(soundManager, isMuted) {
-    if (!soundManager?.sounds) return;
+    if (!soundManager?.sounds) {
+        console.log('no sound manager');    
+        return;
+    }
     
-    Object.values(soundManager.sounds).forEach(audio => {
-        if (audio) {
+    // Update all sound volumes based on mute state
+    Object.entries(soundManager.sounds).forEach(([name, audio]) => {
+        if (!audio) return;
+        
+        if (name === 'walking') {
+            audio.volume = isMuted ? 0.0 : 0.8;
+        } else if (name === 'hurt' || name === 'dead') {
+            audio.volume = isMuted ? 0.0 : 0.6;
+        } else {
             audio.volume = isMuted ? 0.0 : 0.2;
         }
     });
-    
-    if (soundManager.sounds.walking) {
-        soundManager.sounds.walking.volume = isMuted ? 0.0 : 0.8;
-    }
-    if (soundManager.sounds.hurt) {
-        soundManager.sounds.hurt.volume = isMuted ? 0.0 : 0.6;
-    }
-    if (soundManager.sounds.dead) {
-        soundManager.sounds.dead.volume = isMuted ? 0.0 : 0.6;
-    }
 }
 
 /**
