@@ -61,12 +61,10 @@ class GameManager {
         this.world.character = new Character();
         this.world.character.world = this.world;
         this.world.level = createLevel1();
-        
         this.world.statusBarHP = new StatusBarHP();
         this.world.statusBarCoin = new StatusBarCoin();
         this.world.statusBarBottles = new StatusBarBottles();
         this.world.statusBarEndbossHP = new StatusBarEndbossHP();
-        
         this.world.endboss = this.world.level.endboss[0];
     }
 
@@ -97,9 +95,10 @@ class GameManager {
      */
     handleGameOver(isVictory) {
         this.world.soundManager.stopAll();
+        this.updateGameSounds(isVictory); 
         setTimeout(() => {
-            this.updateGameSounds(isVictory); 
             setTimeout(() => this.showEndScreen(isVictory), 2000);
+            this.world.soundManager.muteAll();
         }, 100);
     }
 
@@ -111,6 +110,7 @@ class GameManager {
     updateGameSounds(isVictory) {
         const soundType = isVictory ? "victory" : "defeat";
         this.world.soundManager.play(soundType);
+            this.world.soundManager.play(soundType);
     }
 
     /**

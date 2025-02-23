@@ -72,6 +72,7 @@ class Character extends MoveableObject {
   };
   lastWalkingSoundTime = 0;
   lastHitSoundTime = 0;
+  deathSoundPlayed = false;
 
 
   /**
@@ -219,8 +220,7 @@ class Character extends MoveableObject {
       const currentTime = Date.now();
       if ((this.canMoveRight() || this.canMoveLeft()) && !this.isAboveGround() && 
           currentTime - this.lastWalkingSoundTime >= 250) {
-          this.world.soundManager.play("walking");
-          console.log("walking sound");
+          this.world.soundManager.play("walk");
           this.lastWalkingSoundTime = currentTime;
       }
     }
@@ -245,20 +245,19 @@ class Character extends MoveableObject {
    * @private
    */
   handleDeathSound() {
-    if (this.world && this.world.soundManager) {
-        const deadSound = this.world.soundManager.sounds.dead;
-        if (deadSound) {
-          deadSound.addEventListener('ended', () => {
-            this.world.soundManager.play("defeat");
-          }, { once: true });
-        }
+    if (this.world && this.world.soundManager && !this.deathSoundPlayed) {
+      const deadSound = this.world.soundManager.sounds.dead;
+      if (deadSound) {
+        this.world.soundManager.play("dead");
+        this.deathSoundPlayed = true;
       }
     }
-    /**
-     * Checks if the character is dead (energy is 0).
-     * @returns {boolean} True if the character is dead, false otherwise.
-    */
-   isDead() {
-    return this.energy <= 0;
   }
+  /**
+   * Checks if the character is dead (energy is 0).
+   * @returns {boolean} True if the character is dead, false otherwise.
+  */
+ isDead() {
+  return this.energy <= 0;
+}
 }

@@ -18,20 +18,15 @@ function init() {
     
     initSound();
     
-    // Initialize sound button states based on localStorage
     const isMuted = localStorage.getItem('isMuted') === 'true';
     const soundOn = document.getElementById('desktopSoundButtonOn');
     const soundOff = document.getElementById('desktopSoundButtonOff');
     const mobileSoundOn = document.getElementById('mobileSoundButtonOn');
     const mobileSoundOff = document.getElementById('mobileSoundButtonOff');
-    
-    // Set initial button visibility
     soundOff.classList.toggle('d-none', !isMuted);
     soundOn.classList.toggle('d-none', isMuted);
     mobileSoundOn.classList.toggle('d-none', isMuted);
     mobileSoundOff.classList.toggle('d-none', !isMuted);
-    
-    // Set initial sound state
     if (isMuted) {
         world.soundManager.muteAll();
 
@@ -71,27 +66,19 @@ function toggleFullscreen() {
  */
 function toggleSound() {
     if (!world?.soundManager) return;
-    
-    // Toggle the mute state
     const isMuted = localStorage.getItem('isMuted') !== 'true';
-    
-    // Update UI elements
     const soundOn = document.getElementById('desktopSoundButtonOn');
     const soundOff = document.getElementById('desktopSoundButtonOff');
     const mobileSoundOn = document.getElementById('mobileSoundButtonOn');
     const mobileSoundOff = document.getElementById('mobileSoundButtonOff');
-    
     soundOff.classList.toggle('d-none', !isMuted);
     soundOn.classList.toggle('d-none', isMuted);
     mobileSoundOn.classList.toggle('d-none', isMuted);
     mobileSoundOff.classList.toggle('d-none', !isMuted);
-
-    // Update sound state
     if (isMuted) {
         world.soundManager.muteAll();
     } else {
         world.soundManager.unmuteAll();
-        // Only play background music if game has started
         if (world.gameStarted && !world.gameOver) {
             world.soundManager.play("background");
         }
@@ -111,7 +98,6 @@ function updateSoundVolumes(soundManager, isMuted) {
         return;
     }
     
-    // Update all sound volumes based on mute state
     Object.entries(soundManager.sounds).forEach(([name, audio]) => {
         if (!audio) return;
         

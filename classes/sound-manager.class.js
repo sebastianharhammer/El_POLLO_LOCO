@@ -1,8 +1,10 @@
 class SoundManager {
     constructor() {
         this.sounds = {
+            defeat: new Audio('audio/defeat.mp3'),
             jump: new Audio('audio/jump.mp3'),
             coin: new Audio('audio/coin.mp3'),
+            dead: new Audio('audio/dead.mp3'),
             bottle: new Audio('audio/bottle.mp3'),
             bottleHit: new Audio('audio/bottle-hit.mp3'),
             throw: new Audio('audio/throw.mp3'),
@@ -11,25 +13,21 @@ class SoundManager {
             hurt: new Audio('audio/hurt.mp3'),
             endbossHurt: new Audio('audio/endboss-hurt2.wav'),
             victory: new Audio('audio/won.mp3'),
-            defeat: new Audio('audio/defeat.mp3'),
             walk: new Audio('audio/walk.mp3'),
             background: new Audio('audio/background.mp3'),
-            dead: new Audio('audio/dead.mp3')
         };
 
-        // Pre-load all sounds and set default volume
         Object.values(this.sounds).forEach(audio => {
             audio.load();
             audio.volume = 0.2;
         });
         this.sounds.walk.volume = 0.5;
-
+        this.sounds.dead.volume = 0.5;
         this.initialized = false;
         this.pendingSounds = [];
         this.isMuted = localStorage.getItem('isMuted') === 'true';
         this.backgroundMusicPlaying = false;
 
-        // Add initialization method
         document.addEventListener('click', () => this.initialize(), { once: true });
         document.addEventListener('keydown', () => this.initialize(), { once: true });
     }
@@ -40,10 +38,8 @@ class SoundManager {
      */
     async play(name) {
         if (!this.initialized || this.isMuted) return;
-        
         const sound = this.sounds[name];
         if (!sound) return;
-
         try {
             if (name === 'background') {
                 if (!this.backgroundMusicPlaying) {
@@ -52,12 +48,10 @@ class SoundManager {
                     await sound.play().catch(() => {});
                 }
             } else if (name === 'defeat' || name === 'victory') {
-                // For end game sounds, ensure they play from the start
                 sound.currentTime = 0;
-                this.stopAll(); // Stop all other sounds first
+                this.stopAll();
                 await sound.play().catch(() => {});
             } else {
-                // For other sounds, reset and play
                 sound.currentTime = 0;
                 await sound.play().catch(() => {});
             }
@@ -128,7 +122,6 @@ class SoundManager {
         if (this.initialized) return;
         this.initialized = true;
         
-        // Play any pending sounds
         while (this.pendingSounds.length > 0) {
             const sound = this.pendingSounds.shift();
             this.play(sound);

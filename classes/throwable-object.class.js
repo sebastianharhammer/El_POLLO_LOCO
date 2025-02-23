@@ -89,6 +89,7 @@ class ThrowableObject extends CollidableObject {
   handleBottleImpact() {
     this.y = 600;
     this.speedY = 0;
+    this.world.soundManager.play('bottleHit');
     this.removeGravity();
     setTimeout(() => {
       this.applyGravity();
@@ -96,7 +97,6 @@ class ThrowableObject extends CollidableObject {
     if (this.bottleInterval) clearInterval(this.bottleInterval);
     if (this.throwInterval) clearInterval(this.throwInterval);
     this.animateSplash();
-    this.world.soundManager.play('bottleHit');
   }
 
   /**

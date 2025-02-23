@@ -96,12 +96,8 @@ class World extends Var {
       this.soundManager.play("background");
     }
     this.gameInterval = setInterval(() => {
-      setTimeout(() => {
-        this.checkCollisions();
-      }, 1000);
-      setTimeout(() => {
-        this.checkEndbossCollision();
-      }, 1000);
+      this.checkCollisions();
+      this.checkEndbossCollision();
       this.checkTrowObjects();
       this.checkCoinCollisions();
       this.checkBottleCollisions();

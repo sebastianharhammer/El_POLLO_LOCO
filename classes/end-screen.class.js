@@ -98,8 +98,6 @@ class EndScreen extends DrawableObject {
             this.buttons[0].disabled = true;
             this.buttons[0].text = 'Restarting...';
             this.isRestarting = true;
-            
-            
             setTimeout(() => {
                 if (this.world?.gameManager) {
                     this.world.gameManager.resetGame();
@@ -108,8 +106,8 @@ class EndScreen extends DrawableObject {
                     this.isRestarting = false;
                     this.buttons[0].disabled = false;
                     this.buttons[0].text = 'Play Again';
-                }, 1000);
-            }, 1500);
+                }, 750);
+            }, 1000);
         }
     }
 

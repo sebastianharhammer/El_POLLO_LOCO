@@ -47,7 +47,6 @@ class CollidableObject extends MoveableObject {
                 endboss.endbossIsDead = true;
             }
             if (endboss.endbossIsDead) {
-                world.soundManager.play("endbossHurt");
                 setTimeout(() => {
                     world.level.endboss.splice(0, 1);
                 }, 1500);
