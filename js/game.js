@@ -15,9 +15,10 @@ function init() {
     world = new World(canvas, keyboard, soundManager);
     bindMobileControls();
     hideMobileControls();
+    toggleFullScreenForMobile();
     
     initSound();
-    
+
     const isMuted = localStorage.getItem('isMuted') === 'true';
     const soundOn = document.getElementById('desktopSoundButtonOn');
     const soundOff = document.getElementById('desktopSoundButtonOff');
@@ -47,6 +48,12 @@ function hideMobileControls() {
     if (world.startScreen instanceof StartScreen && window.innerWidth <= 1280) {
         document.getElementById('mobileOverlayContainerTop').classList.add('d-none');
         document.getElementById('mobileOverlayContainerBottom').classList.add('d-none');
+    }
+}
+
+function toggleFullScreenForMobile() {
+    if (window.innerWidth <= 1000) {
+        toggleFullscreen();
     }
 }
 
