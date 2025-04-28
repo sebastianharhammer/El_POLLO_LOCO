@@ -61,12 +61,13 @@ function toggleFullScreenForMobile() {
  * Toggles the canvas between fullscreen and normal mode
  */
 function toggleFullscreen() {
-    if (canvas.fullscreenElement) {
-        canvas.exitFullscreen();
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
     } else {
         canvas.requestFullscreen();
     }
 }
+
 
 /**
  * Toggles the game sound on/off and updates the UI accordingly
