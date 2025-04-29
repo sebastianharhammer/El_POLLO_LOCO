@@ -15,7 +15,7 @@ function init() {
     world = new World(canvas, keyboard, soundManager);
     bindMobileControls();
     hideMobileControls();
-    toggleFullScreenForMobile();
+    
     
     initSound();
 
@@ -51,22 +51,35 @@ function hideMobileControls() {
     }
 }
 
-function toggleFullScreenForMobile() {
-    if (window.innerWidth <= 1000) {
-        toggleFullscreen();
-    }
-}
+
 
 /**
  * Toggles the canvas between fullscreen and normal mode
  */
 function toggleFullscreen() {
-    if (document.fullscreenElement) {
-        document.exitFullscreen();
+    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
     } else {
-        canvas.requestFullscreen();
+        if (canvas.requestFullscreen) {
+            canvas.requestFullscreen();
+        } else if (canvas.webkitRequestFullscreen) {
+            canvas.webkitRequestFullscreen();
+        } else if (canvas.mozRequestFullScreen) {
+            canvas.mozRequestFullScreen();
+        } else if (canvas.msRequestFullscreen) {
+            canvas.msRequestFullscreen();
+        }
     }
 }
+
 
 
 /**
