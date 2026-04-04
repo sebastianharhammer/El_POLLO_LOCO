@@ -46,6 +46,7 @@ class GameManager {
      * @returns {void}
      */
     cleanupIntervals() {
+        console.log("cleanupIntervalls");
         this.world.soundManager.stopAll();
         clearInterval(this.world.character.animationInterval);
         clearInterval(this.world.character.movementInterval);
@@ -94,7 +95,8 @@ class GameManager {
      * @returns {void}
      */
     handleGameOver(isVictory) {
-        this.world.soundManager.stopAll();
+        //console.log("handleGameOver: ");
+        //this.world.soundManager.stopAll();
         this.updateGameSounds(isVictory); 
         setTimeout(() => {
             setTimeout(() => this.showEndScreen(isVictory), 2000);

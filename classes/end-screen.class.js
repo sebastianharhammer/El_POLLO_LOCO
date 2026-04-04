@@ -32,6 +32,7 @@ class EndScreen extends DrawableObject {
         this.width = 1280;
         
         if (isVictory) {
+            console.log("isVictory");
             this.world.soundManager.stopAll();
             this.world.soundManager.play("victory");
             this.calculateScore(coins, health, bottles, gameTime);

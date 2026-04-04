@@ -49,6 +49,7 @@ class SoundManager {
                 }
             } else if (name === 'defeat' || name === 'victory') {
                 sound.currentTime = 0;
+                console.log("play / elseif")
                 this.stopAll();
                 await sound.play().catch(() => {});
             } else {
@@ -79,6 +80,7 @@ class SoundManager {
      * Stops all sounds
      */
     stopAll() {
+        console.log("stop All wurde aufgerufen");
         Object.values(this.sounds).forEach(audio => {
             if (!audio.paused) {
                 audio.pause();
